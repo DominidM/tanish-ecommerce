@@ -31,10 +31,8 @@ class Tanish_WhatsApp {
 		add_action('admin_menu', array($this, 'add_admin_menu'));
 		add_action('admin_init', array($this, 'register_settings'));
 
-		// Single product: button and removal of add-to-cart.
-		// Use wp hook to ensure WooCommerce has registered its actions.
+		// Single product: remove the default add-to-cart flow while keeping the storefront catalog simple.
 		add_action('wp', array($this, 'maybe_remove_add_to_cart'));
-		add_action('woocommerce_single_product_summary', array($this, 'render_whatsapp_button'), 30);
 
 		// Catalog - replace add to cart with "Ver producto".
 		add_filter('woocommerce_loop_add_to_cart_link', array($this, 'filter_loop_add_to_cart'), 10, 2);
