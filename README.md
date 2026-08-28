@@ -408,6 +408,85 @@ Datos tomados dinámicamente del producto actual: `get_name()`, `get_sku()` (si 
 
 ---
 
+## Configuración inicial de WordPress
+
+El archivo `scripts/setup-wordpress.php` automatiza la configuración inicial del storefront de forma **reproducible, versionada e idempotente** mediante APIs oficiales de WordPress (sin SQL directo).
+
+### Qué automatiza
+
+- **Creación de página `Inicio`** (`slug: inicio`, `status: publish`)
+  - Si existe, la **actualiza** en lugar de duplicar (idempotente — no crea `Inicio (2)`)
+  - Contenido comercial Gutenberg-compatible con:
+    - `TANISH` + `Compra fácil y rápida`
+    - Descripción y botón `[Ver productos]` → `/shop`
+    - `Categorías` → `[product_categories number="6" columns="3" parent="0"]`
+    - `Productos disponibles` → `[products limit="8" columns="4" orderby="date" order="DESC"]`
+    - `¿Por qué comprar en TANISH?` + `¿Necesitas ayuda?` (WhatsApp)
+  - Usa `get_page_by_path('inicio')` + `wp_insert_post()` / `wp_update_post()` + `get_posts()` — no hardcodea IDs de productos
+
+- **Configuración de portada estática**
+  - `update_option('show_on_front', 'page')`
+  - `update_option('page_on_front', ID_de_Inicio)`
+  - `update_option('page_for_posts', 0)` — sin página de entradas para este proyecto
+  - Resultado: `http://localhost:8080` deja de mostrar el blog / `¡Hola, mundo!` y muestra `Inicio`
+
+- **Limpieza de contenido de demostración**
+  - `Página de ejemplo` / `Sample Page` (`sample-page`, `pagina-ejemplo`) → `wp_trash_post()` si existe y está publicada
+  - `¡Hola, mundo!` / `Hello World` (`hola-mundo`, `hello-world`, `post` type) → `wp_trash_post()`
+  - **No borra:** `Shop`, `Cart`, `Checkout`, `My Account`, `Política de privacidad`, `Refund and Returns Policy` — WooCommerce las requiere
+
+- **Título y descripción**
+  - `update_option('blogname', 'TANISH')`
+  - `update_option('blogdescription', 'Compra fácil, rápida y directa.')`
+  - **No modifica** `siteurl` / `home` (siguen en `http://localhost:8080`)
+
+- **Conteo WooCommerce**
+  - `wc_get_products(['limit'=>-1,'status'=>'publish'])` → reporta `WooCommerce products found: 12`
+
+### Cómo ejecutar
+
+Desde el host (recomendado, no requiere wp-cli en contenedor):
+
+```bash
+docker cp scripts/setup-wordpress.php tanish-wordpress:/tmp/setup-wordpress.php
+docker exec tanish-wordpress php /tmp/setup-wordpress.php
+docker exec tanish-wordpress rm /tmp/setup-wordpress.php
+```
+
+Salida esperada (idempotente):
+
+```
+TANISH WordPress Setup
+----------------------
+Inicio: created/updated (ID 35)
+Front page: configured (page_on_front=35)
+Sample page: trashed/already absent
+Hello World: trashed/already absent
+Blog name: TANISH
+WooCommerce products found: 12
+Setup completed successfully
+```
+
+### Idempotencia
+
+El script es **idempotente**: ejecutarlo 2 o 10 veces **no** crea páginas duplicadas.
+
+```bash
+docker exec tanish-wordpress php /tmp/setup-wordpress.php  # 1ª: Inicio: created
+docker exec tanish-wordpress php /tmp/setup-wordpress.php  # 2ª: Inicio: updated
+```
+
+Verificación:
+
+```bash
+# Debe existir exactamente una con slug inicio
+wp shell: get_page_by_path('inicio') → 1 resultado
+```
+
+Funciones clave usadas: `wp_insert_post()`, `wp_update_post()`, `get_page_by_path()`, `get_posts()`, `update_option()`, `get_option()`, `wp_trash_post()`, `wc_get_products()` — todas oficiales, sin SQL directo.
+
+---
+
 ## Roadmap
 
 - [ ] Entorno Docker (WordPress + MySQL)
