@@ -328,6 +328,86 @@ docker exec tanish-mysql mysqldump -u root -p"$MYSQL_ROOT_PASSWORD" tanish_wordp
 
 ---
 
+## Integración comercial por WhatsApp
+
+La versión inicial **no utiliza el checkout tradicional de WooCommerce**. En su lugar, implementa un flujo comercial ligero y directo vía WhatsApp, manteniendo a WooCommerce como fuente de verdad del catálogo.
+
+### WooCommerce como:
+
+- **Catálogo** de productos (nombre, categorías, imágenes)
+- **Gestor de productos** (SKU, descripciones, atributos)
+- **Gestión de precios** (`get_price_html` / `wc_price`)
+- **Gestión de stock** (`is_in_stock`, `is_purchasable`) — fuente única de verdad
+
+### WhatsApp como:
+
+- **Canal de contacto** inmediato
+- **Canal inicial de cierre comercial** (TANISH confirma disponibilidad y coordina el pedido manualmente)
+
+### Flujo
+
+```
+Producto (WooCommerce)
+  → Comprar por WhatsApp (botón en single product, hook woocommerce_single_product_summary:30)
+  → Mensaje precargado vía https://wa.me/{numero}?text={mensaje}
+  → Atención comercial TANISH por WhatsApp
+```
+
+**Ejemplo de mensaje precargado (codificado con `rawurlencode`):**
+
+```
+Hola, deseo comprar este producto de TANISH.
+
+Producto: Coca-Cola 1.5 L
+SKU: BEB-001
+Precio: S/ 8.00
+Enlace: http://localhost:8080/product/coca-cola-1-5-l/
+
+¿Podrían confirmarme disponibilidad y coordinar el pedido?
+```
+
+Datos tomados dinámicamente del producto actual: `get_name()`, `get_sku()` (si existe), `get_price_html()` (strip tags), `get_permalink()`.
+
+### Configuración
+
+- **Ubicación:** WordPress Admin → **WooCommerce → TANISH WhatsApp**
+- **Capability:** `manage_woocommerce`
+- **Campo:** *Número de WhatsApp* — solo números, con código de país, sin `+` ni espacios
+- **Formato:** `51987654321` (ejemplo Perú) — sanitizado con `sanitize_text_field` + `preg_replace('/\D/', '', $value)`
+- **Ayuda en página:** *“Ingresa el número en formato internacional sin + ni espacios. Ejemplo para Perú: 51987654321”*
+- **Sin número configurado:** el botón no genera enlaces inválidos (no se muestra)
+
+### Comportamiento de stock
+
+- **Producto disponible (`is_in_stock() === true` y `is_purchasable()`):** muestra botón `Comprar por WhatsApp` (`<a href="https://wa.me/..." target="_blank" rel="noopener noreferrer" class="button alt">`)
+- **Producto agotado:** **NO** muestra botón — WooCommerce sigue siendo la única fuente de stock, sin sistema paralelo ni columnas duplicadas ni `wp_postmeta` directo
+
+### Carrito y Checkout
+
+- **Single product:** se elimina `Añadir al carrito` vía `remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30)` en hook `wp` — reversible fácilmente comentando la línea para reactivar checkout tradicional.
+- **Catálogo/archivo:** `woocommerce_loop_add_to_cart_link` se filtra para mostrar **“Ver producto”** enlazando al detalle (`get_permalink`) en lugar de añadir directo al carrito, guiando al usuario hacia el botón WhatsApp. No se borran páginas `Cart`/`Checkout`.
+
+### Compatibilidad
+
+- **Soporte inicial optimizado para productos simples (`is_type('simple')`).** Variables, bundles, subscriptions, descargables y externos quedan fuera del alcance v0.2.0 y se documentan para futuras versiones.
+
+### Aclaración importante
+
+> **Abrir WhatsApp NO descuenta stock automáticamente.** La salida de inventario se registrará **solo cuando la venta sea confirmada** mediante el módulo interno de inventario (`tanish-inventory` → entradas/salidas/ajustes/kardex).
+
+> **La creación automática de pedidos (WooCommerce order) antes de abrir WhatsApp está planificada como una evolución futura** — actualmente el pedido se coordina manualmente por el equipo comercial.
+
+### Seguridad y calidad
+
+- `sanitize_text_field`, `preg_replace`, `esc_url`, `esc_html`, `esc_attr`
+- `Settings API` + `manage_woocommerce` + `settings_fields()`/`do_settings_sections()`
+- API pública WooCommerce (`WC_Product`, `get_name`, `get_sku`, `get_price_html`, `is_in_stock`, `is_purchasable`)
+- Hooks oficiales (`woocommerce_single_product_summary`, `woocommerce_loop_add_to_cart_link`, `admin_menu`, `admin_init`, `plugins_loaded`)
+- Sin SQL directo, sin `eval`, sin credenciales, sin librerías externas, sin lectura de `.env`
+- Si WooCommerce no está activo: no produce fatal error, muestra aviso `admin_notices` y no ejecuta integración.
+
+---
+
 ## Roadmap
 
 - [ ] Entorno Docker (WordPress + MySQL)
