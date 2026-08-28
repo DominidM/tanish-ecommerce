@@ -1,0 +1,257 @@
+/**
+ * TANISH Storefront - Estilos profesionales sobrios
+ * Version: 0.2.1
+ * Carga vía TANISH Inventory plugin (wp_enqueue_style)
+ */
+
+/* Tipografía y ancho base - mejora Twenty Twenty-Five */
+:root {
+  --tanish-primary: #0f172a; /* slate-900 */
+  --tanish-primary-hover: #1e293b;
+  --tanish-accent: #059669; /* emerald-600 */
+  --tanish-accent-hover: #047857;
+  --tanish-muted: #64748b;
+  --tanish-border: #e2e8f0;
+  --tanish-bg-soft: #f8fafc;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Contenido más contenido */
+.wp-site-blocks {
+  --wp--style--global--content-size: 840px;
+}
+
+/* Hero - Inicio */
+.tanish-hero {
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  border: 1px solid var(--tanish-border);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  margin: 2rem 0 2.5rem;
+  text-align: center;
+}
+
+.tanish-hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  letter-spacing: -0.02em;
+  color: var(--tanish-primary);
+  margin: 0 0 0.5rem;
+}
+
+.tanish-hero h2 {
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  color: var(--tanish-primary);
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.tanish-hero p {
+  color: var(--tanish-muted);
+  max-width: 640px;
+  margin: 0 auto 1.8rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* Botones consistentes */
+.tanish-hero .wp-block-button__link,
+.tanish-whatsapp-button,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce .button {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em;
+  padding: 0.85em 1.6em !important;
+  transition: all 0.2s ease;
+}
+
+.tanish-hero .wp-block-button__link {
+  background: var(--tanish-primary) !important;
+}
+
+.tanish-hero .wp-block-button__link:hover {
+  background: var(--tanish-primary-hover) !important;
+  transform: translateY(-1px);
+}
+
+.tanish-whatsapp-button {
+  background: var(--tanish-accent) !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+.tanish-whatsapp-button:hover {
+  background: var(--tanish-accent-hover) !important;
+  transform: translateY(-1px);
+}
+
+/* Secciones Inicio */
+.tanish-section {
+  margin: 3rem 0;
+}
+
+.tanish-section h2 {
+  font-size: 1.6rem;
+  color: var(--tanish-primary);
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.01em;
+  border-left: 4px solid var(--tanish-accent);
+  padding-left: 0.75rem;
+}
+
+.tanish-benefits {
+  background: var(--tanish-bg-soft);
+  border: 1px solid var(--tanish-border);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.tanish-benefits ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.tanish-benefits li {
+  background: #fff;
+  border: 1px solid var(--tanish-border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  font-weight: 500;
+  color: var(--tanish-primary);
+  position: relative;
+  padding-left: 2.2rem;
+}
+
+.tanish-benefits li::before {
+  content: "✓";
+  position: absolute;
+  left: 0.9rem;
+  color: var(--tanish-accent);
+  font-weight: 700;
+}
+
+/* WooCommerce categorías - mejor grilla */
+.product-category a {
+  border: 1px solid var(--tanish-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #fff;
+}
+
+.product-category a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+}
+
+.product-category .woocommerce-loop-category__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--tanish-primary);
+  padding: 0.8rem;
+}
+
+/* Si no hay imagen, mostrar placeholder digno */
+.product-category img[width="1"][height="1"] {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  min-height: 140px;
+}
+
+/* Productos - cards */
+.woocommerce ul.products li.product {
+  border: 1px solid var(--tanish-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  padding: 0 !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.woocommerce ul.products li.product:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+}
+
+.woocommerce ul.products li.product a img {
+  margin: 0 !important;
+  border-bottom: 1px solid var(--tanish-border);
+}
+
+.woocommerce ul.products li.product .woocommerce-loop-product__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--tanish-primary);
+  padding: 0.9rem 1rem 0.3rem;
+}
+
+.woocommerce ul.products li.product .price {
+  color: var(--tanish-accent) !important;
+  font-weight: 700 !important;
+  font-size: 1.05rem !important;
+  padding: 0 1rem 0.9rem;
+}
+
+.woocommerce ul.products li.product .button {
+  margin: 0 1rem 1rem !important;
+  display: block;
+  text-align: center;
+}
+
+/* Contacto */
+.tanish-contact {
+  background: var(--tanish-primary);
+  color: #fff;
+  border-radius: 12px;
+  padding: 2.2rem;
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.tanish-contact h2 {
+  color: #fff !important;
+  border: none !important;
+  padding: 0 !important;
+  text-align: center;
+}
+
+.tanish-contact p {
+  color: #cbd5e1;
+  max-width: 640px;
+  margin: 0.5rem auto 0;
+}
+
+/* Navegación - más limpia */
+.wp-block-navigation__responsive-container.is-menu-open {
+  padding: 1rem;
+}
+
+/* Footer sobrio */
+footer {
+  border-top: 1px solid var(--tanish-border);
+  margin-top: 3rem;
+}
+
+/* Espaciado general */
+.wp-block-group, .wp-block-columns {
+  gap: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tanish-hero {
+    padding: 2rem 1.2rem;
+  }
+  .tanish-benefits ul {
+    grid-template-columns: 1fr;
+  }
+}

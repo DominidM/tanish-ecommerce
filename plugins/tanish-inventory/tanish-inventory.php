@@ -4,7 +4,7 @@
  * Plugin Name: TANISH Inventory
  * Plugin URI: https://github.com/DominidM/tanish-ecommerce
  * Description: Gestión interna de inventario integrada con WooCommerce para TANISH S.A.C.
- * Version: 0.2.0
+ * Version: 0.2.1
  * Author: Juan Dominid Muñoz Eslava
  * Text Domain: tanish-inventory
  */
@@ -12,9 +12,23 @@
 defined('ABSPATH') || exit;
 
 // Plugin version.
-define('TANISH_INVENTORY_VERSION', '0.2.0');
+define('TANISH_INVENTORY_VERSION', '0.2.1');
 define('TANISH_INVENTORY_FILE', __FILE__);
 define('TANISH_INVENTORY_PATH', plugin_dir_path(__FILE__));
+define('TANISH_INVENTORY_URL', plugin_dir_url(__FILE__));
+
+/**
+ * Enqueue storefront styles (sobrio, profesional).
+ */
+function tanish_inventory_enqueue_assets() {
+	wp_enqueue_style(
+		'tanish-storefront',
+		TANISH_INVENTORY_URL . 'assets/tanish-storefront.css',
+		array(),
+		TANISH_INVENTORY_VERSION
+	);
+}
+add_action('wp_enqueue_scripts', 'tanish_inventory_enqueue_assets');
 
 /**
  * Show admin notice if WooCommerce is not active.

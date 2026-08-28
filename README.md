@@ -148,16 +148,22 @@ tanish-ecommerce/
 ├── README.md
 │
 ├── plugins/
-│   └── tanish-inventory/       # Plugin propio ( scaffold futuro )
-│       └── .gitkeep
+│   └── tanish-inventory/       # Plugin propio TANISH Inventory
+│       ├── tanish-inventory.php
+│       ├── includes/
+│       │   └── class-tanish-whatsapp.php  # Integración WhatsApp
+│       └── assets/
+│           └── tanish-storefront.css      # Estilos sobrios v0.2.1
 │
 ├── docs/
-│   ├── arquitectura/           # Diagramas, decisiones técnicas
-│   ├── requisitos/             # Historias de usuario, RF/RNF
-│   ├── pruebas/                # Planes y casos de prueba
-│   └── evidencias/             # Capturas, demos
+│   ├── arquitectura/
+│   ├── requisitos/
+│   ├── pruebas/
+│   └── evidencias/
 │
-└── scripts/                    # Utilidades, backups, helpers
+└── scripts/
+    ├── setup-wordpress.php     # Portada + limpieza (idempotente)
+    └── improve-storefront.php  # Mejora visual + menú (idempotente)
 ```
 
 > **Nota:** WordPress core **no se sube** al repositorio. Se ejecuta desde la imagen oficial `wordpress:latest` y persiste en el volumen Docker `tanish_wordpress_data`.
@@ -484,6 +490,57 @@ wp shell: get_page_by_path('inicio') → 1 resultado
 ```
 
 Funciones clave usadas: `wp_insert_post()`, `wp_update_post()`, `get_page_by_path()`, `get_posts()`, `update_option()`, `get_option()`, `wp_trash_post()`, `wc_get_products()` — todas oficiales, sin SQL directo.
+
+---
+
+## Mejora visual del storefront
+
+Preparado para presentación académica: sobrio, moderno y comercial, sin Elementor ni plugins de diseño.
+
+### Coming Soon
+
+- **Causa:** `woocommerce_coming_soon = 'yes'` (WooCommerce activa pantalla morada para visitantes no autenticados)
+- **Solución:** `update_option('woocommerce_coming_soon', 'no')` + `woocommerce_store_pages_only = 'no'` vía `scripts/improve-storefront.php` (idempotente). Se conserva `blog_public` sin romper configuración.
+
+### Navegación
+
+- **Antes:** `wp_navigation` con `<!-- wp:page-list /-->` mostraba todas las páginas (incluyendo Cart, Checkout, My account, Página de ejemplo)
+- **Ahora:** `wp_navigation` ID 14 actualizado con 5 enlaces explícitos: **Inicio** (`/`, ID 35), **Tienda** (`?page_id=8`), **Categorías** (`/#categorias` anchor), **Nosotros** (ID 41), **Contacto** (ID 42) — Cart/Checkout/My account siguen existiendo pero fuera del menú principal.
+
+### Páginas
+
+- **Nosotros** (`/nosotros`, ID 41): texto institucional TANISH S.A.C., compromiso, stock transparente
+- **Contacto** (`/contacto`, ID 42): indica canal WhatsApp, horario, enlace a Tienda y botón WhatsApp
+- Ambas creadas idempotentemente con `get_page_by_path` + `wp_insert_post` si no existen
+
+### Portada `Inicio` (ID 35)
+
+Mejorada manteniendo Gutenberg y shortcodes, con clases versionadas `tanish-hero` / `tanish-section` / `tanish-benefits` / `tanish-contact`:
+
+- **Hero:** `TANISH` H1, `Compra fácil y rápida` H2, texto breve, 2 botones `Ver productos → /shop` + `Comprar por WhatsApp → /contacto`
+- **Categorías:** `[product_categories number="6" columns="3" parent="0"]` con `id="categorias"` para ancla del menú
+- **Productos:** `[products limit="8" columns="4" orderby="date" order="DESC"]`
+- **Beneficios:** grid 2x2 en `tanish-benefits` (Stock actualizado, Atención directa, Compra rápida, Catálogo online)
+- **Contacto:** bloque oscuro `tanish-contact` con invitación WhatsApp
+
+### Estilo visual
+
+- **Archivo versionado:** `plugins/tanish-inventory/assets/tanish-storefront.css` (5.5 KB, `ver=0.2.1`) — documentado en repo, no `Customizer` suelto
+- **Encole:** `wp_enqueue_style('tanish-storefront', plugin_dir_url() . 'assets/tanish-storefront.css', [], TANISH_INVENTORY_VERSION)` en `tanish-inventory.php:20`
+- **Paleta sobria:** `slate-900` primario, `emerald-600` acento, `slate-500` muted, bordes `slate-200`, fondo `slate-50`
+- **Jerarquía:** hero con gradiente, botones consistentes (`border-radius 8px`, hover `translateY`), cards de categorías/productos con `border-radius 12px`, `hover` sombra suave, ancho contenido `840px`, espaciado y tipografía limpia
+- **Sin Elementor, sin frameworks CSS, sin modificar WooCommerce/WordPress core**
+- **Categorías:** sin imágenes asignadas (thumbnails vacíos), pero CSS da placeholder digno con gradiente y cards elevadas — evita copyright dudoso
+
+### Ejecución reproducible
+
+```bash
+docker cp scripts/improve-storefront.php tanish-wordpress:/tmp/improve-storefront.php
+docker exec tanish-wordpress php /tmp/improve-storefront.php
+docker exec tanish-wordpress rm /tmp/improve-storefront.php
+# Salida: Coming soon: 'no' -> 'no' / Nosotros/Contacto created/exists / Inicio: updated / Menu: updated / Products found: 12
+# Idempotente: segunda ejecución → Inicio: already professional, Nosotros: exists
+```
 
 ---
 
