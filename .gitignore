@@ -1,0 +1,39 @@
+# Entorno local
+.env
+
+# WordPress core y contenido generado (se usa imagen Docker)
+wordpress/
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/backup-db/
+wp-content/backups/
+
+# Backups
+backups/
+*.sql
+*.sql.gz
+*.zip
+
+# Logs
+*.log
+logs/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Dependencias (si se añade tooling Node/PHP local en el futuro)
+node_modules/
+vendor/
+
+# OS
+.directory
