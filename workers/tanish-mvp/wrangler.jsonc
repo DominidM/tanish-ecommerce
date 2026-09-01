@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "tanish-mvp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "SITE_NAME": "TANISH",
+    "ORIGIN_URL": "https://actually-leading-serves-tanks.trycloudflare.com"
+  },
+  "env": {
+    "staging": {
+      "name": "tanish-mvp-staging",
+      "vars": {
+        "SITE_NAME": "TANISH STAGING",
+        "ORIGIN_URL": "https://actually-leading-serves-tanks.trycloudflare.com"
+      }
+    },
+    "production": {
+      "name": "tanish-mvp",
+      "vars": {
+        "SITE_NAME": "TANISH",
+        "ORIGIN_URL": "https://actually-leading-serves-tanks.trycloudflare.com"
+      }
+    }
+  }
+}
