@@ -20,11 +20,6 @@ get_header();
 
                 <?php else : ?>
 
-                    <div class="widget">
-                        <h2 class="widget-title">Buscar</h2>
-                        <?php get_product_search_form(); ?>
-                    </div>
-
                     <?php
 
                     $categories = get_terms([

@@ -16,10 +16,10 @@ define('TANISH_INVENTORY_PATH', plugin_dir_path(__FILE__));
 define('TANISH_INVENTORY_URL', plugin_dir_url(__FILE__));
 
 function tanish_inventory_require_files(): void {
-	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-whatsapp.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-capabilities.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-database.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-service.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-admin.php';
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-whatsapp.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-capabilities.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-database.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-service.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-admin.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-cpts.php';
 }
 
-function tanish_inventory_enqueue_assets() {
+function tanish_inventory_enqueue_admin_assets() {
 	wp_enqueue_style(
 		'tanish-storefront',
 		TANISH_INVENTORY_URL . 'assets/tanish-storefront.css',
@@ -27,7 +27,7 @@ function tanish_inventory_enqueue_assets() {
 		TANISH_INVENTORY_VERSION
 	);
 }
-add_action('wp_enqueue_scripts', 'tanish_inventory_enqueue_assets');
+add_action('admin_enqueue_scripts', 'tanish_inventory_enqueue_admin_assets');
 
 function tanish_inventory_woocommerce_missing_notice() {
 	?>
@@ -56,6 +56,10 @@ function tanish_inventory_bootstrap() {
 
 	if (class_exists('Tanish_WhatsApp')) {
 		new Tanish_WhatsApp();
+	}
+
+	if (class_exists('Tanish_CPTs')) {
+		new Tanish_CPTs();
 	}
 }
 add_action('plugins_loaded', 'tanish_inventory_bootstrap');
