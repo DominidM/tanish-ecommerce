@@ -6,21 +6,21 @@
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
     "SITE_NAME": "TANISH",
-    "ORIGIN_URL": "https://actually-leading-serves-tanks.trycloudflare.com"
+    "ORIGIN_URL": "https://tanish.example.com"
   },
   "env": {
     "staging": {
       "name": "tanish-mvp-staging",
       "vars": {
         "SITE_NAME": "TANISH STAGING",
-        "ORIGIN_URL": "https://actually-leading-serves-tanks.trycloudflare.com"
+        "ORIGIN_URL": "https://tanish.example.com"
       }
     },
     "production": {
       "name": "tanish-mvp",
       "vars": {
         "SITE_NAME": "TANISH",
-        "ORIGIN_URL": "https://actually-leading-serves-tanks.trycloudflare.com"
+        "ORIGIN_URL": "https://tanish.example.com"
       }
     }
   }

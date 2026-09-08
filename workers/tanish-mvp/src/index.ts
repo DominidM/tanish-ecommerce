@@ -18,7 +18,7 @@ function htmlResponse(body: string, status = 200): Response {
 function fallbackPage(siteName: string, originUrl?: string): Response {
   const originLine = originUrl
     ? `<p class="meta">Origen configurado: <code>${escapeHtml(originUrl)}</code></p>`
-    : `<p class="meta">Falta configurar <code>ORIGIN_URL</code> para apuntar a tu WordPress o Tunnel.</p>`;
+    : `<p class="meta">Falta configurar <code>ORIGIN_URL</code> para apuntar a tu WordPress en producción.</p>`;
 
   return htmlResponse(`
 <!doctype html>

@@ -1,5 +1,8 @@
 # Entorno local
 .env
+.env.*
+!.env.example
+!.env.production.example
 
 # WordPress core y contenido generado (se usa imagen Docker)
 wordpress/
@@ -8,6 +11,10 @@ wp-content/cache/
 wp-content/upgrade/
 wp-content/backup-db/
 wp-content/backups/
+
+# Producción / Caddy / despliegue
+caddy/*
+!caddy/Caddyfile
 
 # Backups
 backups/

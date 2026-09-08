@@ -302,6 +302,34 @@ docker compose config
 
 ---
 
+## Producción / VPS (sin Quick Tunnel)
+
+Se recomienda desplegar en un VPS Linux permanente usando Docker Compose + Cloudflare DNS. La ruta pública debe ser:
+
+```text
+Usuario -> Cloudflare -> VPS -> Caddy -> WordPress
+```
+
+No se recomienda seguir usando `*.trycloudflare.com`, `quick tunnel` ni `ngrok` para la producción del sitio.
+
+### Archivos de producción preparados
+
+- `docker-compose.prod.yml`
+- `.env.production.example`
+- `scripts/deploy-production.sh`
+- `scripts/backup-production.sh`
+- `docs/DEPLOYMENT.md`
+
+### Configuración recomendada
+
+```bash
+cp .env.production.example .env.production
+# ajustar valores reales del VPS y del dominio
+./scripts/deploy-production.sh
+```
+
+> El repositorio no incluye secretos ni `.env` reales. El entorno local y el entorno de producción quedan separadas.
+
 ## Importante sobre los Datos
 
 ### `docker compose down`

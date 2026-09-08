@@ -1,0 +1,92 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: tanish-prod-mysql
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-tanish_wordpress}
+      MYSQL_USER: ${MYSQL_USER:-tanish_wp}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required. Set it in .env.production}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required. Set it in .env.production}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    expose:
+      - "3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - tanish-network
+
+  wordpress:
+    image: wordpress:php8.3-apache
+    container_name: tanish-prod-wordpress
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:-tanish_wordpress}
+      WORDPRESS_DB_USER: ${MYSQL_USER:-tanish_wp}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required. Set it in .env.production}
+      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX:-wp_}
+      WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', '${WORDPRESS_URL}');
+        define('WP_SITEURL', '${WORDPRESS_URL}');
+        define('FORCE_SSL_ADMIN', true);
+        define('FS_METHOD', 'direct');
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./plugins/tanish-inventory:/var/www/html/wp-content/plugins/tanish-inventory:ro
+      - ./themes/tanish-storefront:/var/www/html/wp-content/themes/tanish-storefront:ro
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsSL http://127.0.0.1/ >/dev/null 2>&1 || wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 45s
+    networks:
+      - tanish-network
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: tanish-prod-caddy
+    restart: unless-stopped
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    environment:
+      CADDY_DOMAIN: ${CADDY_DOMAIN:-tanish.example.com}
+      CADDY_EMAIL: ${CADDY_EMAIL:-admin@example.com}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - tanish-network
+
+volumes:
+  mysql_data:
+    name: tanish_mysql_data_prod
+  wordpress_data:
+    name: tanish_wordpress_data_prod
+  caddy_data:
+    name: tanish_caddy_data
+  caddy_config:
+    name: tanish_caddy_config
+
+networks:
+  tanish-network:
+    name: tanish-network
+    driver: bridge

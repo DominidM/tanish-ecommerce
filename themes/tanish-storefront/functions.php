@@ -61,6 +61,17 @@ function tanish_storefront_assets(): void
         [],
         file_exists($css_path) ? filemtime($css_path) : wp_get_theme()->get('Version')
     );
+
+    $storefront_css_path = WP_CONTENT_DIR . '/plugins/tanish-inventory/assets/tanish-storefront.css';
+
+    if (!wp_style_is('tanish-storefront', 'enqueued') && file_exists($storefront_css_path)) {
+        wp_enqueue_style(
+            'tanish-storefront-visual',
+            content_url('plugins/tanish-inventory/assets/tanish-storefront.css'),
+            [],
+            filemtime($storefront_css_path)
+        );
+    }
 }
 
 add_action('wp_enqueue_scripts', 'tanish_storefront_assets');

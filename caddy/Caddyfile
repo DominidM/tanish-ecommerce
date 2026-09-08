@@ -1,0 +1,13 @@
+{
+  email {$CADDY_EMAIL}
+  auto_https disable_redirects
+}
+
+{$CADDY_DOMAIN} {
+  encode gzip
+  reverse_proxy wordpress:80
+}
+
+:80 {
+  respond 404
+}
