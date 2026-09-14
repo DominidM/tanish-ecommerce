@@ -155,6 +155,9 @@ tanish-ecommerce/
 │       └── assets/
 │           └── tanish-storefront.css      # Estilos sobrios v0.2.1
 │
+├── backups/                    # Backups de BD (NO se sube a Git)
+│   └── .gitkeep
+│
 ├── docs/
 │   ├── arquitectura/
 │   ├── requisitos/
@@ -162,6 +165,8 @@ tanish-ecommerce/
 │   └── evidencias/
 │
 └── scripts/
+    ├── backup.sh               # Backup local de BD (para compartir al equipo)
+    ├── restore.sh              # Restore de BD desde dump
     ├── setup-wordpress.php     # Portada + limpieza (idempotente)
     └── improve-storefront.php  # Mejora visual + menú (idempotente)
 ```
@@ -248,6 +253,58 @@ Esperar ~30s a que MySQL pase el `healthcheck` (`healthy`) y WordPress copie los
 2. Seleccionar idioma
 3. Crear usuario administrador, contraseña y email
 4. Instalar WooCommerce desde `Plugins > Añadir nuevo` (paso posterior)
+
+---
+
+## Setup del equipo (con datos existentes)
+
+Cuando un miembro del equipo clona el repo, obtiene el codigo pero **no la base de datos** (usuarios, productos, configuracion). Para tener el mismo entorno:
+
+### 1. Clonar y configurar
+
+```bash
+git clone https://github.com/DominidM/tanish-ecommerce.git
+cd tanish-ecommerce
+cp .env.example .env
+# Copiar las credenciales del .env del repositorio principal (pedir al lead)
+nano .env
+```
+
+### 2. Levantar servicios
+
+```bash
+docker compose up -d
+```
+
+Esperar ~30s hasta que MySQL este `healthy`:
+
+```bash
+docker compose ps
+```
+
+### 3. Restaurar la base de datos
+
+Pedir al lead el archivo de backup mas reciente (`.sql.gz`). Luego ejecutar:
+
+```bash
+./scripts/restore.sh backups/tanish_backup_XXXXXXXX_XXXXXX.sql.gz
+```
+
+> **Nota:** El restore detiene WordPress, reemplaza la BD completamente, y vuelve a iniciar WordPress.
+
+### 4. Verificar
+
+Abrir http://localhost:8080 — debería verse la tienda con los productos y configuracion existentes.
+
+### Generar un backup (solo el lead)
+
+```bash
+./scripts/backup.sh
+```
+
+Esto crea un archivo `backups/tanish_backup_XXXXXXXX_XXXXXX.sql.gz` que se puede compartir con el equipo.
+
+> Los archivos `.sql.gz` estan en `.gitignore` y **no se suben al repositorio**. Compartirlos por WhatsApp, Drive, o el canal que el equipo use.
 
 ---
 
