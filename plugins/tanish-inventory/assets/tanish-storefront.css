@@ -1,18 +1,22 @@
 /**
- * TANISH Storefront - Estilos profesionales sobrios
- * Version: 0.2.1
+ * TANISH Storefront - Estilos profesionales con identidad visual TANISH
+ * Version: 1.0.0
+ * Paleta: Verde #22C55E | Azul #0F3B5F | Amarillo #FBBF24 | Fondo #F8F9F4
  * Carga vía TANISH Inventory plugin (wp_enqueue_style)
  */
 
 /* Tipografía y ancho base - mejora Twenty Twenty-Five */
 :root {
-  --tanish-primary: #0f172a; /* slate-900 */
-  --tanish-primary-hover: #1e293b;
-  --tanish-accent: #059669; /* emerald-600 */
-  --tanish-accent-hover: #047857;
-  --tanish-muted: #64748b;
-  --tanish-border: #e2e8f0;
-  --tanish-bg-soft: #f8fafc;
+  --tanish-primary: #0F3B5F; /* azul TANISH */
+  --tanish-primary-hover: #0D3456;
+  --tanish-accent: #22C55E; /* verde TANISH */
+  --tanish-accent-hover: #16A34A;
+  --tanish-muted: #6B7280;
+  --tanish-border: #E5E7EB;
+  --tanish-bg-soft: #F8F9F4;
+  --tanish-text: #1F2937;
+  --tanish-yellow: #FBBF24;
+  --tanish-red: #EF4444;
 }
 
 body {
@@ -27,7 +31,7 @@ body {
 
 /* Hero - Inicio */
 .tanish-hero {
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  background: linear-gradient(180deg, #F8F9F4 0%, #ffffff 100%);
   border: 1px solid var(--tanish-border);
   border-radius: 16px;
   padding: 3rem 2rem;
@@ -68,14 +72,15 @@ body {
   letter-spacing: 0.01em;
   padding: 0.85em 1.6em !important;
   transition: all 0.2s ease;
+  font-family: Poppins, sans-serif;
 }
 
 .tanish-hero .wp-block-button__link {
-  background: var(--tanish-primary) !important;
+  background: var(--tanish-accent) !important;
 }
 
 .tanish-hero .wp-block-button__link:hover {
-  background: var(--tanish-primary-hover) !important;
+  background: var(--tanish-accent-hover) !important;
   transform: translateY(-1px);
 }
 
@@ -163,7 +168,7 @@ body {
 
 /* Si no hay imagen, mostrar placeholder digno */
 .product-category img[width="1"][height="1"] {
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  background: linear-gradient(135deg, #F8F9F4 0%, #E5E7EB 100%);
   min-height: 140px;
 }
 
@@ -195,7 +200,7 @@ body {
 }
 
 .woocommerce ul.products li.product .price {
-  color: var(--tanish-accent) !important;
+  color: var(--tanish-text) !important;
   font-weight: 700 !important;
   font-size: 1.05rem !important;
   padding: 0 1rem 0.9rem;

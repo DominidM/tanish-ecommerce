@@ -15,8 +15,8 @@ defined('ABSPATH') || exit;
     <div class="header-top">
         <div class="tanish-container header-top-inner">
 
-            <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
-                TANISH
+            <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" style="color: #0F3B5F;">
+                <img src="https://res.cloudinary.com/dp1vgjhsq/image/upload/v1789516962/logo-tanish_ekdvpd.png" alt="logo" style="width: 52px; height: 52px; object-fit: contain; transform: scale(3);">
             </a>
 
             <div class="header-search">

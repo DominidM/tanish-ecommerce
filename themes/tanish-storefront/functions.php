@@ -62,6 +62,13 @@ function tanish_storefront_assets(): void
         file_exists($css_path) ? filemtime($css_path) : wp_get_theme()->get('Version')
     );
 
+    wp_enqueue_style(
+        'tanish-poppins',
+        'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap',
+        [],
+        null
+    );
+
     $js_path = get_stylesheet_directory() . '/assets/js/storefront.js';
 
     if (file_exists($js_path)) {

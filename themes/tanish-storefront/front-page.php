@@ -236,8 +236,15 @@ if ($has_videos) {
                         <article class="product-card" data-reveal="up" style="--reveal-delay: <?php echo esc_attr($i * 70); ?>ms">
                             <a class="product-image" href="<?php echo esc_url($product_url); ?>">
                                 <?php echo wp_kses_post($product->get_image('woocommerce_thumbnail')); ?>
-                                <?php if ($product->is_in_stock()) : ?>
-                                    <span class="stock-badge">Disponible</span>
+                                <?php if ($product->is_in_stock()) :
+                                    $stock_qty = $product->get_stock_quantity();
+                                    if ($stock_qty !== null && $stock_qty <= 5) : ?>
+                                        <span class="stock-badge stock-badge--low">Stock bajo</span>
+                                    <?php else : ?>
+                                        <span class="stock-badge">Disponible</span>
+                                    <?php endif;
+                                else : ?>
+                                    <span class="stock-badge stock-badge--out">Agotado</span>
                                 <?php endif; ?>
                             </a>
                             <div class="product-body">

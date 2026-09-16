@@ -3,7 +3,7 @@ Theme Name: TANISH Storefront
 Theme URI: https://github.com/DominidM/tanish-ecommerce
 Author: Juan Dominid Muñoz Eslava
 Description: Tema comercial personalizado para TANISH S.A.C. integrado con WooCommerce.
-Version: 2.0.0
+Version: 3.0.0
 Text Domain: tanish-storefront
 */
 
@@ -14,18 +14,23 @@ Text Domain: tanish-storefront
 :root {
     --t-bg: #ffffff;
     --t-surface: #ffffff;
-    --t-surface-alt: #f6f7f9;
-    --t-navy: #081525;
-    --t-navy-light: #0b1728;
-    --t-primary: #111827;
-    --t-secondary: #2f3747;
-    --t-muted: #667085;
-    --t-border: #e5e7eb;
-    --t-accent: #16a34a;
-    --t-accent-dark: #15803d;
-    --t-accent-soft: #ecfdf5;
+    --t-surface-alt: #F8F9F4;
+    --t-navy: #0F3B5F;
+    --t-navy-light: #0D3456;
+    --t-primary: #1F2937;
+    --t-secondary: #374151;
+    --t-muted: #6B7280;
+    --t-border: #E5E7EB;
+    --t-accent: #22C55E;
+    --t-accent-dark: #16A34A;
+    --t-accent-soft: #ECFDF5;
+    --t-yellow: #FBBF24;
+    --t-yellow-dark: #F59E0B;
+    --t-yellow-soft: #FEF9C3;
+    --t-red: #EF4444;
+    --t-red-soft: #FEF2F2;
     --t-container: 1280px;
-    --t-radius: 4px;
+    --t-radius: 8px;
 }
 
 *,
@@ -43,6 +48,7 @@ body {
     background: var(--t-bg);
     color: var(--t-primary);
     font-family:
+        Poppins,
         Inter,
         ui-sans-serif,
         system-ui,
@@ -106,12 +112,12 @@ ul, ol {
 }
 
 .btn-primary {
-    background: var(--t-primary);
+    background: var(--t-accent);
     color: #fff;
 }
 
 .btn-primary:hover {
-    background: #0f172a;
+    background: var(--t-accent-dark);
 }
 
 .btn-secondary {
@@ -142,6 +148,17 @@ ul, ol {
 .btn-whatsapp:hover {
     background: var(--t-accent-dark);
     color: #fff;
+}
+
+.btn-yellow {
+    background: var(--t-yellow);
+    color: var(--t-primary);
+    border-color: var(--t-yellow);
+}
+
+.btn-yellow:hover {
+    background: var(--t-yellow-dark);
+    color: var(--t-primary);
 }
 
 .btn-link {
@@ -244,7 +261,7 @@ body.admin-bar .site-header {
 }
 
 .header-search-form input[type="search"]:focus {
-    border-color: var(--t-primary);
+    border-color: var(--t-accent);
     background: #fff;
 }
 
@@ -320,7 +337,7 @@ body.admin-bar .site-header {
 
 .header-nav .menu a:hover,
 .header-nav .menu .current-menu-item > a {
-    color: var(--t-primary);
+    color: var(--t-accent);
 }
 
 /* ================================================
@@ -648,7 +665,7 @@ body.admin-bar .site-header {
 }
 
 .category-card:hover .category-name {
-    color: var(--t-accent-dark);
+    color: var(--t-accent);
 }
 
 .category-count {
@@ -711,7 +728,19 @@ body.admin-bar .site-header {
     color: var(--t-accent-dark);
     font-size: 0.7rem;
     font-weight: 700;
-    border: 1px solid rgba(22, 163, 74, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.stock-badge--low {
+    background: var(--t-yellow-soft);
+    color: var(--t-yellow-dark);
+    border-color: rgba(251, 191, 36, 0.2);
+}
+
+.stock-badge--out {
+    background: var(--t-red-soft);
+    color: var(--t-red);
+    border-color: rgba(239, 68, 68, 0.2);
 }
 
 .product-body {
@@ -731,7 +760,7 @@ body.admin-bar .site-header {
 }
 
 .product-card:hover .product-name {
-    color: var(--t-accent-dark);
+    color: var(--t-accent);
 }
 
 .product-name a {
@@ -849,7 +878,7 @@ body.admin-bar .site-header {
    ================================================ */
 
 .site-footer {
-    background: #081525;
+    background: #0F3B5F;
     color: #9aa7b8;
 }
 
@@ -886,7 +915,7 @@ body.admin-bar .site-header {
 .footer-desc {
     max-width: 300px;
     margin-top: 12px;
-    color: #9aa7b8;
+    color: rgba(255, 255, 255, 0.7);
     font-size: 0.88rem;
     line-height: 1.7;
 }
@@ -907,7 +936,7 @@ body.admin-bar .site-header {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: #9aa7b8;
+    color: rgba(255, 255, 255, 0.7);
     font-size: 0.88rem;
     text-decoration: none;
     transition: color 0.18s ease, transform 0.18s ease;
@@ -949,7 +978,7 @@ body.admin-bar .site-header {
 
 .footer-bottom-bar {
     margin-top: 48px;
-    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .footer-bottom-inner {
@@ -962,7 +991,7 @@ body.admin-bar .site-header {
 
 .footer-copyright {
     margin: 0;
-    color: #6b7a90;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 0.82rem;
 }
 
@@ -976,7 +1005,7 @@ body.admin-bar .site-header {
 }
 
 .footer-sg-text {
-    color: #6b7a90;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 0.75rem;
 }
 
@@ -985,6 +1014,7 @@ body.admin-bar .site-header {
     height: auto;
     opacity: 0.85;
     transition: opacity 0.2s ease, transform 0.2s ease;
+    filter: brightness(0) invert(1);
 }
 
 .tanish-footer-sg:hover img {
@@ -1206,9 +1236,9 @@ body.admin-bar .site-header {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: #25D366;
+    background: var(--t-accent);
     color: #fff;
-    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
     text-decoration: none;
     flex-shrink: 0;
     transition: transform 0.18s ease, box-shadow 0.18s ease;
@@ -1216,7 +1246,7 @@ body.admin-bar .site-header {
 
 .whatsapp-circle:hover {
     transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
 }
 
 .whatsapp-circle svg {
@@ -1290,7 +1320,7 @@ body.admin-bar .site-header {
 }
 
 .shop-search-form input[type="search"]:focus {
-    border-color: var(--t-primary);
+    border-color: var(--t-accent);
 }
 
 .shop-search-form input[type="search"]::placeholder {
@@ -1338,7 +1368,7 @@ body.admin-bar .site-header {
 }
 
 .shop-category-list a:hover {
-    color: var(--t-accent-dark);
+    color: var(--t-accent);
 }
 
 .shop-content {
@@ -1528,7 +1558,7 @@ body.admin-bar .site-header {
     min-height: 38px;
     padding: 0 16px !important;
     border-radius: var(--t-radius) !important;
-    background: var(--t-primary) !important;
+    background: var(--t-accent) !important;
     color: #fff !important;
     border: 0 !important;
     font-weight: 700 !important;
@@ -1538,7 +1568,7 @@ body.admin-bar .site-header {
 
 .woocommerce ul.products li.product .button:hover,
 .woocommerce-page ul.products li.product .button:hover {
-    background: #0f172a !important;
+    background: var(--t-accent-dark) !important;
     color: #fff !important;
 }
 
@@ -1583,9 +1613,9 @@ body.admin-bar .site-header {
 }
 
 .woocommerce nav.woocommerce-pagination ul li .current {
-    background: var(--t-navy-light);
+    background: var(--t-navy);
     color: #fff;
-    border-color: var(--t-navy-light);
+    border-color: var(--t-navy);
 }
 
 .woocommerce .woocommerce-notices-wrapper,
@@ -1657,84 +1687,84 @@ body.admin-bar .site-header {
         display: none;
     }
 
-    .hero-content {
-        text-align: center;
-        align-items: center;
-    }
+.hero-content {
+    text-align: center;
+    align-items: center;
+}
 
-    .tanish-slide-desc {
-        text-align: center;
-    }
+.tanish-slide-desc {
+    text-align: center;
+}
 
-    .tanish-slide-actions {
-        justify-content: center;
-    }
+.tanish-slide-actions {
+    justify-content: center;
+}
 
-    .category-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.category-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
 
-    .tanish-products {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.tanish-products {
+    grid-template-columns: repeat(2, 1fr);
+}
 
-    .videos-layout {
-        grid-template-columns: 1fr;
-    }
+.videos-layout {
+    grid-template-columns: 1fr;
+}
 
-    .video-sidebar {
-        flex-direction: row;
-        overflow-x: auto;
-        gap: 16px;
-        padding-bottom: 8px;
-    }
+.video-sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 16px;
+    padding-bottom: 8px;
+}
 
-    .video-sidebar-item {
-        flex-direction: column;
-        min-width: 160px;
-        border-bottom: none;
-        padding: 0;
-    }
+.video-sidebar-item {
+    flex-direction: column;
+    min-width: 160px;
+    border-bottom: none;
+    padding: 0;
+}
 
-    .video-sidebar-thumb {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 16 / 9;
-    }
+.video-sidebar-thumb {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+}
 
-    .benefits {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.benefits {
+    grid-template-columns: repeat(2, 1fr);
+}
 
-    .benefit:nth-child(2) {
-        border-right: none;
-    }
+.benefit:nth-child(2) {
+    border-right: none;
+}
 
-    .benefit:nth-child(3) {
-        border-top: 1px solid var(--t-border);
-    }
+.benefit:nth-child(3) {
+    border-top: 1px solid var(--t-border);
+}
 
-    .benefit:nth-child(4) {
-        border-top: 1px solid var(--t-border);
-        border-right: none;
-    }
+.benefit:nth-child(4) {
+    border-top: 1px solid var(--t-border);
+    border-right: none;
+}
 
-    .whatsapp-cta {
-        flex-direction: column;
-        text-align: center;
-    }
+.whatsapp-cta {
+    flex-direction: column;
+    text-align: center;
+}
 
-    .tanish-shop-layout {
-        grid-template-columns: 200px minmax(0, 1fr);
-        gap: 28px;
-    }
+.tanish-shop-layout {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 28px;
+}
 
-    .woocommerce ul.products,
-    .woocommerce-page ul.products,
-    .woocommerce ul.products.columns-4,
-    .woocommerce-page ul.products.columns-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+.woocommerce ul.products,
+.woocommerce-page ul.products,
+.woocommerce ul.products.columns-4,
+.woocommerce-page ul.products.columns-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 }
 
 @media (max-width: 768px) {
@@ -1946,17 +1976,17 @@ body.admin-bar .site-header {
 
 .tanish-product-page .woocommerce-breadcrumb {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--t-muted);
     margin-bottom: 24px;
 }
 
 .tanish-product-page .woocommerce-breadcrumb a {
-    color: var(--text-muted);
+    color: var(--t-muted);
     text-decoration: none;
 }
 
 .tanish-product-page .woocommerce-breadcrumb a:hover {
-    color: var(--navy);
+    color: var(--t-navy);
 }
 
 /* ── 2-Column Grid ─────────────────────────────────── */
@@ -1983,7 +2013,7 @@ body.admin-bar .site-header {
 .tanish-product-gallery .woocommerce-product-gallery__wrapper {
     border-radius: 6px;
     overflow: hidden;
-    background: var(--bg-alt);
+    background: var(--t-surface-alt);
 }
 
 .tanish-product-gallery .woocommerce-product-gallery__image {
@@ -1991,7 +2021,7 @@ body.admin-bar .site-header {
     align-items: center;
     justify-content: center;
     min-height: 400px;
-    background: var(--bg-alt);
+    background: var(--t-surface-alt);
 }
 
 .tanish-product-gallery .woocommerce-product-gallery__image img {
@@ -2005,7 +2035,7 @@ body.admin-bar .site-header {
 .tanish-product-summary .product_title {
     font-size: 1.75rem;
     font-weight: 700;
-    color: var(--navy);
+    color: var(--t-primary);
     margin: 0 0 8px;
     line-height: 1.3;
 }
@@ -2013,28 +2043,28 @@ body.admin-bar .site-header {
 .tanish-product-summary .price {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--navy);
+    color: var(--t-primary);
     margin: 0 0 16px;
 }
 
 .tanish-product-summary .price del {
-    color: var(--text-muted);
+    color: var(--t-muted);
     font-size: 1rem;
     font-weight: 400;
 }
 
 .tanish-product-summary .price ins {
-    color: var(--navy);
+    color: var(--t-primary);
     text-decoration: none;
 }
 
 .tanish-product-summary .woocommerce-product-details__short-description {
     font-size: 0.95rem;
-    color: var(--text-muted);
+    color: var(--t-muted);
     line-height: 1.7;
     margin-bottom: 20px;
     padding-bottom: 20px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--t-border);
 }
 
 /* ── WhatsApp CTA ──────────────────────────────────── */
@@ -2047,10 +2077,10 @@ body.admin-bar .site-header {
     display: inline-flex;
     align-items: center;
     gap: 0;
-    background: #25D366;
+    background: var(--t-accent);
     color: #fff;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--t-radius);
     padding: 14px 28px;
     font-size: 1rem;
     font-weight: 600;
@@ -2061,7 +2091,7 @@ body.admin-bar .site-header {
 }
 
 .tanish-whatsapp-wrapper .tanish-whatsapp-button:hover {
-    background: #1da851;
+    background: var(--t-accent-dark);
     transform: translateY(-1px);
 }
 
@@ -2073,9 +2103,9 @@ body.admin-bar .site-header {
 
 .tanish-product-summary .product_meta {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--t-muted);
     padding-top: 16px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--t-border);
     margin-top: 4px;
 }
 
@@ -2087,7 +2117,7 @@ body.admin-bar .site-header {
 }
 
 .tanish-product-summary .product_meta a {
-    color: var(--navy);
+    color: var(--t-navy);
     text-decoration: none;
 }
 
@@ -2099,7 +2129,7 @@ body.admin-bar .site-header {
 
 .woocommerce-tabs {
     margin-top: 48px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--t-border);
     padding-top: 32px;
 }
 
@@ -2107,7 +2137,7 @@ body.admin-bar .site-header {
     list-style: none;
     display: flex;
     gap: 0;
-    border-bottom: 2px solid var(--border);
+    border-bottom: 2px solid var(--t-border);
     margin: 0 0 24px;
     padding: 0;
 }
@@ -2121,7 +2151,7 @@ body.admin-bar .site-header {
     padding: 12px 24px;
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--text-muted);
+    color: var(--t-muted);
     text-decoration: none;
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
@@ -2129,25 +2159,25 @@ body.admin-bar .site-header {
 }
 
 .woocommerce-tabs .wc-tabs li a:hover {
-    color: var(--navy);
+    color: var(--t-navy);
 }
 
 .woocommerce-tabs .wc-tabs li.active a {
-    color: var(--navy);
-    border-bottom-color: var(--navy);
+    color: var(--t-navy);
+    border-bottom-color: var(--t-navy);
 }
 
 .woocommerce-Tabs-panel {
     padding: 0;
     font-size: 0.95rem;
-    color: var(--text);
+    color: var(--t-primary);
     line-height: 1.7;
 }
 
 .woocommerce-Tabs-panel h2 {
     font-size: 1.2rem;
     font-weight: 600;
-    color: var(--navy);
+    color: var(--t-navy);
     margin: 0 0 12px;
 }
 
@@ -2160,13 +2190,13 @@ body.admin-bar .site-header {
 .related.products {
     margin-top: 48px;
     padding-top: 32px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--t-border);
 }
 
 .related.products h2 {
     font-size: 1.3rem;
     font-weight: 700;
-    color: var(--navy);
+    color: var(--t-navy);
     margin: 0 0 20px;
 }
 
