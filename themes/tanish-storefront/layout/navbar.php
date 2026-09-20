@@ -8,5 +8,6 @@
             'fallback_cb'    => 'tanish_storefront_menu_fallback',
         ]);
         ?>
+        <span class="nav-underline"></span>
     </div>
 </nav>

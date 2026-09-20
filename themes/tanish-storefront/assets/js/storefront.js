@@ -17,6 +17,36 @@
     onReady(function () {
 
         /* -------------------------------------------
+           CART SIDEBAR - Toggle open/close
+        ------------------------------------------- */
+        var cartToggle = document.getElementById('cart-toggle');
+        var cartClose = document.getElementById('cart-close');
+        var cartOverlay = document.getElementById('cart-overlay');
+        var cartSidebar = document.getElementById('cart-sidebar');
+
+        function openCart() {
+            if (cartSidebar) cartSidebar.classList.add('is-open');
+            if (cartOverlay) cartOverlay.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCart() {
+            if (cartSidebar) cartSidebar.classList.remove('is-open');
+            if (cartOverlay) cartOverlay.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        if (cartToggle) cartToggle.addEventListener('click', openCart);
+        if (cartClose) cartClose.addEventListener('click', closeCart);
+        if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && cartSidebar && cartSidebar.classList.contains('is-open')) {
+                closeCart();
+            }
+        });
+
+        /* -------------------------------------------
            HEADER SCROLL (shadow only, no shrink)
         ------------------------------------------- */
         var header = document.querySelector('.site-header');
@@ -243,6 +273,56 @@
         var pagination = document.querySelector('.woocommerce-pagination');
         if (shopCount && pagination) {
             pagination.parentNode.insertBefore(shopCount, pagination.nextSibling);
+        }
+
+        /* -------------------------------------------
+           NAV UNDERLINE - Sliding active indicator
+        ------------------------------------------- */
+        var underline = document.querySelector('.nav-underline');
+        var navMenu = document.querySelector('.header-nav .menu');
+        if (underline && navMenu) {
+            var menuRect = navMenu.getBoundingClientRect();
+            var innerRect = navMenu.parentElement.getBoundingClientRect();
+
+            function moveUnderline(el) {
+                var r = el.getBoundingClientRect();
+                underline.style.left = (r.left - innerRect.left) + 'px';
+                underline.style.width = r.width + 'px';
+            }
+
+            var active = navMenu.querySelector('.current-menu-item > a, .current_page_item > a');
+            if (!active) {
+                var links = navMenu.querySelectorAll('a');
+                for (var i = 0; i < links.length; i++) {
+                    var href = links[i].getAttribute('href');
+                    var path = window.location.pathname.replace(/\/$/, '');
+                    var linkPath = href ? new URL(href, window.location.origin).pathname.replace(/\/$/, '') : '';
+                    if (linkPath === path || window.location.pathname === href) {
+                        active = links[i];
+                        break;
+                    }
+                }
+            }
+
+            if (active) {
+                moveUnderline(active);
+            }
+
+            var navLinks = navMenu.querySelectorAll('a');
+            for (var n = 0; n < navLinks.length; n++) {
+                navLinks[n].addEventListener('mouseenter', function () {
+                    moveUnderline(this);
+                });
+            }
+
+            navMenu.addEventListener('mouseleave', function () {
+                if (active) moveUnderline(active);
+            });
+
+            window.addEventListener('resize', function () {
+                innerRect = navMenu.parentElement.getBoundingClientRect();
+                if (active) moveUnderline(active);
+            });
         }
 
         /* -------------------------------------------

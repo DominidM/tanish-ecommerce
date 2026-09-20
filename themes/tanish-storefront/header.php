@@ -32,6 +32,18 @@ defined('ABSPATH') || exit;
             </div>
 
             <div class="header-actions">
+                <button class="header-cart-btn" id="cart-toggle" aria-label="Carrito de compras">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    <span class="cart-count" id="cart-count">
+                        <?php
+                        if (function_exists('WC') && WC()->cart) {
+                            echo esc_html(WC()->cart->get_cart_contents_count());
+                        } else {
+                            echo '0';
+                        }
+                        ?>
+                    </span>
+                </button>
                 <?php
                 $login_redirect = admin_url('admin.php?page=tanish-inventory');
                 if (is_user_logged_in()) :
@@ -62,3 +74,5 @@ defined('ABSPATH') || exit;
 
     <?php get_template_part('layout/navbar'); ?>
 </header>
+
+<?php get_template_part('layout/cart-sidebar'); ?>
