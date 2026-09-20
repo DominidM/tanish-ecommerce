@@ -8,6 +8,12 @@ get_header();
 
 <main id="main" class="site-main tanish-shop-main" role="main">
 
+    <?php
+    $page_title = 'Tienda';
+    $page_subtitle = 'Explora nuestro catálogo de productos';
+    get_template_part('layout/page-hero');
+    ?>
+
     <div class="tanish-container">
 
         <div class="tanish-shop-layout">
