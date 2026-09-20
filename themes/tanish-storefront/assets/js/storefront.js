@@ -237,6 +237,15 @@
         }
 
         /* -------------------------------------------
+           SHOP - Move result count below pagination
+        ------------------------------------------- */
+        var shopCount = document.querySelector('.shop-toolbar-inner');
+        var pagination = document.querySelector('.woocommerce-pagination');
+        if (shopCount && pagination) {
+            pagination.parentNode.insertBefore(shopCount, pagination.nextSibling);
+        }
+
+        /* -------------------------------------------
            SCROLL REVEAL - IntersectionObserver
         ------------------------------------------- */
         var revealElements = document.querySelectorAll('[data-reveal]');

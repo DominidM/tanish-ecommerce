@@ -8,11 +8,7 @@ get_header();
 
 <main id="main" class="site-main tanish-shop-main" role="main">
 
-    <?php
-    $page_title = 'Tienda';
-    $page_subtitle = 'Explora nuestro catálogo de productos';
-    get_template_part('layout/page-hero');
-    ?>
+    <?php get_template_part('layout/page-hero'); ?>
 
     <div class="tanish-container">
 
@@ -59,6 +55,11 @@ get_header();
                     <?php endif; ?>
 
                 <?php endif; ?>
+
+                <div class="shop-sidebar-sort">
+                    <h2 class="widget-title">Ordenar por</h2>
+                    <?php woocommerce_catalog_ordering(); ?>
+                </div>
 
             </aside>
 
