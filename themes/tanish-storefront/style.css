@@ -625,16 +625,38 @@ body.admin-bar .site-header {
     width: 100%;
     overflow: hidden;
     display: flex;
-    justify-content: center;
-    padding: 20px 0;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px 0;
+}
+
+.tanish-promo-banner::before {
+    content: "";
+    width: 100%;
+    max-width: 1280px;
+    height: 1px;
+    background: #d0d0d0;
+    margin-bottom: 50px;
+}
+
+.tanish-promo-banner::after {
+    content: "";
+    width: 100%;
+    max-width: 1280px;
+    height: 1px;
+    background: #d0d0d0;
+    margin-top: 80px;
 }
 
 .tanish-promo-banner-img {
     width: 100%;
+    max-width: 1280px;
     height: auto;
     display: block;
     object-fit: cover;
     object-position: center;
+    border: 3px solid #e8e8e8;
+    border-radius: 8px;
 }
 
 /* ================================================

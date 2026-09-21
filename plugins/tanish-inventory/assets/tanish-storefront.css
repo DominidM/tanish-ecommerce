@@ -114,6 +114,7 @@ body {
   border: 1px solid var(--tanish-border);
   border-radius: 12px;
   padding: 2rem;
+  margin-top: 40px;
 }
 
 .tanish-benefits ul {

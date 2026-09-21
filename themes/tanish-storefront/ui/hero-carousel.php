@@ -11,7 +11,7 @@ $whatsapp_url = $whatsapp
 
 <!-- HERO -->
 <section class="tanish-hero" aria-label="Banner principal">
-    <div class="tanish-hero-bg" style="background-image: url('https://res.cloudinary.com/dp1vgjhsq/image/upload/v1789897599/hero-2_hgpp8i.png');"></div>
+    <div class="tanish-hero-bg" style="background-image: url('https://res.cloudinary.com/dp1vgjhsq/image/upload/v1790031238/banner-hero_qyfjoh.png');"></div>
     <div class="tanish-hero-overlay"></div>
     <div class="tanish-container">
         <div class="tanish-hero-inner">
