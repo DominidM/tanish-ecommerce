@@ -86,7 +86,7 @@ get_header();
     </section>
 
     <!-- SECCIÓN 4: Beneficios -->
-    <?php get_template_part('layout/benefits'); ?>
+    <?php get_template_part('ui/benefits'); ?>
 
 </main>
 

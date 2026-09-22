@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_contact_nonce'
             <div class="contacto-grid">
 
                 <div class="contacto-info">
-                    <h2 class="contacto-title">Contáctanos</h2>
+                    <h2 class="contacto-title">Escribenos</h2>
                     <p class="contacto-text">
                         Completa el formulario y nos pondremos en contacto contigo lo antes posible. También puedes escribirnos directamente por WhatsApp.
                     </p>

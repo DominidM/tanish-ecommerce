@@ -75,4 +75,4 @@ defined('ABSPATH') || exit;
     <?php get_template_part('layout/navbar'); ?>
 </header>
 
-<?php get_template_part('layout/cart-sidebar'); ?>
+<?php get_template_part('layout/shop-sidebar'); ?>
