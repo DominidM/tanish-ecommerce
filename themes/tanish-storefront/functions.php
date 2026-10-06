@@ -223,6 +223,9 @@ function tanish_storefront_menu_fallback(): void
  */
 function tanish_storefront_product_no_sidebar(): void
 {
+    if (!function_exists('is_product')) {
+        return;
+    }
     if (is_product()) {
         remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
     }
@@ -238,7 +241,7 @@ add_action('woocommerce_before_main_content', 'tanish_storefront_product_no_side
  */
 function tanish_storefront_whatsapp_button(): void
 {
-    if (!is_product()) {
+    if (!function_exists('is_product') || !is_product()) {
         return;
     }
 
@@ -295,6 +298,10 @@ function tanish_storefront_whatsapp_button(): void
  */
 function tanish_storefront_whatsapp_button_hook(): void
 {
+    // Only run if WooCommerce is active and we're on a product page
+    if (!function_exists('is_product')) {
+        return;
+    }
     if (is_product()) {
         add_action('woocommerce_single_product_summary', 'tanish_storefront_whatsapp_button', 35);
     }
@@ -307,7 +314,7 @@ add_action('wp', 'tanish_storefront_whatsapp_button_hook');
  */
 function tanish_storefront_wc_tabs_translation(array $tabs): array
 {
-    if (!is_product()) {
+    if (!function_exists('is_product') || !is_product()) {
         return $tabs;
     }
 

@@ -11,7 +11,7 @@ if (is_front_page()) {
 } elseif (is_page('contacto')) {
     $page_title = 'Contacto';
     $page_subtitle = 'Estamos aquí para ayudarte. Escríbenos por WhatsApp o completa el formulario.';
-} elseif (is_product()) {
+} elseif (function_exists('is_product') && is_product()) {
     $page_title = get_the_title();
     $page_subtitle = '';
 } elseif (is_page()) {
