@@ -21,6 +21,9 @@ function tanish_storefront_setup(): void
     );
 
     add_theme_support('woocommerce');
+    add_theme_support('wc-product-gallery-zoom');      // Zoom al pasar el mouse
+    add_theme_support('wc-product-gallery-lightbox');  // Lupa: ver la foto en grande
+    add_theme_support('wc-product-gallery-slider');    // Carrusel si hay varias fotos
 
     register_nav_menus([
         'primary' => __('Menú principal', 'tanish-storefront'),
@@ -433,3 +436,22 @@ function tanish_storefront_product_overlay(): void
     echo '</div>';
 }
 add_action('woocommerce_after_shop_loop_item', 'tanish_storefront_product_overlay', 5);
+
+/**
+ * Evita la ruta (breadcrumb) duplicada en la página de producto.
+ * El tema ya muestra la suya en woocommerce/single-product.php.
+ */
+add_action('wp', function () {
+    if (function_exists('is_product') && is_product()) {
+        remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
+    }
+});
+
+/**
+ * Galería de producto: flechas para pasar las fotos.
+ */
+add_filter('woocommerce_single_product_carousel_options', function ($options) {
+    $options['directionNav'] = true;   // Flechas < >
+    $options['animationLoop'] = true;  // Al llegar a la última, vuelve a la primera
+    return $options;
+});
