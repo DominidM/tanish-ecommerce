@@ -2748,7 +2748,7 @@ body.admin-bar .site-header {
 
 .tanish-product-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 48px;
     align-items: start;
 }
@@ -2991,4 +2991,176 @@ body.admin-bar .site-header {
     .site-header.is-scrolled {
         transition: none;
     }
+}
+
+/* ================================================
+   NOSOTROS - IMÁGENES
+   ================================================ */
+
+.nosotros-image {
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--t-border);
+}
+
+.nosotros-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ================================================
+   PAGE HERO CON IMAGEN
+   ================================================ */
+
+.page-hero--image {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Capa azul semitransparente para que el texto se lea bien */
+.page-hero--image::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 59, 95, 0.72);
+}
+
+.page-hero--image .tanish-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* ================================================
+   GALERÍA DE PRODUCTO: tamaño cuadrado y ancho completo
+   ================================================ */
+
+/* Que la galería ocupe todo el ancho de su columna */
+.woocommerce .tanish-product-gallery div.images,
+.tanish-product-gallery .woocommerce-product-gallery {
+    width: 100% !important;
+    float: none !important;
+    margin: 0 !important;
+}
+
+/* Recuadro cuadrado, fondo blanco, sin barras grises */
+.tanish-product-gallery .woocommerce-product-gallery__wrapper {
+    background: #fff;
+    border: 1px solid var(--t-border);
+    border-radius: 12px;
+}
+
+.tanish-product-gallery .woocommerce-product-gallery__image {
+    min-height: 0;
+    aspect-ratio: 1 / 1;
+    background: #fff;
+}
+
+.tanish-product-gallery .woocommerce-product-gallery__image > a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* La foto completa, centrada, sin recortes (no afecta al zoom) */
+.tanish-product-gallery .woocommerce-product-gallery__image img:not(.zoomImg) {
+    width: 100%;
+    height: 100% !important;
+    object-fit: contain;
+}
+
+/* ================================================
+   GALERÍA: miniaturas y flechas tipo carrusel
+   ================================================ */
+
+.tanish-product-gallery .woocommerce-product-gallery {
+    position: relative;
+}
+
+/* Fila de miniaturas */
+.woocommerce div.product div.images .flex-control-thumbs {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px !important;
+    padding: 0;
+}
+
+.woocommerce div.product div.images .flex-control-thumbs li {
+    width: 72px !important;
+    float: none !important;
+    margin: 0 !important;
+}
+
+.woocommerce div.product div.images .flex-control-thumbs li img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    background: #fff;
+    border: 1px solid var(--t-border);
+    border-radius: 8px;
+    padding: 4px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+/* Miniatura activa: borde verde */
+.woocommerce div.product div.images .flex-control-thumbs li img.flex-active,
+.woocommerce div.product div.images .flex-control-thumbs li img:hover {
+    opacity: 1;
+    border: 2px solid var(--t-accent);
+}
+
+/* Flechas < > sobre la foto */
+.tanish-product-gallery .flex-direction-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tanish-product-gallery .flex-direction-nav a {
+    position: absolute;
+    top: 40%;
+    z-index: 5;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid var(--t-border);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0;
+    text-decoration: none;
+    color: var(--t-primary);
+}
+
+.tanish-product-gallery .flex-direction-nav a::before {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.tanish-product-gallery .flex-direction-nav .flex-prev { left: 10px; }
+.tanish-product-gallery .flex-direction-nav .flex-next { right: 10px; }
+.tanish-product-gallery .flex-direction-nav .flex-prev::before { content: "‹"; }
+.tanish-product-gallery .flex-direction-nav .flex-next::before { content: "›"; }
+
+/* ================================================
+   carrusel con varias fotos no debe desbordar
+   ================================================ */
+
+.tanish-product-gallery {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.tanish-product-gallery .flex-viewport {
+    max-width: 100%;
+    overflow: hidden;
 }
