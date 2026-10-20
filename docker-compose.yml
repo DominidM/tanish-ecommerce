@@ -1,17 +1,21 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: tanish-mysql
+    container_name: ${MYSQL_CONTAINER_NAME:?MYSQL_CONTAINER_NAME is required. Set it in .env}
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?MYSQL_DATABASE is required. Set it in .env}
+      MYSQL_USER: ${MYSQL_USER:?MYSQL_USER is required. Set it in .env}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required. Set it in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required. Set it in .env}
+    ports:
+      # MYSQL_PORT es el puerto del host; 3306 es el interno fijo del contenedor.
+      - "${MYSQL_PORT:?MYSQL_PORT is required. Set it in .env}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      # $$ evita que Compose expanda la variable; se resuelve dentro del contenedor.
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -21,18 +25,19 @@ services:
 
   wordpress:
     image: wordpress:latest
-    container_name: tanish-wordpress
+    container_name: ${WORDPRESS_CONTAINER_NAME:?WORDPRESS_CONTAINER_NAME is required. Set it in .env}
     restart: unless-stopped
     depends_on:
       mysql:
         condition: service_healthy
     ports:
-      - "8080:80"
+      - "${WORDPRESS_PORT:?WORDPRESS_PORT is required. Set it in .env}:80"
     environment:
-      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
-      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      # Se reutilizan las variables de MySQL para no duplicar credenciales.
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST:?WORDPRESS_DB_HOST is required. Set it in .env}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:?MYSQL_DATABASE is required. Set it in .env}
+      WORDPRESS_DB_USER: ${MYSQL_USER:?MYSQL_USER is required. Set it in .env}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required. Set it in .env}
     volumes:
       - wordpress_data:/var/www/html
       - ./plugins/tanish-inventory:/var/www/html/wp-content/plugins/tanish-inventory
@@ -42,11 +47,11 @@ services:
 
 volumes:
   mysql_data:
-    name: tanish_mysql_data
+    name: ${MYSQL_VOLUME_NAME:?MYSQL_VOLUME_NAME is required. Set it in .env}
   wordpress_data:
-    name: tanish_wordpress_data
+    name: ${WORDPRESS_VOLUME_NAME:?WORDPRESS_VOLUME_NAME is required. Set it in .env}
 
 networks:
   tanish-network:
-    name: tanish-network
+    name: ${NETWORK_NAME:?NETWORK_NAME is required. Set it in .env}
     driver: bridge
