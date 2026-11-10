@@ -506,19 +506,31 @@ add_filter('woocommerce_single_product_carousel_options', function ($options) {
 });
 
 /* ================================================
-   GOOGLE ANALYTICS 4 (Sprint 03 - T-19)
-   Etiqueta de Google en el <head> de todas las páginas.
+   GOOGLE TAG MANAGER (Sprint 03 - T-19)
+   Contenedor GTM-MQ2THQTS en el <head> de todas las páginas.
+   (Reemplaza el contenedor anterior GTM-W3H9VX9S: solo
+   debe existir UNA etiqueta Google por página.)
    ================================================ */
 add_action('wp_head', function () {
     ?>
-<!-- Google tag (GA4) -->
-<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-W3H9VX9S"></script>
+<!-- Google Tag Manager -->
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MQ2THQTS"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 </script>
-<!-- End Google tag -->
+<!-- End Google Tag Manager -->
+    <?php
+}, 1);
+
+// Fallback <noscript> de GTM: se inyecta justo después de <body>
+add_action('wp_body_open', function () {
+    ?>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MQ2THQTS"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
     <?php
 }, 1);
 
