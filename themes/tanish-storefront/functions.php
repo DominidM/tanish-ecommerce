@@ -455,3 +455,20 @@ add_filter('woocommerce_single_product_carousel_options', function ($options) {
     $options['animationLoop'] = true;  // Al llegar a la última, vuelve a la primera
     return $options;
 });
+
+/* ================================================
+   GOOGLE ANALYTICS 4 (Sprint 03 - T-19)
+   Etiqueta de Google en el <head> de todas las páginas.
+   ================================================ */
+add_action('wp_head', function () {
+    ?>
+<!-- Google tag (GA4) -->
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-W3H9VX9S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>
+<!-- End Google tag -->
+    <?php
+}, 1);
