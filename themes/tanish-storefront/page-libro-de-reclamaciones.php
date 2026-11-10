@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_reclamo_nonce'
         if (!isset($_POST['declaracion'])) $errors[] = 'Debes confirmar la declaración de veracidad.';
 
         // ── Anti-spam: 1 envío cada 90 s por IP + bloqueo de duplicados ──
-        $ip_key  = 'tanish_rl_' . md5(tanish_client_ip());
-        $dup_key = 'tanish_dup_' . md5($correo . '|' . $producto . '|' . $detalle);
+        $ip_key  = 'tanish_rl_reclamo_' . md5(tanish_client_ip());
+        $dup_key = 'tanish_dup_reclamo_' . md5($correo . '|' . $producto . '|' . $detalle);
 
         if (get_transient($ip_key)) {
             $errors[] = 'Espera un momento antes de enviar otro reclamo.';

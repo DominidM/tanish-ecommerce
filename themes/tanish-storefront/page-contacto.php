@@ -26,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_contact_nonce'
         if (empty($descripcion)) $errors[] = 'La descripción es obligatoria.';
 
         // ── Anti-spam: 1 envío cada 90 s por IP + bloqueo de duplicados ──
-        $ip_key  = 'tanish_rl_' . md5(tanish_client_ip());
-        $dup_key = 'tanish_dup_' . md5($correo . '|' . $tipo . '|' . $descripcion);
+        $ip_key  = 'tanish_rl_contacto_' . md5(tanish_client_ip());
+        $dup_key = 'tanish_dup_contacto_' . md5($correo . '|' . $tipo . '|' . $descripcion);
 
         if (get_transient($ip_key)) {
             $errors[] = 'Espera un momento antes de enviar otro mensaje.';
