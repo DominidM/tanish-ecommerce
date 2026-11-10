@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [production, develop]
+    branches: [produccion, develop]
   pull_request:
-    branches: [production]
+    branches: [produccion]
 
 jobs:
   validate-compose:
