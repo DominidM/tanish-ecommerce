@@ -3,7 +3,7 @@ $whatsapp_number = preg_replace('/\D/', '', (string) get_option('tanish_whatsapp
 if (!empty($whatsapp_number)) :
     $whatsapp_url = 'https://wa.me/' . $whatsapp_number;
 ?>
-<div class="tanish-whatsapp-dock">
+<div class="tanish-whatsapp-dock" id="tanish-whatsapp-dock">
     <a class="whatsapp-label" href="<?php echo esc_url($whatsapp_url); ?>" target="_blank" rel="noopener noreferrer">
         Escríbenos
     </a>

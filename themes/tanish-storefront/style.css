@@ -1409,6 +1409,16 @@ body.admin-bar .site-header {
     align-items: center;
     gap: 8px;
     z-index: 9999;
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+}
+
+/* Al llegar al pie de pagina el boton se retira para no tapar
+   la ultima fila del footer (credito de SolveGrades). */
+.tanish-whatsapp-dock.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px);
+    pointer-events: none;
 }
 
 .whatsapp-label {

@@ -339,6 +339,33 @@
         }
 
         /* -------------------------------------------
+           WHATSAPP DOCK - Se retira al llegar al pie
+           El boton flotante queda por encima de todo y
+           tapaba la ultima fila del footer (credito de
+           SolveGrades). Cuando el footer entra en pantalla
+           el boton se oculta; el propio footer ya tiene su
+           enlace de WhatsApp.
+        ------------------------------------------- */
+        var whatsappDock = document.getElementById('tanish-whatsapp-dock');
+        var siteFooter = document.querySelector('.site-footer');
+
+        if (whatsappDock && siteFooter && typeof IntersectionObserver !== 'undefined') {
+            var footerObserver = new IntersectionObserver(function (entries) {
+                for (var f = 0; f < entries.length; f++) {
+                    whatsappDock.classList.toggle('is-hidden', entries[f].isIntersecting);
+                }
+            }, {
+                root: null,
+                // Se oculta justo antes de que el boton (78 px) llegue
+                // a solaparse con la ultima fila del footer.
+                rootMargin: '0px 0px -90px 0px',
+                threshold: 0
+            });
+
+            footerObserver.observe(siteFooter);
+        }
+
+        /* -------------------------------------------
            SCROLL REVEAL - IntersectionObserver
         ------------------------------------------- */
         var revealElements = document.querySelectorAll('[data-reveal]');
