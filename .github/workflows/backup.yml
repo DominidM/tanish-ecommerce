@@ -22,6 +22,12 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
 
+      # Se sube el script desde el checkout (el VPS puede tener una versión vieja).
+      - name: Subir script de backup al VPS
+        run: |
+          scp -i ~/.ssh/id_ed25519 scripts/backup-production.sh \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:tanish-ecommerce/scripts/backup-production.sh"
+
       - name: Correr backup en el VPS
         run: |
           ssh -i ~/.ssh/id_ed25519 "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
