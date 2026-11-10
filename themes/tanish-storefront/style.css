@@ -3329,8 +3329,9 @@ body.admin-bar .site-header {
 
     .tanish-product-summary .single_add_to_cart_button {
         /* En columna, "flex: 1 1 200px" usaba 200px como ALTURA.
-           Con flex:none el boton toma su alto natural (52px). */
-        flex: none;
+           La regla de escritorio tiene mas especificidad, asi que
+           el flex se fuerza con !important (solo aqui, en movil). */
+        flex: 0 0 auto !important;
         width: 100%;
         min-height: 52px;
     }
