@@ -82,13 +82,16 @@ if (empty($tanish_errors) && isset($_GET['login_error'])) {
 get_header();
 ?>
 
-<main class="page-main">
-
-    <?php get_template_part('layout/page-hero'); ?>
+<main class="page-main page-main--acceso">
 
     <section class="acceso-section">
         <div class="tanish-container">
             <div class="acceso-wrap">
+
+                <a class="acceso-back" href="<?php echo esc_url(home_url('/')); ?>">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Volver a la tienda
+                </a>
 
                 <div class="acceso-card">
 
@@ -151,5 +154,23 @@ get_header();
     </section>
 
 </main>
+
+<?php
+// La seccion ocupa toda la pantalla restante bajo el header. Se mide la
+// altura real del header (cambia con el admin bar y en movil) y se publica
+// como variable CSS.
+?>
+<script>
+(function () {
+    function update() {
+        var header = document.querySelector('.site-header');
+        var h = header ? header.offsetHeight : 0;
+        document.documentElement.style.setProperty('--t-header-h', h + 'px');
+    }
+    update();
+    window.addEventListener('resize', update);
+    window.addEventListener('load', update);
+})();
+</script>
 
 <?php get_footer(); ?>

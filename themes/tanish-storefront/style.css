@@ -2340,14 +2340,61 @@ body.admin-bar .site-header {
    PAGINA DE ACCESO (login)
    ================================================ */
 
+/* La pagina ocupa toda la ventana: sin hero y sin scroll innecesario. */
+.page-main--acceso {
+    min-height: calc(100vh - var(--t-header-h, 110px));
+    min-height: calc(100dvh - var(--t-header-h, 110px));
+}
+
+.page-main--acceso .tanish-container {
+    padding: 0;
+}
+
 .acceso-section {
-    padding: 64px 0 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - var(--t-header-h, 110px));
+    min-height: calc(100dvh - var(--t-header-h, 110px));
+    padding: 40px 0;
     background: var(--t-bg);
 }
 
 .acceso-wrap {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.acceso-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 22px;
+    padding: 8px 16px 8px 12px;
+    border: 1px solid var(--t-border);
+    border-radius: 999px;
+    background: var(--t-surface);
+    color: var(--t-secondary);
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.acceso-back svg {
+    transition: transform 0.2s ease;
+}
+
+.acceso-back:hover {
+    color: var(--t-navy);
+    border-color: var(--t-navy);
+    transform: translateX(-2px);
+}
+
+.acceso-back:hover svg {
+    transform: translateX(-2px);
 }
 
 .acceso-card {
