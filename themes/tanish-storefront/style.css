@@ -3328,7 +3328,9 @@ body.admin-bar .site-header {
     }
 
     .tanish-product-summary .single_add_to_cart_button {
-        flex: 1 1 auto;
+        /* En columna, "flex: 1 1 200px" usaba 200px como ALTURA.
+           Con flex:none el boton toma su alto natural (52px). */
+        flex: none;
         width: 100%;
         min-height: 52px;
     }
