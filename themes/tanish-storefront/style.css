@@ -257,6 +257,18 @@ body.admin-bar .site-header {
     flex-shrink: 0;
 }
 
+/* El logo es horizontal (2172x724 px, proporcion 3:1). Antes se hacia
+   grande con transform: scale(3), lo que lo hacia desbordar de su caja
+   y solaparse con el buscador en movil. Ahora se reserva el ancho real. */
+.brand-logo {
+    display: block;
+    width: 156px;
+    height: 52px;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: left center;
+}
+
 .header-search {
     flex: 1;
     max-width: 560px;
@@ -571,6 +583,53 @@ body.admin-bar .site-header {
 
 .header-nav-inner {
     position: relative;
+}
+
+/* Boton hamburguesa: solo visible en movil. */
+.nav-toggle {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    background: transparent;
+    color: var(--t-navy);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+}
+
+.nav-toggle-bars {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 22px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.nav-toggle-bars span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 .header-nav .menu {
@@ -2681,16 +2740,69 @@ body.admin-bar .site-header {
         top: 46px;
     }
 
-    .header-nav {
-        display: none;
+    /* ── Header en movil ──────────────────────────────────
+       Fila 1: logo + acciones
+       Fila 2: buscador a ancho completo
+       Fila 3: boton de menu que despliega la navegacion
+       ─────────────────────────────────────────────────── */
+    .header-top-inner {
+        flex-wrap: wrap;
+        gap: 12px;
+        row-gap: 10px;
+    }
+
+    .brand-logo {
+        width: 132px;
+        height: 44px;
+    }
+
+    .header-actions {
+        margin-left: auto;
+        gap: 8px;
     }
 
     .header-search {
+        order: 3;
+        flex: 1 0 100%;
         max-width: 100%;
+        margin: 0;
     }
 
-    .brand {
-        font-size: 1.4rem;
+    /* ── Menu desplegable ─────────────────────────────── */
+    .header-nav {
+        display: block;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .header-nav .menu {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        padding-bottom: 8px;
+    }
+
+    .header-nav.is-open .menu {
+        display: flex;
+    }
+
+    .header-nav .menu li {
+        width: 100%;
+    }
+
+    .header-nav .menu a {
+        display: block;
+        padding: 13px 0;
+        border-top: 1px solid var(--t-border);
+        font-size: 0.95rem;
+        justify-content: flex-start;
+    }
+
+    /* El subrayado deslizante es para el menu horizontal de escritorio. */
+    .nav-underline {
+        display: none;
     }
 
     /* Hero mobile */

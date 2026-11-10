@@ -289,6 +289,30 @@
         }
 
         /* -------------------------------------------
+           MOBILE NAV TOGGLE - Menu hamburguesa
+           En movil el menu principal se oculta tras
+           un boton; aqui se alterna la clase .is-open.
+        ------------------------------------------- */
+        var navToggle = document.getElementById('nav-toggle');
+        var headerNav = document.getElementById('header-nav');
+
+        if (navToggle && headerNav) {
+            navToggle.addEventListener('click', function () {
+                var open = headerNav.classList.toggle('is-open');
+                navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+
+            // Al pulsar un enlace del menu, este se cierra.
+            var navLinksToggle = headerNav.querySelectorAll('.menu a');
+            for (var nt = 0; nt < navLinksToggle.length; nt++) {
+                navLinksToggle[nt].addEventListener('click', function () {
+                    headerNav.classList.remove('is-open');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                });
+            }
+        }
+
+        /* -------------------------------------------
            NAV UNDERLINE - Sliding active indicator
         ------------------------------------------- */
         var underline = document.querySelector('.nav-underline');
