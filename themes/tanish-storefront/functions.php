@@ -472,3 +472,9 @@ add_action('wp_head', function () {
 <!-- End Google tag -->
     <?php
 }, 1);
+
+/* ================================================
+   CORREOS HTML (Contacto / Libro de Reclamaciones)
+   Plantilla con logo e identidad de la marca.
+   ================================================ */
+require_once get_template_directory() . '/inc/email-template.php';

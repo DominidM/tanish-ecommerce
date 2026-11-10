@@ -30,14 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_contact_nonce'
         if (empty($errors)) {
             $admin_email = get_option('admin_email', '');
             $subject = '[TANISH] Nuevo mensaje de contacto - ' . $tipo;
-            $message = "Nombre: {$nombres} {$apellidos}\n";
-            $message .= "Teléfono: {$telefono}\n";
-            $message .= "Correo: {$correo}\n";
-            $message .= "Tipo: {$tipo}\n\n";
-            $message .= "Descripción:\n{$descripcion}\n";
-            $headers = ['Content-Type: text/plain; charset=UTF-8', "Reply-To: {$correo}"];
 
-            $sent = wp_mail($admin_email, $subject, $message, $headers);
+            $sent = tanish_send_html_mail($admin_email, $subject, [
+                'Nombres'      => $nombres,
+                'Apellidos'    => $apellidos,
+                'Teléfono'     => $telefono,
+                'Correo'       => $correo,
+                'Tipo'         => $tipo,
+                'Descripción'  => $descripcion,
+            ], [
+                'title'    => 'Nuevo mensaje de contacto',
+                'intro'    => 'Alguien completó el formulario de contacto de la web de TANISH.',
+                'note'     => 'Puedes responder directamente a este correo: se conservará la dirección del remitente.',
+                'footer'   => 'Este mensaje se envió desde el formulario de contacto de la web.',
+                'reply_to' => $correo,
+            ]);
+
             $submitted = true;
         }
     }
