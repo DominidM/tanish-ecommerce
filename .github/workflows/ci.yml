@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-compose:
+    name: Validar docker-compose.prod.yml
+    runs-on: ubuntu-latest
+    env:
+      # Valores dummy solo para pasar la validación de variables obligatorias.
+      MYSQL_PASSWORD: ci-dummy
+      MYSQL_ROOT_PASSWORD: ci-dummy
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validar sintaxis del compose de producción
+        run: docker compose -f docker-compose.prod.yml config --quiet
+
+  php-lint:
+    name: Lint PHP (plugins y temas)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: php -l en todos los archivos PHP
+        run: find plugins themes -name '*.php' -print0 | xargs -0 -n1 php -l
+
+  shellcheck:
+    name: Shellcheck (scripts)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Analizar scripts bash (solo errores)
+        run: shellcheck -S error scripts/*.sh

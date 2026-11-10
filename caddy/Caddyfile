@@ -8,6 +8,15 @@
   reverse_proxy wordpress:80
 }
 
+# Ruta del Worker (Cloudflare no permite fetch() a IPs directas, se usa
+# nip.io como hostname que resuelve a la IP del VPS).
+http://185.176.254.183.nip.io {
+  encode gzip
+  reverse_proxy wordpress:80 {
+    header_up Host tanish-proxy.solvegrades.workers.dev
+  }
+}
+
 :80 {
   respond 404
 }

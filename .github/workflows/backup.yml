@@ -1,0 +1,42 @@
+name: Backup producción
+
+# Backup programado del VPS a un artefacto de GitHub (fuera del VPS).
+# Requiere secrets: VPS_HOST, VPS_USER, VPS_SSH_KEY.
+on:
+  schedule:
+    # Domingos 07:00 UTC = 02:00 en Perú.
+    - cron: '0 7 * * 0'
+  workflow_dispatch: # Ejecución manual desde la pestaña Actions.
+
+jobs:
+  backup:
+    name: Backup en VPS + artefacto
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Correr backup en el VPS
+        run: |
+          ssh -i ~/.ssh/id_ed25519 "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "cd tanish-ecommerce && bash scripts/backup-production.sh"
+
+      - name: Descargar backups al runner
+        run: |
+          mkdir -p backups-descargados
+          scp -i ~/.ssh/id_ed25519 \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:tanish-ecommerce/backups/*.gz" \
+            backups-descargados/
+
+      - name: Subir artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-tanish-${{ github.run_number }}
+          path: backups-descargados/
+          retention-days: 90

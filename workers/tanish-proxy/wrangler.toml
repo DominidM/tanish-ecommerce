@@ -1,0 +1,13 @@
+# Worker proxy inverso: serve el VPS de Contabo detrás de Cloudflare.
+# Despliegue: npx wrangler deploy  (dentro de esta carpeta)
+name = "tanish-proxy"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+# Publicar en https://tanish-proxy.solvegrades.workers.dev
+workers_dev = true
+
+[vars]
+# Origen = tu VPS vía hostname (nip.io resuelve a la IP; Cloudflare bloquea
+# fetch() a IPs directas con error 1003, por eso se usa el hostname).
+ORIGIN = "http://185.176.254.183.nip.io"
+ORIGIN_HOST = "185.176.254.183"
