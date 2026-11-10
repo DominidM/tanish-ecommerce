@@ -54,6 +54,68 @@ function tanish_storefront_ensure_pretty_permalinks(): void
 add_action('init', 'tanish_storefront_ensure_pretty_permalinks');
 
 
+/**
+ * Slug de la pagina de acceso con el estilo de la tienda.
+ */
+const TANISH_LOGIN_PAGE_SLUG = 'acceso';
+
+/**
+ * URL de la pagina de acceso de TANISH.
+ *
+ * @return string
+ */
+function tanish_storefront_login_page_url(): string
+{
+    return tanish_storefront_page_url(TANISH_LOGIN_PAGE_SLUG, '/wp-login.php');
+}
+
+/**
+ * URL real del formulario de WordPress (wp-login.php).
+ *
+ * Se usa como "action" del formulario de la pagina de acceso. No pasa por
+ * el filtro 'login_url' a proposito: ese filtro devuelve la pagina de acceso
+ * y el formulario tiene que enviarse a wp-login.php, que es el motor de
+ * autenticacion de WordPress.
+ *
+ * @return string
+ */
+function tanish_storefront_login_form_action(): string
+{
+    return (string) site_url('wp-login.php');
+}
+
+/**
+ * Redirige los enlaces de "Iniciar sesion" a la pagina de acceso de TANISH.
+ *
+ * WordPress genera URLs como
+ *   wp-login.php?redirect_to=https%3A%2F%2F...%2Fwp-admin%2Fadmin.php%3Fpage%3Dtanish-inventory
+ * que son dificiles de leer. Con este filtro el visitante aterriza en la
+ * pagina de acceso (/acceso) y, tras autenticarse, sigue al destino original.
+ *
+ * @param string $redirect_to URL de destino tras el inicio de sesion.
+ * @param string $forced      Si el inicio de sesion fue forzado por el core.
+ * @return string
+ */
+function tanish_storefront_login_url(string $redirect_to, string $forced = ''): string
+{
+    $login_page = get_page_by_path(TANISH_LOGIN_PAGE_SLUG);
+
+    if (!$login_page instanceof WP_Post) {
+        return $redirect_to;
+    }
+
+    $url = (string) get_permalink($login_page->ID);
+
+    if (!empty($redirect_to)) {
+        $url = add_query_arg('redirect_to', rawurlencode($redirect_to), $url);
+    }
+
+    return $url;
+}
+
+add_filter('login_url', 'tanish_storefront_login_url', 10, 2);
+
+
 function tanish_storefront_assets(): void
 {
     $css_path = get_stylesheet_directory() . '/style.css';

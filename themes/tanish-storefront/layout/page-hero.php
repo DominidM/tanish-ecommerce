@@ -15,6 +15,10 @@ if (is_front_page()) {
     $page_title    = 'Contacto';
     $page_subtitle = 'Estamos aquí para ayudarte. Escríbenos por WhatsApp o completa el formulario.';
     $banner_key    = 'contacto';
+} elseif (is_page('acceso')) {
+    $page_title    = 'Acceso';
+    $page_subtitle = 'Inicia sesión para gestionar el inventario y los pedidos de TANISH.';
+    $banner_key    = '';
 } elseif (function_exists('is_product') && is_product()) {
     $page_title    = get_the_title();
     $page_subtitle = '';

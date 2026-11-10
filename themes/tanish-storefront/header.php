@@ -55,7 +55,7 @@ defined('ABSPATH') || exit;
                     endif;
                 else :
                 ?>
-                    <a class="btn btn-secondary" href="<?php echo esc_url(wp_login_url($login_redirect)); ?>">
+                    <a class="btn btn-secondary" href="<?php echo esc_url(tanish_storefront_login_page_url()); ?>">
                         Iniciar sesión
                     </a>
                 <?php endif; ?>

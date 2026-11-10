@@ -2337,6 +2337,138 @@ body.admin-bar .site-header {
 }
 
 /* ================================================
+   PAGINA DE ACCESO (login)
+   ================================================ */
+
+.acceso-section {
+    padding: 64px 0 96px;
+    background: var(--t-bg);
+}
+
+.acceso-wrap {
+    display: flex;
+    justify-content: center;
+}
+
+.acceso-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--t-surface);
+    border: 1px solid var(--t-border);
+    border-radius: 16px;
+    padding: 40px 36px 32px;
+    box-shadow: 0 12px 32px rgba(15, 59, 95, 0.07);
+}
+
+.acceso-head {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.acceso-icon {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.12);
+    color: var(--t-accent);
+}
+
+.acceso-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--t-navy);
+    margin: 0 0 8px;
+}
+
+.acceso-subtitle {
+    font-size: 0.92rem;
+    color: var(--t-muted);
+    margin: 0;
+}
+
+.acceso-field {
+    margin-bottom: 18px;
+}
+
+.acceso-field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--t-primary);
+    margin-bottom: 6px;
+}
+
+.acceso-field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--t-border);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--t-primary);
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+.acceso-field input:focus {
+    border-color: var(--t-accent);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+
+.acceso-submit {
+    width: 100%;
+    margin-top: 6px;
+}
+
+.acceso-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 22px;
+    color: #dc2626;
+    font-size: 0.88rem;
+}
+
+.acceso-error svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.acceso-foot {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--t-muted);
+    margin: 24px 0 0;
+}
+
+.acceso-foot a {
+    color: var(--t-accent);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .acceso-section {
+        padding: 40px 0 64px;
+    }
+
+    .acceso-card {
+        padding: 32px 22px 26px;
+    }
+}
+
+/* ================================================
    SCROLL REVEAL
    ================================================ */
 
