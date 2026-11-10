@@ -3285,18 +3285,21 @@ body.admin-bar .site-header {
 }
 
 /* Precio y stock: WooCommerce los pinta en su color oliva
-   (#958e09). Sus selectores son muy específicos, asi que aqui
-   se replican con un nivel mas para que ganen. */
-.tanish-product-page .tanish-product-summary div.product p.price,
-.tanish-product-page .tanish-product-summary div.product span.price,
+   (#958e09) con selectores como
+   ".woocommerce:where(...) div.product p.price" (2 clases + 2
+   elementos). Aqui se replican con un nivel mas de clase para
+   que ganen, sin anadir "div.product" (que es el contenedor
+   padre, no un descendiente del resumen). */
 .tanish-product-page .tanish-product-summary p.price,
-.tanish-product-page .tanish-product-summary span.price {
+.tanish-product-page .tanish-product-summary span.price,
+.tanish-product-page .tanish-product-summary .price {
     color: var(--t-primary);
+    font-size: 1.6rem;
+    font-weight: 700;
 }
 
-.tanish-product-page .tanish-product-summary div.product p.stock,
-.tanish-product-page .tanish-product-summary div.product .stock,
-.tanish-product-page .tanish-product-summary p.stock {
+.tanish-product-page .tanish-product-summary p.stock,
+.tanish-product-page .tanish-product-summary .stock {
     color: var(--t-accent-dark);
     font-weight: 600;
 }
