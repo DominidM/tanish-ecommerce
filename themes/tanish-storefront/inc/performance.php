@@ -133,55 +133,14 @@ function tanish_storefront_prefetch_navigation(): void
 }
 add_action('wp_head', 'tanish_storefront_prefetch_navigation', 3);
 
-/**
- * Evita que WooCommerce cargue los scripts de los bloques de carrito y
- * checkout (React, Redux, etc.) en paginas donde no hacen falta.
+/*
+ * Nota: se probo retirar los scripts de los bloques de carrito/checkout en
+ * las paginas donde no hacen falta, pero resulto contraproducente.
+ * "wc-settings" y "wc-price-format" son dependencias transversales de todos
+ * los bloques (wc-blocks-registry, wc-blocks-components, wc-blocks-checkout).
+ * Al deregistrarlos, los gateways de pago se desactivaban en el Carrito y el
+ * Checkout con el aviso "Payment gateway ... has been deactivated because
+ * its dependency 'wc-settings' is missing".
  *
- * El sitio usa el checkout por bloques, asi que esos scripts si se necesitan
- * en /checkout/ y /cart/. En el resto de paginas son peso muerto.
+ * El peso real de la pagina estaba en las imagenes, ya optimizadas.
  */
-function tanish_storefront_dequeue_cart_checkout_blocks(): void
-{
-    if (function_exists('is_admin') && is_admin()) {
-        return;
-    }
-
-    if (function_exists('is_cart') && is_cart()) {
-        return;
-    }
-
-    if (function_exists('is_checkout') && is_checkout()) {
-        return;
-    }
-
-    // El widget del carrito del header es un simple contador (PHP), no el
-    // bloque de React: no necesita los scripts del carrito.
-    // Nombres verificados en WooCommerce 11.1 (wc-blocks-data-store,
-    // no wc-blocks-data; wc-cart-checkout-base, no wc-cart-checkout-base-frontend).
-    $scripts = array(
-        'wc-cart-block',
-        'wc-blocks-data-store',
-        'wc-blocks-registry',
-        'wc-blocks-checkout',
-        'wc-blocks-checkout-events',
-        'wc-blocks-components',
-        'wc-blocks-middleware',
-        'wc-blocks-shared-context',
-        'wc-blocks-shared-hocs',
-        'wc-blocks-types',
-        'wc-settings',
-        'wc-price-format',
-        'wc-blocks-vendors',
-        'wc-cart-checkout-vendors',
-        'wc-cart-checkout-base',
-        'wc-blocks-frontend-vendors',
-    );
-
-    foreach ($scripts as $handle) {
-        if (wp_script_is($handle, 'registered') || wp_script_is($handle, 'enqueued')) {
-            wp_dequeue_script($handle);
-            wp_deregister_script($handle);
-        }
-    }
-}
-add_action('wp_enqueue_scripts', 'tanish_storefront_dequeue_cart_checkout_blocks', 100);
