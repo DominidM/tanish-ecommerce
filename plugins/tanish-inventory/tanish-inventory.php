@@ -16,7 +16,7 @@ define('TANISH_INVENTORY_PATH', plugin_dir_path(__FILE__));
 define('TANISH_INVENTORY_URL', plugin_dir_url(__FILE__));
 
 function tanish_inventory_require_files(): void {
-	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-whatsapp.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-capabilities.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-database.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-service.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-admin.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-cpts.php';
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-whatsapp.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-mercadopago-link.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-capabilities.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-database.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-service.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-admin.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-cpts.php';
 }
 
 function tanish_inventory_enqueue_admin_assets() {
