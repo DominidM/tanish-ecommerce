@@ -10,8 +10,14 @@ $whatsapp_url = $whatsapp
 ?>
 
 <!-- HERO -->
+<?php
+// El PNG original pesa 1.6 MB. Cloudinary lo sirve recomprimido y
+// reducido a 1600 px de ancho (121 KB) sin perdida visible a pantalla.
+$tanish_hero_bg = 'https://res.cloudinary.com/dp1vgjhsq/image/upload/w_1600,q_auto,f_auto/v1790031238/banner-hero_qyfjoh.png';
+?>
+<link rel="preload" as="image" href="<?php echo esc_url($tanish_hero_bg); ?>" fetchpriority="high">
 <section class="tanish-hero" aria-label="Banner principal">
-    <div class="tanish-hero-bg" style="background-image: url('https://res.cloudinary.com/dp1vgjhsq/image/upload/v1790031238/banner-hero_qyfjoh.png');"></div>
+    <div class="tanish-hero-bg" style="background-image: url('<?php echo esc_url($tanish_hero_bg); ?>');"></div>
     <div class="tanish-hero-overlay"></div>
     <div class="tanish-container">
         <div class="tanish-hero-inner">

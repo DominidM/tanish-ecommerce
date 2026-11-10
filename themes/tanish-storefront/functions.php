@@ -549,6 +549,14 @@ require_once get_template_directory() . '/inc/email-template.php';
 require_once get_template_directory() . '/inc/cart-drawer.php';
 
 /* ================================================
+   OPTIMIZACION DE CARGA (LCP)
+   Preload de la imagen principal del producto,
+   lazy loading en la galeria y prefetch de la
+   navegacion.
+   ================================================ */
+require_once get_template_directory() . '/inc/performance.php';
+
+/* ================================================
    TOAST DE CONFIRMACIÓN (Contacto / Reclamos)
    Redirige al inicio tras enviar un formulario y muestra
    un aviso arriba a la derecha (patrón PRG).

@@ -5,7 +5,7 @@
         </p>
         <a href="https://solvegrades.com/services/" target="_blank" rel="noopener noreferrer" class="tanish-footer-sg" aria-label="Desarrollado por SolveGrades">
             <span class="footer-sg-text">Desarrollado por</span>
-            <img src="https://res.cloudinary.com/dp1vgjhsq/image/upload/v1778834655/WhatsApp_Image_2026-05-15_at_3.21.36_AM-removebg-preview_wtgmkr.png" alt="SolveGrades" width="70" height="auto" loading="lazy">
+            <img src="https://res.cloudinary.com/dp1vgjhsq/image/upload/w_200,q_auto,f_auto/v1778834655/WhatsApp_Image_2026-05-15_at_3.21.36_AM-removebg-preview_wtgmkr.png" alt="SolveGrades" width="70" height="auto" loading="lazy" decoding="async">
         </a>
     </div>
 </div>

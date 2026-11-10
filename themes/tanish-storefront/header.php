@@ -16,7 +16,14 @@ defined('ABSPATH') || exit;
         <div class="tanish-container header-top-inner">
 
             <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
-                <img src="https://res.cloudinary.com/dp1vgjhsq/image/upload/v1789516962/logo-tanish_ekdvpd.png" alt="TANISH" class="brand-logo">
+                <?php
+                // El PNG original pesa 578 KB. Se sirve una version reducida
+                // desde Cloudinary (10 KB) y se precarga para que no tarde
+                // en aparecer: es el elemento mas visible al abrir la pagina.
+                $tanish_logo = 'https://res.cloudinary.com/dp1vgjhsq/image/upload/w_400,q_auto,f_auto/v1789516962/logo-tanish_ekdvpd.png';
+                ?>
+                <link rel="preload" as="image" href="<?php echo esc_url($tanish_logo); ?>" fetchpriority="high">
+                <img src="<?php echo esc_url($tanish_logo); ?>" alt="TANISH" class="brand-logo" width="156" height="52" fetchpriority="high" decoding="async">
             </a>
 
             <div class="header-search">

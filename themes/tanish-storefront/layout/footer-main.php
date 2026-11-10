@@ -56,7 +56,7 @@ $terms_url       = $terms_page ? get_permalink($terms_page->ID) : '';
         </ul>
         <?php if (!empty($libro_url)) : ?>
             <a href="<?php echo esc_url($libro_url); ?>" class="footer-libro" aria-label="Libro de Reclamaciones">
-                <img src="https://res.cloudinary.com/dxuk9bogw/image/upload/v1776155530/7f85d794-58b5-47d0-850d-d06179563fb2.png" alt="Libro de Reclamaciones" width="140" height="auto" loading="lazy">
+                <img src="https://res.cloudinary.com/dxuk9bogw/image/upload/w_280,q_auto,f_auto/v1776155530/7f85d794-58b5-47d0-850d-d06179563fb2.png" alt="Libro de Reclamaciones" width="140" height="auto" loading="lazy" decoding="async">
             </a>
         <?php endif; ?>
     </div>

@@ -8,10 +8,15 @@
 
 defined('ABSPATH') || exit;
 
-/** Logo público de TANISH (Cloudinary). */
+/**
+ * Logo público de TANISH (Cloudinary).
+ *
+ * Se sirve la version reducida (10 KB en lugar de los 578 KB del PNG
+ * original): en el correo se muestra a 140 px de ancho.
+ */
 function tanish_email_logo(): string
 {
-    return 'https://res.cloudinary.com/dp1vgjhsq/image/upload/v1789516962/logo-tanish_ekdvpd.png';
+    return 'https://res.cloudinary.com/dp1vgjhsq/image/upload/w_400,q_auto,f_auto/v1789516962/logo-tanish_ekdvpd.png';
 }
 
 /**
