@@ -3285,15 +3285,18 @@ body.admin-bar .site-header {
 }
 
 /* Precio y stock: WooCommerce los pinta en su color oliva
-   (#958e09); aqui se usan los tonos del tema. */
-.tanish-product-summary div.product span.price,
-.tanish-product-summary p.price,
-.tanish-product-summary .price {
+   (#958e09). Sus selectores son muy específicos, asi que aqui
+   se replican con un nivel mas para que ganen. */
+.tanish-product-page .tanish-product-summary div.product p.price,
+.tanish-product-page .tanish-product-summary div.product span.price,
+.tanish-product-page .tanish-product-summary p.price,
+.tanish-product-page .tanish-product-summary span.price {
     color: var(--t-primary);
 }
 
-.tanish-product-summary .stock,
-.tanish-product-summary p.stock {
+.tanish-product-page .tanish-product-summary div.product p.stock,
+.tanish-product-page .tanish-product-summary div.product .stock,
+.tanish-product-page .tanish-product-summary p.stock {
     color: var(--t-accent-dark);
     font-weight: 600;
 }
