@@ -60,8 +60,8 @@ function tanish_email_html(string $title, array $fields, string $intro = '', str
                         <td style="padding:20px 28px;">
                             <table role="presentation" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td style="padding-right:12px;vertical-align:middle;">
-                                        <img src="' . $logo . '" width="40" height="40" alt="TANISH" style="display:block;border:0;background:#FFFFFF;border-radius:10px;padding:4px;">
+                                    <td style="padding-right:14px;vertical-align:middle;">
+                                        <img src="' . $logo . '" width="132" height="44" alt="TANISH" style="display:block;width:132px;height:44px;border:0;background:#FFFFFF;border-radius:8px;padding:6px;">
                                     </td>
                                     <td style="vertical-align:middle;">
                                         <span style="color:#FFFFFF;font-size:20px;font-weight:700;letter-spacing:.06em;">TANISH</span><br>
