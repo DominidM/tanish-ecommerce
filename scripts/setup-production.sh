@@ -38,11 +38,27 @@ set +a
 cd "${REPO_ROOT}"
 
 dc() { docker compose --env-file "${ENV_FILE}" -f "${COMPOSE_FILE}" "$@"; }
+
+# Ojo: `docker compose exec` espera el NOMBRE DEL SERVICIO ("wordpress"),
+# mientras que `docker cp` espera el del CONTENEDOR ("tanish-prod-wordpress").
+WP_SERVICE="wordpress"
 WP_CONTAINER="${WORDPRESS_CONTAINER:-tanish-prod-wordpress}"
 WP_CONTENT="/var/www/html/wp-content"
 
+# El script manipula el contenedor: tiene que estar arriba.
+if ! dc ps --status running --services 2>/dev/null | grep -qx "${WP_SERVICE}"; then
+  echo "[0/4] Levantando el contenedor de WordPress..."
+  dc up -d "${WP_SERVICE}"
+  for _ in $(seq 1 30); do
+    if dc exec -T "${WP_SERVICE}" test -f /var/www/html/wp-load.php 2>/dev/null; then
+      break
+    fi
+    sleep 2
+  done
+fi
+
 echo "[1/4] Descargando el plugin de Mercado Pago ${MP_PLUGIN_VERSION}..."
-if dc exec -T "${WP_CONTAINER}" test -f "${WP_CONTENT}/plugins/${MP_PLUGIN_SLUG}/${MP_PLUGIN_SLUG}.php"; then
+if dc exec -T "${WP_SERVICE}" test -f "${WP_CONTENT}/plugins/${MP_PLUGIN_SLUG}/${MP_PLUGIN_SLUG}.php"; then
   echo "      ya instalado, se omite la descarga"
 else
   tmp_zip="$(mktemp -d)/${MP_PLUGIN_SLUG}.zip"
@@ -56,16 +72,16 @@ with zipfile.ZipFile(sys.argv[1]) as z:
     z.extractall('/tmp/mp-plugin-extract')
 PY
 
-  dc exec -T "${WP_CONTAINER}" mkdir -p "${WP_CONTENT}/plugins/${MP_PLUGIN_SLUG}"
+  dc exec -T "${WP_SERVICE}" mkdir -p "${WP_CONTENT}/plugins/${MP_PLUGIN_SLUG}"
   docker cp "/tmp/mp-plugin-extract/${MP_PLUGIN_SLUG}/." \
     "${WP_CONTAINER}:${WP_CONTENT}/plugins/${MP_PLUGIN_SLUG}/"
-  dc exec -T "${WP_CONTAINER}" chown -R www-data:www-data "${WP_CONTENT}/plugins/${MP_PLUGIN_SLUG}"
+  dc exec -T "${WP_SERVICE}" chown -R www-data:www-data "${WP_CONTENT}/plugins/${MP_PLUGIN_SLUG}"
   rm -rf /tmp/mp-plugin-extract
   echo "      instalado"
 fi
 
 echo "[2/4] Activando el plugin de Mercado Pago..."
-dc exec -T "${WP_CONTAINER}" php -r "
+dc exec -T "${WP_SERVICE}" php -r "
 require '/var/www/html/wp-load.php';
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 \$plugin = '${MP_PLUGIN_SLUG}/${MP_PLUGIN_SLUG}.php';
@@ -99,15 +115,15 @@ for path in glob.glob(os.path.join(work, '*')):
 print('      archivos renombrados a', dst_locale)
 PY
 
-dc exec -T "${WP_CONTAINER}" mkdir -p "${WP_CONTENT}/languages/plugins"
+dc exec -T "${WP_SERVICE}" mkdir -p "${WP_CONTENT}/languages/plugins"
 for f in "${lang_dir}"/*; do
   docker cp "$f" "${WP_CONTAINER}:${WP_CONTENT}/languages/plugins/$(basename "$f")"
 done
-dc exec -T "${WP_CONTAINER}" sh -c "chown www-data:www-data ${WP_CONTENT}/languages/plugins/* && chmod 644 ${WP_CONTENT}/languages/plugins/*"
+dc exec -T "${WP_SERVICE}" sh -c "chown www-data:www-data ${WP_CONTENT}/languages/plugins/* && chmod 644 ${WP_CONTENT}/languages/plugins/*"
 rm -rf "${lang_dir}"
 
 echo "[4/4] Corrigiendo permisos de wp-content/uploads (logs de Mercado Pago)..."
-dc exec -T "${WP_CONTAINER}" sh -c "
+dc exec -T "${WP_SERVICE}" sh -c "
   chown -R www-data:www-data ${WP_CONTENT}/uploads
   mkdir -p ${WP_CONTENT}/uploads/wc-logs
   chown www-data:www-data ${WP_CONTENT}/uploads/wc-logs
@@ -115,7 +131,7 @@ dc exec -T "${WP_CONTAINER}" sh -c "
 
 echo
 echo "Listo. Verifica el estado con:"
-echo "  docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} exec -T ${WORDPRESS_CONTAINER:-tanish-prod-wordpress} \\"
+echo "  docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} exec -T ${WP_SERVICE} \\"
 echo "    php -r \"require '/var/www/html/wp-load.php'; print_r(get_option('active_plugins'));\""
 echo
 echo "Recordatorio: las credenciales de Mercado Pago se configuran en el admin"
