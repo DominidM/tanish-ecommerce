@@ -478,3 +478,65 @@ add_action('wp_head', function () {
    Plantilla con logo e identidad de la marca.
    ================================================ */
 require_once get_template_directory() . '/inc/email-template.php';
+
+/* ================================================
+   TOAST DE CONFIRMACIÓN (Contacto / Reclamos)
+   Redirige al inicio tras enviar un formulario y muestra
+   un aviso arriba a la derecha (patrón PRG).
+   ================================================ */
+
+function tanish_form_success_redirect(string $message): void
+{
+    $token = wp_generate_password(24, false, false);
+    set_transient('tanish_toast_' . $token, $message, 2 * MINUTE_IN_SECONDS);
+
+    $url = add_query_arg('tanish_toast', $token, home_url('/'));
+
+    wp_safe_redirect($url, 303);
+    exit;
+}
+
+add_action('wp_footer', function (): void {
+    if (empty($_GET['tanish_toast'])) {
+        return;
+    }
+
+    $token   = sanitize_key(wp_unslash((string) $_GET['tanish_toast']));
+    $message = get_transient('tanish_toast_' . $token);
+
+    if (!is_string($message) || $message === '') {
+        return;
+    }
+
+    delete_transient('tanish_toast_' . $token);
+    ?>
+    <div class="tanish-toast" id="tanish-toast" role="status" aria-live="polite">
+        <span class="tanish-toast-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </span>
+        <span class="tanish-toast-text"><?php echo esc_html($message); ?></span>
+        <button type="button" class="tanish-toast-close" aria-label="Cerrar">&times;</button>
+    </div>
+    <script>
+    (function () {
+        var toast = document.getElementById('tanish-toast');
+        if (!toast) { return; }
+
+        function dismiss() {
+            toast.classList.add('tanish-toast--hide');
+            setTimeout(function () { toast.remove(); }, 400);
+        }
+
+        toast.querySelector('.tanish-toast-close').addEventListener('click', dismiss);
+        setTimeout(dismiss, 6000);
+
+        // Limpia el parámetro de la URL sin recargar.
+        if (window.history && window.history.replaceState) {
+            var url = new URL(window.location.href);
+            url.searchParams.delete('tanish_toast');
+            window.history.replaceState({}, '', url.pathname + (url.search ? url.search : '') + url.hash);
+        }
+    })();
+    </script>
+    <?php
+}, 99);

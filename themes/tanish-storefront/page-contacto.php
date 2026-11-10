@@ -6,8 +6,6 @@
 
 defined('ABSPATH') || exit;
 
-get_header();
-
 $submitted = false;
 $errors = [];
 
@@ -27,18 +25,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_contact_nonce'
         if (empty($correo) || !is_email($correo)) $errors[] = 'El correo electrónico no es válido.';
         if (empty($descripcion)) $errors[] = 'La descripción es obligatoria.';
 
+        // ── Anti-spam: 1 envío cada 90 s por IP + bloqueo de duplicados ──
+        $ip_key  = 'tanish_rl_' . md5(tanish_client_ip());
+        $dup_key = 'tanish_dup_' . md5($correo . '|' . $tipo . '|' . $descripcion);
+
+        if (get_transient($ip_key)) {
+            $errors[] = 'Espera un momento antes de enviar otro mensaje.';
+        } elseif (get_transient($dup_key)) {
+            $errors[] = 'Ya recibimos tu mensaje hace un instante. Te responderemos pronto.';
+        }
+
         if (empty($errors)) {
+            set_transient($ip_key, 1, 90);
+            set_transient($dup_key, 1, 10 * MINUTE_IN_SECONDS);
+
             $admin_email = get_option('admin_email', '');
             $subject = '[TANISH] Nuevo mensaje de contacto - ' . $tipo;
 
-            $sent = tanish_send_html_mail($admin_email, $subject, [
+            $fields = [
                 'Nombres'      => $nombres,
                 'Apellidos'    => $apellidos,
                 'Teléfono'     => $telefono,
                 'Correo'       => $correo,
                 'Tipo'         => $tipo,
                 'Descripción'  => $descripcion,
-            ], [
+            ];
+
+            // Guardar en la base de datos (visible en el panel admin).
+            tanish_save_form_entry(
+                'contacto',
+                $fields,
+                $nombres . ' ' . $apellidos . ' · ' . $tipo
+            );
+
+            $sent = tanish_send_html_mail($admin_email, $subject, $fields, [
                 'title'    => 'Nuevo mensaje de contacto',
                 'intro'    => 'Alguien completó el formulario de contacto de la web de TANISH.',
                 'note'     => 'Puedes responder directamente a este correo: se conservará la dirección del remitente.',
@@ -46,10 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_contact_nonce'
                 'reply_to' => $correo,
             ]);
 
-            $submitted = true;
+            tanish_form_success_redirect('Mensaje enviado. Te responderemos pronto.');
         }
     }
 }
+
+get_header();
 ?>
 
 <main class="page-main">
@@ -159,6 +181,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_contact_nonce'
                                 Enviar mensaje
                             </button>
                         </form>
+                        <script>
+                        document.querySelectorAll('.contacto-form').forEach(function (form) {
+                            form.addEventListener('submit', function () {
+                                var btn = form.querySelector('button[type="submit"]');
+                                if (btn) {
+                                    btn.disabled = true;
+                                    btn.textContent = 'Enviando...';
+                                }
+                            });
+                        });
+                        </script>
                     <?php endif; ?>
                 </div>
 

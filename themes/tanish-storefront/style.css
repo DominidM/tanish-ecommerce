@@ -3260,3 +3260,101 @@ body.admin-bar .site-header {
         flex-direction: column;
     }
 }
+
+/* ================================================
+   TOAST DE CONFIRMACIÓN (esquina superior derecha)
+   ================================================ */
+
+.tanish-toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: min(380px, calc(100vw - 32px));
+    padding: 14px 40px 14px 16px;
+    background: #ffffff;
+    border: 1px solid #BBF7D0;
+    border-left: 4px solid var(--t-accent);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(15, 59, 95, 0.18);
+    animation: tanish-toast-in 0.35s cubic-bezier(0.21, 1.02, 0.73, 1) both;
+}
+
+.tanish-toast--hide {
+    animation: tanish-toast-out 0.35s ease both;
+}
+
+.tanish-toast-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    background: var(--t-accent-soft);
+    color: var(--t-accent-dark);
+    border-radius: 50%;
+}
+
+.tanish-toast-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.tanish-toast-text {
+    color: var(--t-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.tanish-toast-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    border: 0;
+    background: transparent;
+    color: var(--t-muted);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 4px;
+}
+
+.tanish-toast-close:hover {
+    color: var(--t-primary);
+}
+
+@keyframes tanish-toast-in {
+    from {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes tanish-toast-out {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+}
+
+@media (max-width: 480px) {
+    .tanish-toast {
+        top: 16px;
+        right: 16px;
+        left: 16px;
+        max-width: none;
+    }
+}

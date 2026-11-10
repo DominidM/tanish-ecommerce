@@ -6,8 +6,6 @@
 
 defined('ABSPATH') || exit;
 
-get_header();
-
 $submitted = false;
 $errors    = [];
 $claim_ref = '';
@@ -49,7 +47,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_reclamo_nonce'
         if (empty($solucion))     $errors[] = 'Indica qué solución solicitas.';
         if (!isset($_POST['declaracion'])) $errors[] = 'Debes confirmar la declaración de veracidad.';
 
+        // ── Anti-spam: 1 envío cada 90 s por IP + bloqueo de duplicados ──
+        $ip_key  = 'tanish_rl_' . md5(tanish_client_ip());
+        $dup_key = 'tanish_dup_' . md5($correo . '|' . $producto . '|' . $detalle);
+
+        if (get_transient($ip_key)) {
+            $errors[] = 'Espera un momento antes de enviar otro reclamo.';
+        } elseif (get_transient($dup_key)) {
+            $errors[] = 'Ya registramos este reclamo hace un instante. Revisa tu correo.';
+        }
+
         if (empty($errors)) {
+            set_transient($ip_key, 1, 90);
+            set_transient($dup_key, 1, 10 * MINUTE_IN_SECONDS);
+
             // Número correlativo del libro (por año).
             $option_key = 'tanish_reclamo_counter_' . date('Y');
             $next       = ((int) get_option($option_key, 0)) + 1;
@@ -81,6 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_reclamo_nonce'
                 'Solución solicitada'=> $solucion,
             ];
 
+            // Guardar en la base de datos (visible en el panel admin).
+            tanish_save_form_entry(
+                'reclamo',
+                $fields,
+                $claim_ref . ' · ' . $tipo_tramite . ' · ' . $nombres . ' ' . $apellidos
+            );
+
             $sent = tanish_send_html_mail($admin_email, $subject, $fields, [
                 'title'    => 'Libro de Reclamaciones',
                 'intro'    => 'Se ha registrado una nueva entrada en el Libro de Reclamaciones de TANISH.',
@@ -99,10 +117,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_reclamo_nonce'
                 'footer' => 'TANISH se compromete a atender tu reclamo dentro de los plazos legales.',
             ]);
 
-            $submitted = true;
+            // Patrón PRG: redirigir al inicio con un toast de confirmación
+            // (evita el reenvío al refrescar).
+            tanish_form_success_redirect('Reclamo registrado · Referencia ' . $claim_ref);
         }
     }
 }
+
+get_header();
 ?>
 
 <main class="page-main">
@@ -312,6 +334,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_reclamo_nonce'
                                 Registrar reclamo
                             </button>
                         </form>
+                        <script>
+                        document.querySelectorAll('.contacto-form').forEach(function (form) {
+                            form.addEventListener('submit', function () {
+                                var btn = form.querySelector('button[type="submit"]');
+                                if (btn) {
+                                    btn.disabled = true;
+                                    btn.textContent = 'Enviando...';
+                                }
+                            });
+                        });
+                        </script>
                     </div>
 
                 </div>
