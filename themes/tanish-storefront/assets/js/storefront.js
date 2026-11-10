@@ -40,6 +40,19 @@
         if (cartClose) cartClose.addEventListener('click', closeCart);
         if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
 
+        /* WooCommerce dispara "added_to_cart" (jQuery) tras el alta por AJAX.
+           Abrimos el drawer para que el usuario vea el resultado al instante;
+           el contador y el contenido se refrescan vía cart fragments. */
+        if (window.jQuery) {
+            window.jQuery(function ($) {
+                $(document.body).on('added_to_cart', function () {
+                    if (cartSidebar && !cartSidebar.classList.contains('is-open')) {
+                        openCart();
+                    }
+                });
+            });
+        }
+
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && cartSidebar && cartSidebar.classList.contains('is-open')) {
                 closeCart();

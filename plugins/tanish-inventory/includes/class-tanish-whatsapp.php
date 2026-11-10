@@ -15,7 +15,7 @@ defined('ABSPATH') || exit;
  * - Button "Comprar por WhatsApp" on single product page
  * - Respects WooCommerce stock
  * - Removes traditional add-to-cart on single product
- * - Catalog "Ver producto" replacement via hooks
+ * - Catalog loop keeps the native WooCommerce add-to-cart button
  */
 class Tanish_WhatsApp {
 
@@ -34,8 +34,8 @@ class Tanish_WhatsApp {
 		// Single product: remove the default add-to-cart flow while keeping the storefront catalog simple.
 		add_action('wp', array($this, 'maybe_remove_add_to_cart'));
 
-		// Catalog - replace add to cart with "Ver producto".
-		add_filter('woocommerce_loop_add_to_cart_link', array($this, 'filter_loop_add_to_cart'), 10, 2);
+		// Catalog: the native "add to cart" link is intentionally left untouched.
+		// Detail view is reached by clicking the product image/title.
 	}
 
 	/**
@@ -224,33 +224,5 @@ class Tanish_WhatsApp {
 		echo esc_html('Comprar por WhatsApp');
 		echo '</a>';
 		echo '</div>';
-	}
-
-	/**
-	 * Filter catalog loop add-to-cart link to show "Ver producto".
-	 * Cleanly via hook, easy to revert.
-	 *
-	 * @param string     $html    Original HTML.
-	 * @param WC_Product $product Product object.
-	 * @return string Modified HTML.
-	 */
-	public function filter_loop_add_to_cart($html, $product) {
-		if (!is_a($product, 'WC_Product')) {
-			return $html;
-		}
-
-		// Only modify if we are in shop loop; keep simple and light.
-		// Replace with "Ver producto" linking to single product.
-		$permalink = get_permalink($product->get_id());
-		if (empty($permalink)) {
-			return $html;
-		}
-
-		// For now, apply to all products in loop. Could restrict to simple if needed.
-		// Keeping it clean and reversible.
-		$text = esc_html('Ver producto');
-		$url  = esc_url($permalink);
-
-		return '<a href="' . $url . '" class="button">' . $text . '</a>';
 	}
 }
