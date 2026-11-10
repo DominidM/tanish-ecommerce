@@ -3156,6 +3156,183 @@ body.admin-bar .site-header {
     flex-shrink: 0;
 }
 
+/* ── Botones del formulario de compra ────────────────────
+   WooCommerce aplica a .button.alt el purpura de su marca
+   (#7f54b3) con selectores de alta especificidad, por eso
+   aqui se sobreescriben con los colores de TANISH:
+   verde de marca para la accion principal y azul marino
+   para la secundaria.
+   ────────────────────────────────────────────────────── */
+
+.tanish-product-summary form.cart {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 4px;
+}
+
+.tanish-product-summary form.cart .quantity {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.tanish-product-summary .quantity .qty {
+    width: 82px;
+    height: 48px;
+    padding: 0 12px;
+    border: 1px solid var(--t-border);
+    border-radius: var(--t-radius);
+    background: #fff;
+    color: var(--t-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    font-weight: 600;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -moz-appearance: textfield;
+}
+
+.tanish-product-summary .quantity .qty::-webkit-outer-spin-button,
+.tanish-product-summary .quantity .qty::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.tanish-product-summary .quantity .qty:focus {
+    border-color: var(--t-accent);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+
+.tanish-product-summary .single_add_to_cart_button,
+.tanish-product-summary .single_add_to_cart_button.button,
+.tanish-product-summary .single_add_to_cart_button.button.alt,
+.tanish-product-summary .single_add_to_cart_button.alt {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 200px;
+    min-height: 48px;
+    margin: 0;
+    padding: 0 28px;
+    border: 1px solid var(--t-accent);
+    border-radius: var(--t-radius);
+    background: var(--t-accent);
+    color: #fff;
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.tanish-product-summary .single_add_to_cart_button:hover,
+.tanish-product-summary .single_add_to_cart_button.button:hover,
+.tanish-product-summary .single_add_to_cart_button.button.alt:hover,
+.tanish-product-summary .single_add_to_cart_button.alt:hover {
+    background: var(--t-accent-dark);
+    border-color: var(--t-accent-dark);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.tanish-product-summary .single_add_to_cart_button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.28);
+}
+
+.tanish-product-summary .single_add_to_cart_button.loading {
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+/* Estado "anadido al carrito". */
+.tanish-product-summary .single_add_to_cart_button.added {
+    background: var(--t-navy);
+    border-color: var(--t-navy);
+}
+
+/* El boton de WhatsApp hereda .button.alt de WooCommerce: se
+   fuerza con !important para que no aparezca el purpura. */
+.tanish-product-summary .tanish-whatsapp-wrapper .tanish-whatsapp-button,
+.tanish-product-summary .tanish-whatsapp-wrapper a.button.alt.tanish-whatsapp-button {
+    background: var(--t-navy) !important;
+    border: 1px solid var(--t-navy);
+    border-radius: var(--t-radius);
+    color: #fff !important;
+}
+
+.tanish-product-summary .tanish-whatsapp-wrapper .tanish-whatsapp-button:hover,
+.tanish-product-summary .tanish-whatsapp-wrapper a.button.alt.tanish-whatsapp-button:hover {
+    background: var(--t-navy-light) !important;
+    border-color: var(--t-navy-light);
+    color: #fff !important;
+}
+
+.tanish-product-summary .tanish-whatsapp-wrapper {
+    width: 100%;
+    margin: 0;
+}
+
+.tanish-product-summary .tanish-whatsapp-wrapper .tanish-whatsapp-button {
+    width: 100%;
+    min-height: 48px;
+    font-weight: 600;
+}
+
+/* Precio y stock: WooCommerce los pinta en su color oliva
+   (#958e09); aqui se usan los tonos del tema. */
+.tanish-product-summary div.product span.price,
+.tanish-product-summary p.price,
+.tanish-product-summary .price {
+    color: var(--t-primary);
+}
+
+.tanish-product-summary .stock,
+.tanish-product-summary p.stock {
+    color: var(--t-accent-dark);
+    font-weight: 600;
+}
+
+/* ── Movil: una sola columna y botones a ancho completo ── */
+@media (max-width: 768px) {
+
+    .tanish-product-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .tanish-product-gallery {
+        position: static;
+    }
+
+    .tanish-product-summary form.cart {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .tanish-product-summary form.cart .quantity,
+    .tanish-product-summary .quantity .qty {
+        width: 100%;
+    }
+
+    .tanish-product-summary .single_add_to_cart_button {
+        flex: 1 1 auto;
+        width: 100%;
+        min-height: 52px;
+    }
+
+    .tanish-product-summary .tanish-whatsapp-wrapper,
+    .tanish-product-summary .tanish-whatsapp-wrapper .tanish-whatsapp-button {
+        width: 100%;
+    }
+}
+
 /* ── Product Meta ──────────────────────────────────── */
 
 .tanish-product-summary .product_meta {
