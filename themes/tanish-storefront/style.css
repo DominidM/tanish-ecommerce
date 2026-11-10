@@ -3286,21 +3286,21 @@ body.admin-bar .site-header {
 
 /* Precio y stock: WooCommerce los pinta en su color oliva
    (#958e09) con selectores como
-   ".woocommerce:where(...) div.product p.price" (2 clases + 2
-   elementos). Aqui se replican con un nivel mas de clase para
-   que ganen, sin anadir "div.product" (que es el contenedor
-   padre, no un descendiente del resumen). */
+   ".woocommerce:where(body:not(.woocommerce-uses-block-theme))
+    div.product p.price" (3 clases + 2 elementos), que ganan a
+   cualquier selector del resumen. Por eso el color y el tamano
+   van con !important, acotados al resumen del producto. */
 .tanish-product-page .tanish-product-summary p.price,
 .tanish-product-page .tanish-product-summary span.price,
 .tanish-product-page .tanish-product-summary .price {
-    color: var(--t-primary);
-    font-size: 1.6rem;
+    color: var(--t-primary) !important;
+    font-size: 1.6rem !important;
     font-weight: 700;
 }
 
 .tanish-product-page .tanish-product-summary p.stock,
 .tanish-product-page .tanish-product-summary .stock {
-    color: var(--t-accent-dark);
+    color: var(--t-accent-dark) !important;
     font-weight: 600;
 }
 
