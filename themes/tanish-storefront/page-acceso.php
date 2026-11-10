@@ -173,4 +173,11 @@ get_header();
 })();
 </script>
 
-<?php get_footer(); ?>
+<?php
+// Pantalla completa: en la vista de acceso no se muestra el pie de pagina,
+// asi el formulario ocupa toda la ventana bajo el header. Se mantiene
+// wp_footer() para que se carguen los scripts del sitio.
+wp_footer();
+?>
+</body>
+</html>
