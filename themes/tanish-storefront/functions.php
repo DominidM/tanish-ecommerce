@@ -85,6 +85,43 @@ function tanish_storefront_login_form_action(): string
 }
 
 /**
+ * Desenrolla un redirect_to que en realidad ya es una URL de wp-login.php.
+ *
+ * El nucleo de WordPress (auth_redirect()) construye en ocasiones
+ *   wp-login.php?redirect_to=<destino>&reauth=1
+ * y lo pasa como destino. Si lo reenviamos tal cual, la URL queda anidada
+ * y es ilegible. Aqui se extrae el destino real.
+ *
+ * @param string $url URL de destino recibida.
+ * @return string
+ */
+function tanish_storefront_unwrap_login_redirect(string $url): string
+{
+    if ('' === $url) {
+        return $url;
+    }
+
+    $parts = wp_parse_url($url);
+
+    if (empty($parts['path']) || !str_contains($parts['path'], 'wp-login.php')) {
+        return $url;
+    }
+
+    if (empty($parts['query'])) {
+        return $url;
+    }
+
+    $query = array();
+    parse_str((string) $parts['query'], $query);
+
+    if (empty($query['redirect_to'])) {
+        return $url;
+    }
+
+    return (string) $query['redirect_to'];
+}
+
+/**
  * Redirige los enlaces de "Iniciar sesion" a la pagina de acceso de TANISH.
  *
  * WordPress genera URLs como
@@ -93,20 +130,22 @@ function tanish_storefront_login_form_action(): string
  * pagina de acceso (/acceso) y, tras autenticarse, sigue al destino original.
  *
  * @param string $redirect_to URL de destino tras el inicio de sesion.
- * @param string $forced      Si el inicio de sesion fue forzado por el core.
+ * @param bool   $forced      Si el inicio de sesion fue forzado por el core.
  * @return string
  */
-function tanish_storefront_login_url(string $redirect_to, string $forced = ''): string
+function tanish_storefront_login_url($redirect_to, $forced = false): string
 {
     $login_page = get_page_by_path(TANISH_LOGIN_PAGE_SLUG);
 
     if (!$login_page instanceof WP_Post) {
-        return $redirect_to;
+        return (string) $redirect_to;
     }
+
+    $redirect_to = tanish_storefront_unwrap_login_redirect((string) $redirect_to);
 
     $url = (string) get_permalink($login_page->ID);
 
-    if (!empty($redirect_to)) {
+    if ('' !== $redirect_to) {
         $url = add_query_arg('redirect_to', rawurlencode($redirect_to), $url);
     }
 
