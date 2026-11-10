@@ -44,3 +44,6 @@ vendor/
 
 # OS
 .directory
+
+# Cache de wrangler (no subir)
+workers/*/.wrangler/
