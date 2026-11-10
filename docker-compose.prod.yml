@@ -36,6 +36,13 @@ services:
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required. Set it in .env.production}
       WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX:-wp_}
       WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
+      # Brevo SMTP (correo transaccional: pedidos, usuarios, etc.)
+      SMTP_HOST: ${SMTP_HOST:-smtp-relay.brevo.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-solvegrades@gmail.com}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-TANISH}
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_HOME', '${WORDPRESS_URL}');
         define('WP_SITEURL', '${WORDPRESS_URL}');
@@ -49,6 +56,7 @@ services:
       - wordpress_data:/var/www/html
       - ./plugins/tanish-inventory:/var/www/html/wp-content/plugins/tanish-inventory:ro
       - ./themes/tanish-storefront:/var/www/html/wp-content/themes/tanish-storefront:ro
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins:ro
     expose:
       - "80"
     healthcheck:
