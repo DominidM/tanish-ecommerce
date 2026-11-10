@@ -507,14 +507,14 @@ add_filter('woocommerce_single_product_carousel_options', function ($options) {
 
 /* ================================================
    GOOGLE TAG MANAGER (Sprint 03 - T-19)
-   Contenedor GTM-MQ2THQTS en el <head> de todas las páginas.
-   (Reemplaza el contenedor anterior GTM-W3H9VX9S: solo
-   debe existir UNA etiqueta Google por página.)
+   Contenedor GTM-K9DZWH4C en el <head> de todas las páginas.
+   (Reemplaza los contenedores anteriores GTM-W3H9VX9S y GTM-MQ2THQTS:
+   solo debe existir UNA etiqueta de Google por página.)
    ================================================ */
 add_action('wp_head', function () {
     ?>
 <!-- Google Tag Manager -->
-<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MQ2THQTS"></script>
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-K9DZWH4C"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -528,7 +528,7 @@ add_action('wp_head', function () {
 add_action('wp_body_open', function () {
     ?>
 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MQ2THQTS"
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K9DZWH4C"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
     <?php
