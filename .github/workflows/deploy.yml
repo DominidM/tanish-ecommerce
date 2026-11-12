@@ -1,0 +1,56 @@
+name: Deploy producción
+
+# Despliega automáticamente en el VPS tras cada push a main.
+# Usa los mismos secrets que backup.yml: VPS_HOST, VPS_USER, VPS_SSH_KEY.
+# Requiere que en el VPS el repo tenga remote a GitHub (el script hace git pull).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # Ejecución manual desde la pestaña Actions.
+
+# Evita deploys superpuestos: si llega otro push, espera en cola.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validar antes de desplegar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint PHP (temas, plugins, mu-plugins)
+        run: find plugins themes mu-plugins -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Validar sintaxis del compose de producción
+        run: docker compose -f docker-compose.prod.yml config --quiet
+        env:
+          # Dummies solo para pasar la validación de variables obligatorias.
+          MYSQL_PASSWORD: ci-dummy
+          MYSQL_ROOT_PASSWORD: ci-dummy
+
+  deploy:
+    name: Desplegar en VPS
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      # Se sube el script desde el checkout (el VPS puede tener una versión vieja).
+      - name: Subir script de deploy al VPS
+        run: |
+          scp -i ~/.ssh/id_ed25519 scripts/deploy-production.sh \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:tanish-ecommerce/scripts/deploy-production.sh"
+
+      - name: Correr deploy en el VPS
+        run: |
+          ssh -i ~/.ssh/id_ed25519 "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "cd tanish-ecommerce && bash scripts/deploy-production.sh"
