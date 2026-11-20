@@ -7,34 +7,12 @@
 defined('ABSPATH') || exit;
 
 /**
- * Capacidades de los CPT privados: todo el acceso requiere manage_woocommerce
- * (administradores y shop managers). Así Autor/Editor no ven datos personales
- * (DNI, email, teléfono) aunque tengan acceso al panel.
- *
- * @return array<string, string>
- */
-function tanish_private_cpt_caps(): array
-{
-    return array_fill_keys([
-        'edit_post',
-        'read_post',
-        'delete_post',
-        'edit_posts',
-        'edit_others_posts',
-        'publish_posts',
-        'read_private_posts',
-        'delete_posts',
-        'delete_private_posts',
-        'delete_published_posts',
-        'delete_others_posts',
-        'edit_private_posts',
-        'edit_published_posts',
-        'create_posts',
-    ], 'manage_woocommerce');
-}
-
-/**
  * Registra los tipos de contenido (privados, solo panel admin).
+ *
+ * Se reutiliza el tipo de capacidad de WooCommerce (`shop_order`) para que
+ * solo administradores y shop managers (que tienen edit_shop_orders) puedan
+ * leer estos datos personales. No se usa `capability_type => 'post'` porque
+ * expondría los envíos a Autor/Editor.
  */
 add_action('init', function (): void {
     register_post_type('tanish_reclamo', [
@@ -53,7 +31,7 @@ add_action('init', function (): void {
         'show_in_admin_bar'   => false,
         'menu_position'       => 26,
         'menu_icon'           => 'dashicons-megaphone',
-        'capabilities'        => tanish_private_cpt_caps(),
+        'capability_type'     => 'shop_order',
         'map_meta_cap'        => true,
         'supports'            => ['title', 'editor'],
         'has_archive'         => false,
@@ -77,7 +55,7 @@ add_action('init', function (): void {
         'show_in_admin_bar'   => false,
         'menu_position'       => 27,
         'menu_icon'           => 'dashicons-email-alt',
-        'capabilities'        => tanish_private_cpt_caps(),
+        'capability_type'     => 'shop_order',
         'map_meta_cap'        => true,
         'supports'            => ['title', 'editor'],
         'has_archive'         => false,
