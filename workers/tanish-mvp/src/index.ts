@@ -3,7 +3,7 @@ export interface Env {
   SITE_NAME?: string;
 }
 
-const FALLBACK_TITLE = "TANISH MVP";
+const DEFAULT_SITE_NAME = "TANISH";
 
 function htmlResponse(body: string, status = 200): Response {
   return new Response(body, {
@@ -15,173 +15,6 @@ function htmlResponse(body: string, status = 200): Response {
   });
 }
 
-function fallbackPage(siteName: string, originUrl?: string): Response {
-  const originLine = originUrl
-    ? `<p class="meta">Origen configurado: <code>${escapeHtml(originUrl)}</code></p>`
-    : `<p class="meta">Falta configurar <code>ORIGIN_URL</code> para apuntar a tu WordPress en producción.</p>`;
-
-  return htmlResponse(`
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${escapeHtml(siteName)} - ${FALLBACK_TITLE}</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #07111f;
-        --panel: rgba(12, 21, 37, 0.84);
-        --border: rgba(148, 163, 184, 0.18);
-        --text: #e5eef9;
-        --muted: #9fb0c6;
-        --accent: #62d0a2;
-        --accent-2: #7dd3fc;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: var(--text);
-        background:
-          radial-gradient(circle at top left, rgba(98, 208, 162, 0.18), transparent 30%),
-          radial-gradient(circle at top right, rgba(125, 211, 252, 0.18), transparent 26%),
-          linear-gradient(160deg, #05101d 0%, #0b1727 52%, #07111f 100%);
-      }
-      main {
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 32px;
-      }
-      .card {
-        width: min(920px, 100%);
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        background: var(--panel);
-        backdrop-filter: blur(18px);
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-        padding: clamp(24px, 4vw, 48px);
-      }
-      .eyebrow {
-        display: inline-flex;
-        gap: 10px;
-        align-items: center;
-        padding: 8px 12px;
-        border-radius: 999px;
-        border: 1px solid rgba(98, 208, 162, 0.35);
-        color: var(--accent);
-        font-size: 12px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-      h1 {
-        margin: 18px 0 12px;
-        font-size: clamp(42px, 7vw, 76px);
-        line-height: 0.95;
-        letter-spacing: -0.06em;
-      }
-      p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.65;
-        font-size: 17px;
-        max-width: 60ch;
-      }
-      .grid {
-        margin-top: 28px;
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
-      }
-      .tile {
-        padding: 18px;
-        border-radius: 18px;
-        border: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.03);
-      }
-      .tile strong {
-        display: block;
-        margin-bottom: 8px;
-        color: var(--accent-2);
-      }
-      .cta {
-        margin-top: 28px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-      a.button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 18px;
-        border-radius: 999px;
-        text-decoration: none;
-        font-weight: 600;
-        border: 1px solid transparent;
-      }
-      a.primary {
-        color: #062016;
-        background: linear-gradient(135deg, var(--accent), #a7f3d0);
-      }
-      a.secondary {
-        color: var(--text);
-        border-color: var(--border);
-        background: rgba(255, 255, 255, 0.02);
-      }
-      .meta {
-        margin-top: 18px;
-        font-size: 14px;
-      }
-      code {
-        color: #d1fae5;
-        background: rgba(255, 255, 255, 0.08);
-        padding: 2px 6px;
-        border-radius: 6px;
-      }
-      @media (max-width: 760px) {
-        .grid { grid-template-columns: 1fr; }
-        .card { border-radius: 20px; }
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <section class="card">
-        <span class="eyebrow">Cloudflare Worker MVP</span>
-        <h1>${escapeHtml(siteName)}</h1>
-        <p>
-          Esta capa de entrada está lista para mostrar el storefront del cliente en Cloudflare.
-          Si el origen no responde, verás esta landing de respaldo mientras conectas el WordPress.
-        </p>
-        <div class="grid">
-          <div class="tile">
-            <strong>Proxy</strong>
-            Reenvia el tráfico al WordPress real cuando definas <code>ORIGIN_URL</code>.
-          </div>
-          <div class="tile">
-            <strong>Demo</strong>
-            Sirve una experiencia presentable aunque el backend local siga cerrado.
-          </div>
-          <div class="tile">
-            <strong>Cloudflare</strong>
-            Listo para desplegar con <code>wrangler login</code> y <code>wrangler deploy</code>.
-          </div>
-        </div>
-        <div class="cta">
-          <a class="button primary" href="/">Reintentar origen</a>
-          <a class="button secondary" href="/wp-admin">Ir a WordPress</a>
-        </div>
-        ${originLine}
-      </section>
-    </main>
-  </body>
-</html>
-  `);
-}
-
 function escapeHtml(value: string): string {
   return value
     .replaceAll("&", "&amp;")
@@ -191,32 +24,227 @@ function escapeHtml(value: string): string {
     .replaceAll("'", "&#39;");
 }
 
-async function proxyRequest(request: Request, originUrl: string): Promise<Response> {
+function pageShell(title: string, body: string): string {
+  return `<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escapeHtml(title)}</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: #0b1220;
+        color: #e5eef9;
+      }
+      main { width: min(640px, 100%); }
+      h1 { font-size: clamp(26px, 5vw, 38px); margin: 0 0 16px; }
+      p { color: #b6c4d6; line-height: 1.6; margin: 0 0 12px; }
+      code {
+        color: #d1fae5;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 2px 6px;
+        border-radius: 6px;
+      }
+      ul { color: #b6c4d6; line-height: 1.7; padding-left: 20px; }
+      .tag {
+        display: inline-block;
+        margin-bottom: 16px;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #fca5a5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      ${body}
+    </main>
+  </body>
+</html>`;
+}
+
+function configErrorPage(siteName: string, reason: string): Response {
+  return htmlResponse(
+    pageShell(
+      `${siteName} - Origen no configurado`,
+      `<span class="tag">503 · Error de configuración</span>
+      <h1>Origen no configurado</h1>
+      <p>Este Worker no puede atender tráfico porque <code>ORIGIN_URL</code> no está definida o no es una URL http(s) válida.</p>
+      <p>Detalle: ${escapeHtml(reason)}</p>
+      <p>Configura el origen real del WordPress antes de desplegar:</p>
+      <ul>
+        <li>Producción: <code>wrangler secret put ORIGIN_URL</code> (o una var de entorno en el dashboard).</li>
+        <li>Local: <code>wrangler dev --var ORIGIN_URL:http://localhost:8080</code>.</li>
+      </ul>
+      <p>No se muestra ninguna landing de respaldo: el sitio está fuera de servicio hasta configurar el origen.</p>`,
+    ),
+    503,
+  );
+}
+
+function badGatewayPage(siteName: string, originUrl: string, reason: string): Response {
+  return htmlResponse(
+    pageShell(
+      `${siteName} - Origen no disponible`,
+      `<span class="tag">502 · Bad Gateway</span>
+      <h1>El origen no responde</h1>
+      <p>No se pudo contactar con <code>${escapeHtml(originUrl)}</code>. Revisa que WordPress esté levantado y accesible desde Cloudflare.</p>
+      <p>Detalle: ${escapeHtml(reason)}</p>`,
+    ),
+    502,
+  );
+}
+
+/**
+ * Devuelve la URL del origen solo si es http(s) válida.
+ */
+function parseOrigin(raw: string | undefined): URL | null {
+  if (!raw || raw.trim() === "") {
+    return null;
+  }
+
+  try {
+    const url = new URL(raw.trim());
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return null;
+    }
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * IP del cliente tal como la ve Cloudflare (no la cadena XFF que envía el
+ * cliente, que es falsificable).
+ */
+function clientIp(request: Request): string {
+  const cfConnecting = request.headers.get("cf-connecting-ip")?.trim();
+  if (cfConnecting) {
+    return cfConnecting;
+  }
+
+  const xff = request.headers.get("x-forwarded-for");
+  if (xff) {
+    const first = xff.split(",")[0]?.trim();
+    if (first) {
+      return first;
+    }
+  }
+
+  return "unknown";
+}
+
+/**
+ * Reescribe una cookie para que el navegador la asocie al host de entrada.
+ * En localhost/IP se elimina `Domain` (host-only), porque los navegadores
+ * rechazan Domain=localhost o Domain=<IP>.
+ */
+function rewriteSetCookie(cookie: string, hostname: string): string {
+  const isLocalHost =
+    hostname === "localhost" ||
+    hostname.endsWith(".localhost") ||
+    /^\[?[0-9a-f:.]+\]?$/i.test(hostname);
+
+  if (isLocalHost) {
+    return cookie.replace(/;\s*domain=[^;]*/gi, "");
+  }
+
+  if (/;\s*domain=/i.test(cookie)) {
+    return cookie.replace(/;\s*domain=[^;]*/gi, `; Domain=${hostname}`);
+  }
+
+  return cookie;
+}
+
+/**
+ * Reescribe `Location` para que los redirects del origen apunten al host
+ * público del Worker y no al dominio interno.
+ */
+function rewriteLocation(location: string, origin: URL, incoming: URL): string {
+  try {
+    const target = new URL(location, origin);
+    target.protocol = incoming.protocol;
+    target.host = incoming.host;
+    return target.toString();
+  } catch {
+    return location;
+  }
+}
+
+async function proxyRequest(request: Request, origin: URL): Promise<Response> {
   const incomingUrl = new URL(request.url);
-  const origin = new URL(originUrl);
 
   const targetUrl = new URL(incomingUrl.pathname + incomingUrl.search, origin);
   const upstreamRequest = new Request(targetUrl.toString(), request);
 
   upstreamRequest.headers.set("x-forwarded-host", incomingUrl.host);
   upstreamRequest.headers.set("x-forwarded-proto", incomingUrl.protocol.replace(":", ""));
+  // Se sobrescribe (no se concatena) para que el origen no confíe en una
+  // cadena XFF enviada por el cliente.
+  upstreamRequest.headers.set("x-forwarded-for", clientIp(request));
+  upstreamRequest.headers.set("x-real-ip", clientIp(request));
 
-  return fetch(upstreamRequest);
+  // `manual` permite devolver el 3xx al navegador con Location reescrito en
+  // lugar de seguir el redirect internamente.
+  const upstream = await fetch(upstreamRequest, { redirect: "manual" });
+
+  const headers = new Headers(upstream.headers);
+
+  const location = headers.get("location");
+  if (location) {
+    headers.set("location", rewriteLocation(location, origin, incomingUrl));
+  }
+
+  const cookies =
+    (upstream.headers as Headers & { getSetCookie?: () => string[] }).getSetCookie?.() ?? [];
+  if (cookies.length > 0) {
+    headers.delete("set-cookie");
+    for (const cookie of cookies) {
+      headers.append("set-cookie", rewriteSetCookie(cookie, incomingUrl.hostname));
+    }
+  }
+
+  // 204/304 no pueden llevar body.
+  if (upstream.status === 204 || upstream.status === 304) {
+    return new Response(null, {
+      status: upstream.status,
+      statusText: upstream.statusText,
+      headers,
+    });
+  }
+
+  return new Response(upstream.body, {
+    status: upstream.status,
+    statusText: upstream.statusText,
+    headers,
+  });
 }
 
 export default {
   async fetch(request, env): Promise<Response> {
-    const siteName = env.SITE_NAME || "TANISH";
-    const originUrl = env.ORIGIN_URL?.trim();
+    const siteName = env.SITE_NAME?.trim() || DEFAULT_SITE_NAME;
+    const origin = parseOrigin(env.ORIGIN_URL);
 
-    if (!originUrl) {
-      return fallbackPage(siteName);
+    if (!origin) {
+      const reason = env.ORIGIN_URL?.trim()
+        ? `Valor recibido: ${env.ORIGIN_URL}`
+        : "La variable no está definida.";
+      return configErrorPage(siteName, reason);
     }
 
     try {
-      return await proxyRequest(request, originUrl);
-    } catch {
-      return fallbackPage(siteName, originUrl);
+      return await proxyRequest(request, origin);
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      return badGatewayPage(siteName, origin.toString(), reason);
     }
   },
 };

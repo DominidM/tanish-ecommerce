@@ -38,10 +38,31 @@ services:
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE:?MYSQL_DATABASE is required. Set it in .env}
       WORDPRESS_DB_USER: ${MYSQL_USER:?MYSQL_USER is required. Set it in .env}
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required. Set it in .env}
+      # Correo local: WordPress entrega a Mailpit por SMTP sin autenticación.
+      # En producción estas variables se sobrescriben con las de Brevo.
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_AUTH: ${SMTP_AUTH:-0}
+      SMTP_SECURE: ${SMTP_SECURE:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-no-reply@tanish.test}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-TANISH}
     volumes:
       - wordpress_data:/var/www/html
       - ./plugins/tanish-inventory:/var/www/html/wp-content/plugins/tanish-inventory
       - ./themes/tanish-storefront:/var/www/html/wp-content/themes/tanish-storefront
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins
+    networks:
+      - tanish-network
+
+  # Buzón de correo de desarrollo: captura todos los correos de WordPress.
+  # UI/API en http://localhost:8025. El puerto 1025 (SMTP) queda solo en la red
+  # interna para que WordPress lo alcance como "mailpit:1025".
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: ${MAILPIT_CONTAINER_NAME:-tanish-mailpit}
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_UI_PORT:-8025}:8025"
     networks:
       - tanish-network
 

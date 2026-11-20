@@ -57,6 +57,16 @@ WORDPRESS_DEBUG=0
 WORDPRESS_URL=https://tanish.example.com
 CADDY_DOMAIN=tanish.example.com
 CADDY_EMAIL=admin@example.com
+
+# Correo (Brevo en producción)
+SMTP_HOST=smtp-relay.brevo.com
+SMTP_PORT=587
+SMTP_AUTH=1
+SMTP_SECURE=tls
+SMTP_USER=CHANGE_ME@example.com
+SMTP_PASSWORD=CHANGE_ME
+SMTP_FROM_EMAIL=no-reply@tanish.example.com
+SMTP_FROM_NAME=TANISH
 ```
 
 ## 4. Primer despliegue
@@ -267,3 +277,49 @@ Caddy
 WordPress + WooCommerce + TANISH Inventory
 
 Mientras la PC local esté apagada, el sitio seguiría disponible siempre que el VPS esté encendido y Cloudflare siga apuntando al mismo host.
+
+## 18. Correo
+
+### Desarrollo (Mailpit)
+
+El `docker-compose.yml` de desarrollo incluye **Mailpit**, un buzón SMTP que
+captura todos los correos sin enviarlos a Internet:
+
+- SMTP interno para WordPress: `mailpit:1025` (no se publica al host).
+- UI/API: <http://localhost:8025>.
+
+WordPress toma la configuración de las variables `SMTP_*` del contenedor
+(`SMTP_HOST=mailpit`, `SMTP_PORT=1025`, `SMTP_AUTH=0`, `SMTP_SECURE=`). El
+mu-plugin `mu-plugins/brevo-smtp.php` configura PHPMailer con esos valores.
+
+Verificación rápida:
+
+```bash
+docker exec tanish-wordpress php -r 'require "/var/www/html/wp-load.php"; var_dump(wp_mail("qa@tanish.test","Prueba","Cuerpo"));'
+curl -s http://localhost:8025/api/v1/messages
+```
+
+### Producción (Brevo)
+
+En el VPS se usa el SMTP de Brevo. Configurar en `.env.production` los valores
+documentados en `.env.production.example` (`SMTP_HOST=smtp-relay.brevo.com`,
+`SMTP_PORT=587`, `SMTP_AUTH=1`, `SMTP_SECURE=tls`, `SMTP_USER`,
+`SMTP_PASSWORD`, `SMTP_FROM_EMAIL`, `SMTP_FROM_NAME`). El remitente debe estar
+verificado en Brevo. Los fallos de `wp_mail()` quedan en el `error_log` con el
+prefijo `[TANISH SMTP]`.
+
+## 19. Cloudflare Worker
+
+El Worker de `workers/tanish-mvp` ya **no** muestra una landing comercial falsa.
+La variable `ORIGIN_URL` es obligatoria:
+
+- Sin `ORIGIN_URL` (o con una URL no http/https) responde **503** con un mensaje
+  de configuración.
+- Si el origen falla, responde **502**.
+- Configuración recomendada: `wrangler secret put ORIGIN_URL` (o variable de
+  entorno en el dashboard) con la URL pública del WordPress, por ejemplo
+  `https://tanish.example.com`.
+
+El valor por defecto en `wrangler.jsonc` está vacío a propósito. No volver a
+poner un placeholder: un dominio inventado provoca que el Worker parezca
+"funcionar" mientras todo cae en una página de respaldo.

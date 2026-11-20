@@ -7,6 +7,33 @@
 defined('ABSPATH') || exit;
 
 /**
+ * Capacidades de los CPT privados: todo el acceso requiere manage_woocommerce
+ * (administradores y shop managers). Así Autor/Editor no ven datos personales
+ * (DNI, email, teléfono) aunque tengan acceso al panel.
+ *
+ * @return array<string, string>
+ */
+function tanish_private_cpt_caps(): array
+{
+    return array_fill_keys([
+        'edit_post',
+        'read_post',
+        'delete_post',
+        'edit_posts',
+        'edit_others_posts',
+        'publish_posts',
+        'read_private_posts',
+        'delete_posts',
+        'delete_private_posts',
+        'delete_published_posts',
+        'delete_others_posts',
+        'edit_private_posts',
+        'edit_published_posts',
+        'create_posts',
+    ], 'manage_woocommerce');
+}
+
+/**
  * Registra los tipos de contenido (privados, solo panel admin).
  */
 add_action('init', function (): void {
@@ -26,7 +53,7 @@ add_action('init', function (): void {
         'show_in_admin_bar'   => false,
         'menu_position'       => 26,
         'menu_icon'           => 'dashicons-megaphone',
-        'capability_type'     => 'post',
+        'capabilities'        => tanish_private_cpt_caps(),
         'map_meta_cap'        => true,
         'supports'            => ['title', 'editor'],
         'has_archive'         => false,
@@ -50,7 +77,7 @@ add_action('init', function (): void {
         'show_in_admin_bar'   => false,
         'menu_position'       => 27,
         'menu_icon'           => 'dashicons-email-alt',
-        'capability_type'     => 'post',
+        'capabilities'        => tanish_private_cpt_caps(),
         'map_meta_cap'        => true,
         'supports'            => ['title', 'editor'],
         'has_archive'         => false,
@@ -60,21 +87,49 @@ add_action('init', function (): void {
 });
 
 /**
+ * ¿La IP pertenece a un proxy de confianza (privada o loopback)?
+ */
+function tanish_is_trusted_proxy(string $ip): bool
+{
+    if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+        return false;
+    }
+
+    // Si NO es pública (es privada o reservada/loopback), es un proxy local.
+    return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false;
+}
+
+/**
  * IP real del visitante (detrás del Worker de Cloudflare y Caddy).
+ *
+ * - HTTP_CF_CONNECTING_IP lo escribe Cloudflare y es la fuente preferente.
+ * - HTTP_X_FORWARDED_FOR solo se acepta si REMOTE_ADDR es un proxy de
+ *   confianza (IP privada/loopback). Si el origen recibe tráfico directo,
+ *   un cliente podría falsificarlo y por eso se ignora.
+ * - En cualquier otro caso se usa REMOTE_ADDR.
  */
 function tanish_client_ip(): string
 {
-    foreach (['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'] as $key) {
-        if (empty($_SERVER[$key])) {
-            continue;
-        }
-        $candidate = trim(explode(',', (string) $_SERVER[$key])[0]);
+    if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        $candidate = trim(explode(',', (string) $_SERVER['HTTP_CF_CONNECTING_IP'])[0]);
         if (filter_var($candidate, FILTER_VALIDATE_IP)) {
             return $candidate;
         }
     }
 
-    return '0.0.0.0';
+    $remote = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+    $remoteValid = (bool) filter_var($remote, FILTER_VALIDATE_IP);
+
+    if ($remoteValid && tanish_is_trusted_proxy($remote) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        foreach (explode(',', (string) $_SERVER['HTTP_X_FORWARDED_FOR']) as $part) {
+            $candidate = trim($part);
+            if (filter_var($candidate, FILTER_VALIDATE_IP)) {
+                return $candidate;
+            }
+        }
+    }
+
+    return $remoteValid ? $remote : '0.0.0.0';
 }
 
 /**
