@@ -182,3 +182,21 @@ function tanish_register_mercadopago_link_gateway($methods): array
     return $methods;
 }
 add_filter('woocommerce_payment_gateways', 'tanish_register_mercadopago_link_gateway');
+
+/**
+ * Asegura que el gateway esté instanciado en las pantallas donde se muestran
+ * sus instrucciones. Los callbacks se registran en el constructor del gateway.
+ */
+function tanish_mercadopago_link_ensure_gateway_instance(): void
+{
+    if (!function_exists('is_account_page')) {
+        return;
+    }
+
+    if (!is_account_page() && !is_order_received_page()) {
+        return;
+    }
+
+    WC()->payment_gateways()->payment_gateways();
+}
+add_action('wp', 'tanish_mercadopago_link_ensure_gateway_instance');
