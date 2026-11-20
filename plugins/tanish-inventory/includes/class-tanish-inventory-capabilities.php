@@ -19,6 +19,24 @@ class Tanish_Inventory_Capabilities {
 		// Se ejecuta en init para que los roles existan también fuera del admin.
 		add_action('init', array($this, 'ensure_capabilities'));
 		add_action('admin_init', array($this, 'ensure_capabilities'));
+
+		// WooCommerce bloquea wp-admin a quien no tenga edit_posts/manage_woocommerce.
+		// El personal de almacén y ventas debe poder entrar a su panel.
+		add_filter('woocommerce_prevent_admin_access', array($this, 'allow_staff_admin_access'));
+	}
+
+	/**
+	 * Permite el acceso a wp-admin al personal con capacidades de TANISH.
+	 *
+	 * @param bool $prevent Valor calculado por WooCommerce.
+	 * @return bool
+	 */
+	public function allow_staff_admin_access($prevent): bool {
+		if (is_user_logged_in() && (current_user_can(self::CAPABILITY) || current_user_can('edit_shop_orders'))) {
+			return false;
+		}
+
+		return (bool) $prevent;
 	}
 
 	public function ensure_capabilities(): void {
