@@ -6,19 +6,23 @@
 
 defined('ABSPATH') || exit;
 
-$submitted = false;
 $errors = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_contact_nonce'])) {
-    if (!wp_verify_nonce($_POST['tanish_contact_nonce'], 'tanish_contact_form')) {
+// WordPress añade barras invertidas a $_POST; se quitan una sola vez para
+// guardar y repintar los valores tal cual los escribió el usuario
+// (p. ej. "O'Brien" no debe quedar como "O\'Brien").
+$posted = wp_unslash($_POST);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($posted['tanish_contact_nonce'])) {
+    if (!wp_verify_nonce(sanitize_text_field($posted['tanish_contact_nonce']), 'tanish_contact_form')) {
         $errors[] = 'Token de seguridad inválido. Intenta de nuevo.';
     } else {
-        $nombres    = sanitize_text_field($_POST['nombres'] ?? '');
-        $apellidos  = sanitize_text_field($_POST['apellidos'] ?? '');
-        $telefono   = sanitize_text_field($_POST['telefono'] ?? '');
-        $correo     = sanitize_email($_POST['correo'] ?? '');
-        $tipo       = sanitize_text_field($_POST['tipo'] ?? '');
-        $descripcion = sanitize_textarea_field($_POST['descripcion'] ?? '');
+        $nombres    = sanitize_text_field($posted['nombres'] ?? '');
+        $apellidos  = sanitize_text_field($posted['apellidos'] ?? '');
+        $telefono   = sanitize_text_field($posted['telefono'] ?? '');
+        $correo     = sanitize_email($posted['correo'] ?? '');
+        $tipo       = sanitize_text_field($posted['tipo'] ?? '');
+        $descripcion = sanitize_textarea_field($posted['descripcion'] ?? '');
 
         if (empty($nombres))   $errors[] = 'El nombre es obligatorio.';
         if (empty($apellidos)) $errors[] = 'Los apellidos son obligatorios.';
@@ -66,7 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tanish_contact_nonce'
                 'reply_to' => $correo,
             ]);
 
-            tanish_form_success_redirect('Mensaje enviado. Te responderemos pronto.');
+            if ($sent) {
+                tanish_form_success_redirect('Mensaje enviado. Te responderemos pronto.');
+            }
+
+            // El mensaje ya quedó guardado en la base de datos, pero el
+            // correo no salió: hay que avisar en vez de dar éxito falso.
+            $errors[] = 'Tu mensaje se guardó, pero no pudimos enviar la notificación por correo. Escríbenos por WhatsApp o inténtalo de nuevo en unos minutos.';
         }
     }
 }
@@ -120,79 +130,71 @@ get_header();
                 </div>
 
                 <div class="contacto-form-wrap">
-                    <?php if ($submitted) : ?>
-                        <div class="contacto-success">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            <h3>Mensaje enviado</h3>
-                            <p>Gracias por contactarnos. Te responderemos pronto.</p>
+                    <?php if (!empty($errors)) : ?>
+                        <div class="contacto-errors">
+                            <?php foreach ($errors as $err) : ?>
+                                <p><?php echo esc_html($err); ?></p>
+                            <?php endforeach; ?>
                         </div>
-                    <?php else : ?>
-                        <?php if (!empty($errors)) : ?>
-                            <div class="contacto-errors">
-                                <?php foreach ($errors as $err) : ?>
-                                    <p><?php echo esc_html($err); ?></p>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <form class="contacto-form" method="post" action="">
-                            <?php wp_nonce_field('tanish_contact_form', 'tanish_contact_nonce'); ?>
-
-                            <div class="contacto-form-row">
-                                <div class="contacto-field">
-                                    <label for="nombres">Nombres *</label>
-                                    <input type="text" id="nombres" name="nombres" required placeholder="Tus nombres" value="<?php echo esc_attr($_POST['nombres'] ?? ''); ?>">
-                                </div>
-                                <div class="contacto-field">
-                                    <label for="apellidos">Apellidos *</label>
-                                    <input type="text" id="apellidos" name="apellidos" required placeholder="Tus apellidos" value="<?php echo esc_attr($_POST['apellidos'] ?? ''); ?>">
-                                </div>
-                            </div>
-
-                            <div class="contacto-form-row">
-                                <div class="contacto-field">
-                                    <label for="telefono">Teléfono</label>
-                                    <input type="tel" id="telefono" name="telefono" placeholder="+51 999 999 999" value="<?php echo esc_attr($_POST['telefono'] ?? ''); ?>">
-                                </div>
-                                <div class="contacto-field">
-                                    <label for="correo">Correo electrónico *</label>
-                                    <input type="email" id="correo" name="correo" required placeholder="correo@ejemplo.com" value="<?php echo esc_attr($_POST['correo'] ?? ''); ?>">
-                                </div>
-                            </div>
-
-                            <div class="contacto-field">
-                                <label for="tipo">Tipo de consulta *</label>
-                                <select id="tipo" name="tipo" required>
-                                    <option value="">Selecciona una opción</option>
-                                    <option value="Consulta general" <?php selected($_POST['tipo'] ?? '', 'Consulta general'); ?>>Consulta general</option>
-                                    <option value="Pedido" <?php selected($_POST['tipo'] ?? '', 'Pedido'); ?>>Pedido</option>
-                                    <option value="Disponibilidad" <?php selected($_POST['tipo'] ?? '', 'Disponibilidad'); ?>>Disponibilidad</option>
-                                    <option value="Precios" <?php selected($_POST['tipo'] ?? '', 'Precios'); ?>>Precios</option>
-                                    <option value="Otro" <?php selected($_POST['tipo'] ?? '', 'Otro'); ?>>Otro</option>
-                                </select>
-                            </div>
-
-                            <div class="contacto-field">
-                                <label for="descripcion">Descripción *</label>
-                                <textarea id="descripcion" name="descripcion" rows="5" required placeholder="Cuéntanos en qué podemos ayudarte..."><?php echo esc_textarea($_POST['descripcion'] ?? ''); ?></textarea>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary contacto-submit">
-                                Enviar mensaje
-                            </button>
-                        </form>
-                        <script>
-                        document.querySelectorAll('.contacto-form').forEach(function (form) {
-                            form.addEventListener('submit', function () {
-                                var btn = form.querySelector('button[type="submit"]');
-                                if (btn) {
-                                    btn.disabled = true;
-                                    btn.textContent = 'Enviando...';
-                                }
-                            });
-                        });
-                        </script>
                     <?php endif; ?>
+
+                    <form class="contacto-form" method="post" action="">
+                        <?php wp_nonce_field('tanish_contact_form', 'tanish_contact_nonce'); ?>
+
+                        <div class="contacto-form-row">
+                            <div class="contacto-field">
+                                <label for="nombres">Nombres *</label>
+                                <input type="text" id="nombres" name="nombres" required placeholder="Tus nombres" value="<?php echo esc_attr($posted['nombres'] ?? ''); ?>">
+                            </div>
+                            <div class="contacto-field">
+                                <label for="apellidos">Apellidos *</label>
+                                <input type="text" id="apellidos" name="apellidos" required placeholder="Tus apellidos" value="<?php echo esc_attr($posted['apellidos'] ?? ''); ?>">
+                            </div>
+                        </div>
+
+                        <div class="contacto-form-row">
+                            <div class="contacto-field">
+                                <label for="telefono">Teléfono</label>
+                                <input type="tel" id="telefono" name="telefono" placeholder="+51 999 999 999" value="<?php echo esc_attr($posted['telefono'] ?? ''); ?>">
+                            </div>
+                            <div class="contacto-field">
+                                <label for="correo">Correo electrónico *</label>
+                                <input type="email" id="correo" name="correo" required placeholder="correo@ejemplo.com" value="<?php echo esc_attr($posted['correo'] ?? ''); ?>">
+                            </div>
+                        </div>
+
+                        <div class="contacto-field">
+                            <label for="tipo">Tipo de consulta *</label>
+                            <select id="tipo" name="tipo" required>
+                                <option value="">Selecciona una opción</option>
+                                <option value="Consulta general" <?php selected($posted['tipo'] ?? '', 'Consulta general'); ?>>Consulta general</option>
+                                <option value="Pedido" <?php selected($posted['tipo'] ?? '', 'Pedido'); ?>>Pedido</option>
+                                <option value="Disponibilidad" <?php selected($posted['tipo'] ?? '', 'Disponibilidad'); ?>>Disponibilidad</option>
+                                <option value="Precios" <?php selected($posted['tipo'] ?? '', 'Precios'); ?>>Precios</option>
+                                <option value="Otro" <?php selected($posted['tipo'] ?? '', 'Otro'); ?>>Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="contacto-field">
+                            <label for="descripcion">Descripción *</label>
+                            <textarea id="descripcion" name="descripcion" rows="5" required placeholder="Cuéntanos en qué podemos ayudarte..."><?php echo esc_textarea($posted['descripcion'] ?? ''); ?></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary contacto-submit">
+                            Enviar mensaje
+                        </button>
+                    </form>
+                    <script>
+                    document.querySelectorAll('.contacto-form').forEach(function (form) {
+                        form.addEventListener('submit', function () {
+                            var btn = form.querySelector('button[type="submit"]');
+                            if (btn) {
+                                btn.disabled = true;
+                                btn.textContent = 'Enviando...';
+                            }
+                        });
+                    });
+                    </script>
                 </div>
 
             </div>

@@ -56,11 +56,6 @@ get_header();
 
                 <?php endif; ?>
 
-                <div class="shop-sidebar-sort">
-                    <h2 class="widget-title">Ordenar por</h2>
-                    <?php woocommerce_catalog_ordering(); ?>
-                </div>
-
             </aside>
 
             <div class="shop-content">

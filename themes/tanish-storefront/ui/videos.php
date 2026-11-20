@@ -1,12 +1,28 @@
 <?php
+defined('ABSPATH') || exit;
+
+// Se incluyen los videos sin la meta (importados o creados antes del campo)
+// y los marcados como activos. Los marcados explícitamente como "0" quedan
+// fuera.
 $videos = new WP_Query([
     'post_type'      => 'tanish_video',
     'posts_per_page' => 5,
     'post_status'    => 'publish',
-    'meta_key'       => '_tanish_video_active',
-    'meta_value'     => '1',
-    'orderby'        => 'menu_order',
-    'order'          => 'ASC',
+    'no_found_rows'  => true,
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+    'meta_query'     => [
+        'relation' => 'OR',
+        [
+            'key'     => '_tanish_video_active',
+            'compare' => 'NOT EXISTS',
+        ],
+        [
+            'key'     => '_tanish_video_active',
+            'value'   => '1',
+            'compare' => '=',
+        ],
+    ],
 ]);
 
 $has_videos = $videos->have_posts();

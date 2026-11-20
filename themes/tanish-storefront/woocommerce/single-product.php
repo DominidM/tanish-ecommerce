@@ -14,12 +14,19 @@ do_action('woocommerce_before_main_content');
 
 <div class="tanish-container tanish-product-page">
 
-	<nav class="woocommerce-breadcrumb" aria-label="Breadcrumb">
-		<?php
-		do_action('woocommerce_before_shop_loop');
-		woocommerce_breadcrumb();
-		?>
-	</nav>
+	<?php
+	/**
+	 * Avisos de WooCommerce (carrito, errores...) fuera del breadcrumb.
+	 * Este hook tambien lo usan otros plugins; imprime los notices en su
+	 * prioridad 10 sin ensuciar el HTML del breadcrumb.
+	 */
+	do_action('woocommerce_before_single_product');
+	?>
+
+	<?php
+	// woocommerce_breadcrumb() ya imprime su propio <nav class="woocommerce-breadcrumb">.
+	woocommerce_breadcrumb();
+	?>
 
 	<?php while (have_posts()) : ?>
 		<?php the_post(); ?>
@@ -50,10 +57,13 @@ do_action('woocommerce_before_main_content');
 
 		<?php
 		/**
-		 * Tabs + Related products (outside the grid, full width)
+		 * Tabs, upsells y productos relacionados (fuera de la rejilla).
+		 * WooCommerce engancha aqui:
+		 *   - woocommerce_output_product_data_tabs (10)
+		 *   - woocommerce_upsell_display             (15)
+		 *   - woocommerce_output_related_products    (20)
 		 */
-		woocommerce_output_product_data_tabs();
-		woocommerce_output_related_products();
+		do_action('woocommerce_after_single_product_summary');
 		?>
 
 	<?php endwhile; ?>
@@ -61,5 +71,6 @@ do_action('woocommerce_before_main_content');
 </div>
 
 <?php
+do_action('woocommerce_after_single_product');
 do_action('woocommerce_after_main_content');
 get_footer('shop');

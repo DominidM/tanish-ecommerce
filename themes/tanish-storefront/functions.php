@@ -28,6 +28,18 @@ function tanish_storefront_setup(): void
     register_nav_menus([
         'primary' => __('Menú principal', 'tanish-storefront'),
     ]);
+
+    // Barra lateral de la tienda: permite colocar widgets (filtro de precio,
+    // categorías, etc.) desde Apariencia > Widgets.
+    register_sidebar([
+        'name'          => __('Filtros de tienda', 'tanish-storefront'),
+        'id'            => 'shop-sidebar',
+        'description'   => __('Widgets que se muestran en la barra lateral del catálogo.', 'tanish-storefront'),
+        'before_widget' => '<div id="%1$s" class="widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widget-title">',
+        'after_title'   => '</h2>',
+    ]);
 }
 
 add_action('after_setup_theme', 'tanish_storefront_setup');
@@ -234,7 +246,8 @@ function tanish_storefront_wc_translations(string $translation, string $text, st
     return $map[$text] ?? $translation;
 }
 add_filter('gettext', 'tanish_storefront_wc_translations', 10, 3);
-add_filter('ngettext', 'tanish_storefront_wc_translations', 10, 3);
+// Nota: no se engancha a 'ngettext' con esta firma: ngettext pasa 5
+// argumentos ($translation, $single, $plural, $number, $domain).
 
 
 function tanish_storefront_wc_ordering_options(array $options): array
@@ -251,24 +264,8 @@ function tanish_storefront_wc_ordering_options(array $options): array
 add_filter('woocommerce_catalog_orderedby', 'tanish_storefront_wc_ordering_options');
 
 
-function tanish_storefront_shop_subtitle(): void
-{
-    if (!is_shop()) {
-        return;
-    }
-
-    global $wp_query;
-
-    $total = $wp_query->found_posts ?? 0;
-    $per_page = $wp_query->query_vars['posts_per_page'] ?? 9;
-    $found = min($wp_query->post_count, $per_page);
-
-    echo '<div class="shop-toolbar-inner">';
-    echo '<span class="shop-toolbar-count">Mostrando ' . esc_html($found) . ' de ' . esc_html($total) . ' productos</span>';
-    echo '</div>';
-}
-remove_action('woocommerce_before_shop_loop', 'tanish_storefront_shop_subtitle', 1);
-add_action('woocommerce_before_shop_loop', 'tanish_storefront_shop_subtitle', 1);
+// El conteo de resultados lo imprime WooCommerce (woocommerce_result_count)
+// en woocommerce_before_shop_loop. No se duplica con un subtítulo propio.
 
 
 function tanish_storefront_custom_product_search(): void
@@ -432,7 +429,16 @@ function tanish_storefront_wc_tabs_translation(array $tabs): array
         $tabs['additional_information']['title'] = 'Información adicional';
     }
     if (isset($tabs['reviews']['title'])) {
-        $tabs['reviews']['title'] = 'Reseñas (0)';
+        global $product;
+
+        if (!($product instanceof WC_Product)) {
+            $product = wc_get_product(get_the_ID());
+        }
+
+        $review_count = $product instanceof WC_Product ? (int) $product->get_review_count() : 0;
+
+        /* translators: %d: número de reseñas del producto. */
+        $tabs['reviews']['title'] = sprintf('Reseñas (%d)', $review_count);
     }
 
     return $tabs;
@@ -533,6 +539,247 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
     <?php
 }, 1);
+
+/* ================================================
+   ANALITICA GA4 (UAT-10)
+   Eventos de e-commerce empujados a window.dataLayer
+   (el contenedor GTM-P9CHWGQD se carga arriba).
+   ================================================ */
+
+/**
+ * Empuja un evento a la capa de datos de GTM/GA4.
+ *
+ * @param string $event  Nombre del evento (view_item, add_to_cart...).
+ * @param array  $params Parámetros del evento.
+ */
+function tanish_storefront_ga4_event(string $event, array $params = []): void
+{
+    if ('' === $event) {
+        return;
+    }
+
+    $json = wp_json_encode(
+        $params,
+        JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+    );
+
+    if (!is_string($json) || '' === $json) {
+        $json = '{}';
+    }
+
+    printf(
+        "<script>window.dataLayer=window.dataLayer||[];window.dataLayer.push(Object.assign(%s,{event:'%s'}));</script>\n",
+        $json,
+        esc_js($event)
+    );
+}
+
+/**
+ * Productos del carrito en el formato "items" de GA4.
+ *
+ * @return array
+ */
+function tanish_storefront_ga4_cart_items(): array
+{
+    $items = [];
+
+    if (!function_exists('WC') || !WC()->cart) {
+        return $items;
+    }
+
+    foreach (WC()->cart->get_cart() as $cart_item) {
+        $product = $cart_item['data'] ?? null;
+
+        if (!($product instanceof WC_Product)) {
+            continue;
+        }
+
+        $items[] = [
+            'item_id'   => (string) $product->get_id(),
+            'item_name' => $product->get_name(),
+            'sku'       => (string) $product->get_sku(),
+            'price'     => (float) $product->get_price(),
+            'quantity'  => (int) ($cart_item['quantity'] ?? 1),
+        ];
+    }
+
+    return $items;
+}
+
+/**
+ * Evento view_item en la ficha de producto.
+ */
+function tanish_storefront_ga4_view_item(): void
+{
+    if (!function_exists('is_product') || !is_product()) {
+        return;
+    }
+
+    global $product;
+
+    if (!($product instanceof WC_Product)) {
+        $product = wc_get_product(get_the_ID());
+    }
+
+    if (!($product instanceof WC_Product)) {
+        return;
+    }
+
+    tanish_storefront_ga4_event('view_item', [
+        'currency' => 'PEN',
+        'value'    => (float) $product->get_price(),
+        'items'    => [
+            [
+                'item_id'   => (string) $product->get_id(),
+                'item_name' => $product->get_name(),
+                'sku'       => (string) $product->get_sku(),
+                'price'     => (float) $product->get_price(),
+                'quantity'  => 1,
+            ],
+        ],
+    ]);
+}
+add_action('wp_footer', 'tanish_storefront_ga4_view_item', 20);
+
+/**
+ * Evento begin_checkout en la página de checkout.
+ */
+function tanish_storefront_ga4_begin_checkout(): void
+{
+    if (!function_exists('is_checkout') || !is_checkout()) {
+        return;
+    }
+
+    if (function_exists('is_order_received_page') && is_order_received_page()) {
+        return;
+    }
+
+    $items = tanish_storefront_ga4_cart_items();
+
+    if (empty($items)) {
+        return;
+    }
+
+    $total = 0.0;
+
+    foreach ($items as $item) {
+        $total += (float) $item['price'] * (int) $item['quantity'];
+    }
+
+    tanish_storefront_ga4_event('begin_checkout', [
+        'currency' => 'PEN',
+        'value'    => $total,
+        'items'    => $items,
+    ]);
+}
+add_action('wp_footer', 'tanish_storefront_ga4_begin_checkout', 20);
+
+/**
+ * Evento add_to_cart: escucha el evento jQuery "added_to_cart" que dispara
+ * WooCommerce tras el alta por AJAX y recoge los datos del botón.
+ */
+add_action('wp_footer', function (): void {
+    if (is_admin()) {
+        return;
+    }
+    ?>
+    <script>
+    (function () {
+        if (!window.jQuery) { return; }
+        window.jQuery(function ($) {
+            $(document.body).on('added_to_cart', function (event, fragments, cartHash, $button) {
+                window.dataLayer = window.dataLayer || [];
+
+                var $btn = ($button && $button.length) ? $button : $();
+                var productId = $btn.data('product_id') || '';
+                var sku = $btn.data('product_sku') || '';
+                var quantity = parseInt($btn.data('quantity'), 10) || 1;
+                var name = $btn.data('product_name') || $btn.attr('aria-label') || '';
+
+                if (!name) {
+                    name = $btn.closest('.product').find('.woocommerce-loop-product__title').text() || '';
+                }
+
+                var price = 0;
+                var $price = $btn.closest('.product, .tanish-product-summary').find('.price .amount').first();
+
+                if ($price.length) {
+                    price = parseFloat($price.text().replace(/[^0-9.,]/g, '').replace(',', '.')) || 0;
+                }
+
+                window.dataLayer.push({
+                    event: 'add_to_cart',
+                    currency: 'PEN',
+                    value: price * quantity,
+                    items: [{
+                        item_id: String(productId),
+                        item_name: String(name),
+                        sku: String(sku),
+                        price: price,
+                        quantity: quantity
+                    }]
+                });
+            });
+        });
+    })();
+    </script>
+    <?php
+}, 21);
+
+/**
+ * Evento purchase en la página de "gracias" del pedido.
+ *
+ * Se marca el pedido para no duplicar la compra si el usuario recarga.
+ *
+ * @param int $order_id ID del pedido.
+ */
+function tanish_storefront_ga4_purchase(int $order_id): void
+{
+    if (!function_exists('wc_get_order')) {
+        return;
+    }
+
+    $order = wc_get_order($order_id);
+
+    if (!($order instanceof WC_Order)) {
+        return;
+    }
+
+    if ('1' === $order->get_meta('_tanish_ga4_purchase_sent')) {
+        return;
+    }
+
+    $items = [];
+
+    foreach ($order->get_items() as $item) {
+        if (!($item instanceof WC_Order_Item_Product)) {
+            continue;
+        }
+
+        $product = $item->get_product();
+
+        $items[] = [
+            'item_id'   => (string) $item->get_product_id(),
+            'item_name' => $item->get_name(),
+            'sku'       => $product instanceof WC_Product ? (string) $product->get_sku() : '',
+            'price'     => (float) $order->get_item_total($item, false, false),
+            'quantity'  => (int) $item->get_quantity(),
+        ];
+    }
+
+    tanish_storefront_ga4_event('purchase', [
+        'transaction_id' => (string) $order->get_order_number(),
+        'currency'       => $order->get_currency() ?: 'PEN',
+        'value'          => (float) $order->get_total(),
+        'tax'            => (float) $order->get_total_tax(),
+        'shipping'       => (float) $order->get_shipping_total(),
+        'items'          => $items,
+    ]);
+
+    $order->update_meta_data('_tanish_ga4_purchase_sent', '1');
+    $order->save();
+}
+add_action('woocommerce_thankyou', 'tanish_storefront_ga4_purchase', 10, 1);
 
 /* ================================================
    CORREOS HTML (Contacto / Libro de Reclamaciones)

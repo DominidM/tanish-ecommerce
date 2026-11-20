@@ -53,13 +53,11 @@ defined('ABSPATH') || exit;
                     </a>
                 <?php
                     endif;
-                    if (current_user_can('manage_tanish_inventory')) :
                 ?>
                     <a class="header-logout" href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>">
                         Salir
                     </a>
                 <?php
-                    endif;
                 else :
                 ?>
                     <a class="btn btn-secondary" href="<?php echo esc_url(tanish_storefront_login_page_url()); ?>">
