@@ -165,7 +165,7 @@ get_header();
 
                         <div class="acceso-field acceso-field--remember">
                             <label for="rememberme">
-                                <input type="checkbox" name="rememberme" id="rememberme" value="forever" <?php checked(!empty($_POST['rememberme'])); ?>>
+                                <input type="checkbox" name="rememberme" id="rememberme" value="forever" <?php checked(!empty($posted['rememberme'])); ?>>
                                 Mantener la sesión iniciada
                             </label>
                         </div>

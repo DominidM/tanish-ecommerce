@@ -28,9 +28,16 @@ function tanish_storefront_setup(): void
     register_nav_menus([
         'primary' => __('Menú principal', 'tanish-storefront'),
     ]);
+}
 
-    // Barra lateral de la tienda: permite colocar widgets (filtro de precio,
-    // categorías, etc.) desde Apariencia > Widgets.
+add_action('after_setup_theme', 'tanish_storefront_setup');
+
+/**
+ * Barra lateral de la tienda: permite colocar widgets (filtro de precio,
+ * categorías, etc.) desde Apariencia > Widgets.
+ */
+function tanish_storefront_widgets_init(): void
+{
     register_sidebar([
         'name'          => __('Filtros de tienda', 'tanish-storefront'),
         'id'            => 'shop-sidebar',
@@ -41,8 +48,7 @@ function tanish_storefront_setup(): void
         'after_title'   => '</h2>',
     ]);
 }
-
-add_action('after_setup_theme', 'tanish_storefront_setup');
+add_action('widgets_init', 'tanish_storefront_widgets_init');
 
 function tanish_storefront_page_url(string $slug, string $fallback = '/'): string
 {

@@ -280,15 +280,6 @@
         }
 
         /* -------------------------------------------
-           SHOP - Move result count below pagination
-        ------------------------------------------- */
-        var shopCount = document.querySelector('.shop-toolbar-inner');
-        var pagination = document.querySelector('.woocommerce-pagination');
-        if (shopCount && pagination) {
-            pagination.parentNode.insertBefore(shopCount, pagination.nextSibling);
-        }
-
-        /* -------------------------------------------
            MOBILE NAV TOGGLE - Menu hamburguesa
            En movil el menu principal se oculta tras
            un boton; aqui se alterna la clase .is-open.
