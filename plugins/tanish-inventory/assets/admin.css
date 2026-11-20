@@ -1,40 +1,675 @@
-.tanish-inventory-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-    margin: 24px 0;
+/**
+ * TANISH Inventory - Admin UI
+ *
+ * Every rule is scoped to the plugin screens only:
+ *   body.toplevel_page_tanish-inventory
+ *   body[class*="tanish-inventory_page_"]
+ *
+ * @package Tanish_Inventory
+ */
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) {
+	--t-navy: #0F3B5F;
+	--t-primary: #1F2937;
+	--t-muted: #6B7280;
+	--t-border: #E5E7EB;
+	--t-accent: #22C55E;
+	--t-accent-dark: #16A34A;
+	--t-accent-soft: #ECFDF5;
+	--t-yellow: #FBBF24;
+	--t-yellow-soft: #FEF9C3;
+	--t-red: #EF4444;
+	--t-red-soft: #FEF2F2;
+	--t-bg: #F8F9F4;
+	--t-radius: 12px;
+	--t-shadow: 0 1px 2px rgba(15, 59, 95, 0.05), 0 14px 30px -26px rgba(15, 59, 95, 0.45);
 }
 
-.tanish-inventory-card {
-    background: #fff;
-    border: 1px solid #dfe3ea;
-    border-radius: 12px;
-    padding: 18px 20px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+/* -------------------------------------------------------------------------
+ * Layout / page header
+ * ---------------------------------------------------------------------- */
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap {
+	max-width: 1320px;
+	margin-top: 22px;
+	padding-top: 0;
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	color: var(--t-primary);
 }
 
-.tanish-inventory-card span {
-    display: block;
-    color: #475467;
-    font-size: 12px;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    font-weight: 700;
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap h1.wp-heading-inline {
+	position: relative;
+	margin: 0 0 6px;
+	padding: 2px 0 2px 18px;
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	font-size: 25px;
+	line-height: 1.25;
+	font-weight: 650;
+	letter-spacing: -0.01em;
+	color: var(--t-navy);
 }
 
-.tanish-inventory-card strong {
-    font-size: 30px;
-    line-height: 1;
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap h1.wp-heading-inline::before {
+	content: "";
+	position: absolute;
+	top: 4px;
+	bottom: 4px;
+	left: 0;
+	width: 5px;
+	border-radius: 999px;
+	background: linear-gradient(180deg, var(--t-accent), var(--t-accent-dark));
 }
 
-.tanish-inventory-card.success strong { color: #15803d; }
-.tanish-inventory-card.danger strong { color: #b91c1c; }
-.tanish-inventory-card.warning strong { color: #b45309; }
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-page-subtitle {
+	margin: 0 0 22px;
+	padding-left: 18px;
+	font-size: 13.5px;
+	line-height: 1.5;
+	color: var(--t-muted);
+}
 
-.tanish-inventory-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 18px;
+/* -------------------------------------------------------------------------
+ * Dashboard cards
+ * ---------------------------------------------------------------------- */
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 16px;
+	margin: 24px 0 10px;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-card {
+	--card-accent: var(--t-navy);
+	--card-icon-bg: #EEF3F8;
+	--card-icon-color: var(--t-navy);
+
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	overflow: hidden;
+	padding: 20px;
+	background: #fff;
+	border: 1px solid var(--t-border);
+	border-radius: var(--t-radius);
+	box-shadow: var(--t-shadow);
+	transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-card::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 4px;
+	background: var(--card-accent);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-card:hover {
+	transform: translateY(-2px);
+	border-color: #D7DEE7;
+	box-shadow: 0 2px 4px rgba(15, 59, 95, 0.06), 0 18px 32px -22px rgba(15, 59, 95, 0.4);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-card.success {
+	--card-accent: var(--t-accent);
+	--card-icon-bg: var(--t-accent-soft);
+	--card-icon-color: var(--t-accent-dark);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-card.danger {
+	--card-accent: var(--t-red);
+	--card-icon-bg: var(--t-red-soft);
+	--card-icon-color: #B91C1C;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-card.warning {
+	--card-accent: var(--t-yellow);
+	--card-icon-bg: var(--t-yellow-soft);
+	--card-icon-color: #B45309;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-card-icon {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 46px;
+	height: 46px;
+	border-radius: 50%;
+	background: var(--card-icon-bg);
+	color: var(--card-icon-color);
+	font-size: 22px;
+	line-height: 1;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-card-icon.dashicons {
+	width: 46px;
+	height: 46px;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-card-body {
+	min-width: 0;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-card-body > span {
+	display: block;
+	margin-bottom: 4px;
+	color: var(--t-muted);
+	font-size: 11.5px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	line-height: 1.35;
+	text-transform: uppercase;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-card strong {
+	display: block;
+	color: var(--t-navy);
+	font-size: 32px;
+	font-weight: 700;
+	line-height: 1.05;
+}
+
+/* -------------------------------------------------------------------------
+ * Action buttons
+ * ---------------------------------------------------------------------- */
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin: 24px 0 10px;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .button,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .button-primary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 7px;
+	min-height: 40px;
+	padding: 0 20px;
+	border-radius: 999px;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1;
+	text-decoration: none;
+	text-shadow: none;
+	box-shadow: none;
+	transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .button {
+	background: #fff;
+	border: 1px solid var(--t-border);
+	color: var(--t-primary);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .button:hover,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .button:focus {
+	background: #fff;
+	border-color: #C9D3DF;
+	color: var(--t-navy);
+	transform: translateY(-1px);
+	box-shadow: 0 8px 16px -10px rgba(15, 59, 95, 0.5);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .button-primary {
+	background: var(--t-accent);
+	border: 1px solid var(--t-accent);
+	color: #fff;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .button-primary:hover,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .button-primary:focus {
+	background: var(--t-accent-dark);
+	border-color: var(--t-accent-dark);
+	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: 0 8px 18px -10px rgba(22, 163, 74, 0.7);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .dashicons {
+	width: 16px;
+	height: 16px;
+	font-size: 16px;
+	line-height: 16px;
+}
+
+/* -------------------------------------------------------------------------
+ * Forms (movement / adjustment)
+ * ---------------------------------------------------------------------- */
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table {
+	width: 100%;
+	max-width: 720px;
+	margin: 20px 0 0;
+	padding: 8px 24px;
+	background: #fff;
+	border: 1px solid var(--t-border);
+	border-radius: var(--t-radius);
+	border-collapse: separate;
+	border-spacing: 0;
+	box-shadow: var(--t-shadow);
+	box-sizing: border-box;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table tr + tr > th,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table tr + tr > td {
+	border-top: 1px solid #F1F3EF;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table th {
+	width: 190px;
+	padding: 18px 20px 18px 0;
+	color: var(--t-muted);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	line-height: 1.4;
+	text-transform: uppercase;
+	vertical-align: middle;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table td {
+	padding: 16px 0;
+	color: var(--t-primary);
+	font-size: 13.5px;
+	vertical-align: middle;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table input[type="text"],
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table input[type="number"],
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table input[type="search"],
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table select,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table textarea {
+	width: 100%;
+	max-width: 420px;
+	min-height: 40px;
+	padding: 8px 12px;
+	background: #fff;
+	border: 1px solid var(--t-border);
+	border-radius: 8px;
+	color: var(--t-primary);
+	font-family: inherit;
+	font-size: 13.5px;
+	line-height: 1.4;
+	box-shadow: inset 0 1px 1px rgba(15, 59, 95, 0.03);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table textarea {
+	min-height: 96px;
+	resize: vertical;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table input[type="text"]:focus,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table input[type="number"]:focus,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table input[type="search"]:focus,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table select:focus,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table textarea:focus {
+	border-color: var(--t-accent);
+	outline: 2px solid transparent;
+	outline-offset: 0;
+	box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.16);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-stock-chip {
+	display: inline-flex;
+	align-items: center;
+	min-height: 32px;
+	padding: 4px 16px;
+	background: var(--t-navy);
+	border-radius: 999px;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: 0.01em;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap p.submit {
+	margin: 22px 0 10px;
+	padding: 0;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap p.submit .button,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap p.submit .button-primary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 42px;
+	padding: 0 26px;
+	background: var(--t-accent);
+	border: 1px solid var(--t-accent);
+	border-radius: 999px;
+	color: #fff;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1;
+	text-shadow: none;
+	box-shadow: none;
+	transition: background-color 0.16s ease, border-color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap p.submit .button:hover,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap p.submit .button-primary:hover,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap p.submit .button:focus,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap p.submit .button-primary:focus {
+	background: var(--t-accent-dark);
+	border-color: var(--t-accent-dark);
+	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: 0 10px 20px -12px rgba(22, 163, 74, 0.8);
+}
+
+/* Filter bars above tables */
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-filter-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	float: none;
+	margin: 18px 0 6px;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-filter-bar select {
+	width: auto;
+	min-width: 200px;
+	max-width: 280px;
+	min-height: 40px;
+	padding: 6px 30px 6px 12px;
+	background: #fff;
+	border: 1px solid var(--t-border);
+	border-radius: 8px;
+	color: var(--t-primary);
+	font-family: inherit;
+	font-size: 13.5px;
+	line-height: 1.4;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-filter-bar select:focus {
+	border-color: var(--t-accent);
+	box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.16);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-filter-bar p.submit {
+	float: none;
+	margin: 0;
+	padding: 0;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-filter-bar p.submit .button {
+	min-height: 40px;
+	padding: 0 20px;
+	background: #fff;
+	border: 1px solid var(--t-border);
+	border-radius: 999px;
+	color: var(--t-primary);
+	font-weight: 600;
+	box-shadow: none;
+	transition: border-color 0.16s ease, color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-filter-bar p.submit .button:hover,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-filter-bar p.submit .button:focus {
+	background: #fff;
+	border-color: #C9D3DF;
+	color: var(--t-navy);
+	transform: translateY(-1px);
+	box-shadow: 0 8px 16px -10px rgba(15, 59, 95, 0.5);
+}
+
+/* -------------------------------------------------------------------------
+ * Tables (movements / kardex)
+ * ---------------------------------------------------------------------- */
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-table-wrap {
+	max-width: 100%;
+	margin: 16px 0 8px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	background: #fff;
+	border: 1px solid var(--t-border);
+	border-radius: var(--t-radius);
+	box-shadow: var(--t-shadow);
+	-webkit-overflow-scrolling: touch;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-table-wrap .wp-list-table {
+	width: 100%;
+	min-width: 820px;
+	margin: 0;
+	background: #fff;
+	border: 0;
+	border-collapse: separate;
+	border-spacing: 0;
+	box-shadow: none;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-table-wrap .wp-list-table thead th {
+	padding: 12px 14px;
+	background: var(--t-bg);
+	border: 0;
+	border-bottom: 1px solid var(--t-border);
+	color: var(--t-muted);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	line-height: 1.4;
+	text-align: left;
+	text-transform: uppercase;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-table-wrap .wp-list-table tbody td {
+	padding: 13px 14px;
+	border: 0;
+	border-bottom: 1px solid #F1F3EF;
+	color: var(--t-primary);
+	font-size: 13px;
+	line-height: 1.5;
+	vertical-align: middle;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-table-wrap .wp-list-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-table-wrap .wp-list-table.striped > tbody > tr:nth-child(odd) {
+	background: #fff;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-table-wrap .wp-list-table tbody tr:hover td,
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-table-wrap .wp-list-table tbody tr:hover th {
+	background: var(--t-bg);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-table-wrap .wp-list-table tbody td:first-child {
+	color: var(--t-muted);
+	white-space: nowrap;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-stock-value {
+	color: var(--t-navy) !important;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+/* Movement type badges */
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 3px 10px;
+	border-radius: 999px;
+	font-size: 11.5px;
+	font-weight: 700;
+	line-height: 1.6;
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-badge--entry {
+	background: var(--t-accent-soft);
+	box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.28);
+	color: var(--t-accent-dark);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-badge--exit {
+	background: var(--t-red-soft);
+	box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.25);
+	color: #B91C1C;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-badge--adjustment {
+	background: var(--t-yellow-soft);
+	box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.4);
+	color: #92400E;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-badge--neutral {
+	background: #F1F5F9;
+	box-shadow: inset 0 0 0 1px rgba(100, 116, 139, 0.25);
+	color: #475569;
+}
+
+/* Empty states */
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-table-wrap .wp-list-table td.tanish-empty-state {
+	padding: 40px 16px !important;
+	background: #fff;
+	color: var(--t-muted);
+	font-size: 14px;
+	text-align: center;
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-empty-state {
+	margin: 16px 0;
+	padding: 32px 20px;
+	background: #fff;
+	border: 1px dashed var(--t-border);
+	border-radius: var(--t-radius);
+	color: var(--t-muted);
+	font-size: 13.5px;
+	text-align: center;
+}
+
+/* -------------------------------------------------------------------------
+ * Notices inside the plugin screens
+ * ---------------------------------------------------------------------- */
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .notice {
+	margin: 18px 0;
+	padding: 2px 14px;
+	background: #fff;
+	border-radius: 8px;
+	border-left: 4px solid var(--t-navy);
+	box-shadow: 0 1px 2px rgba(15, 59, 95, 0.05);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .notice.notice-success {
+	border-left-color: var(--t-accent);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .notice.notice-error {
+	border-left-color: var(--t-red);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .notice.notice-warning {
+	border-left-color: var(--t-yellow);
+}
+
+:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .notice p {
+	font-size: 13px;
+}
+
+/* -------------------------------------------------------------------------
+ * Responsive
+ * ---------------------------------------------------------------------- */
+
+@media screen and (max-width: 960px) {
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-cards {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media screen and (max-width: 782px) {
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap {
+		margin-top: 16px;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .wrap h1.wp-heading-inline {
+		font-size: 22px;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions {
+		gap: 10px;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .button,
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-actions .button-primary {
+		flex: 1 1 auto;
+		min-width: 160px;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table {
+		max-width: none;
+		padding: 6px 18px;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table th,
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table td {
+		display: block;
+		width: auto;
+		padding-right: 0;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table th {
+		padding-bottom: 2px;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table td {
+		padding-top: 6px;
+		padding-bottom: 16px;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table tr + tr > th,
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table tr + tr > td {
+		border-top: 0;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table tr + tr > th {
+		padding-top: 16px;
+		border-top: 1px solid #F1F3EF;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table input[type="text"],
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table input[type="number"],
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table input[type="search"],
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table select,
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table textarea {
+		max-width: none;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-filter-bar {
+		align-items: stretch;
+	}
+
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-filter-bar select {
+		flex: 1 1 100%;
+		max-width: none;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	:is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .tanish-inventory-cards {
+		grid-template-columns: 1fr;
+	}
 }

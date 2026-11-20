@@ -64,8 +64,8 @@ class Tanish_Inventory_Admin {
 
 		add_submenu_page(
 			'tanish-inventory',
-			'Nueva entrada',
-			'Nueva entrada',
+			'Registrar entrada',
+			'Registrar entrada',
 			'manage_tanish_inventory',
 			'tanish-inventory-entry',
 			array($this, 'render_entry_form')
@@ -73,8 +73,8 @@ class Tanish_Inventory_Admin {
 
 		add_submenu_page(
 			'tanish-inventory',
-			'Nueva salida',
-			'Nueva salida',
+			'Registrar salida',
+			'Registrar salida',
 			'manage_tanish_inventory',
 			'tanish-inventory-exit',
 			array($this, 'render_exit_form')
@@ -185,35 +185,47 @@ class Tanish_Inventory_Admin {
 		?>
 		<div class="wrap">
 			<h1 class="wp-heading-inline">TANISH Inventory</h1>
-			<p>Resumen del control interno de stock.</p>
+			<p class="tanish-page-subtitle">Resumen del control interno de stock.</p>
 			<div class="notice notice-info inline">
 				<p><strong>Usuario:</strong> <?php echo esc_html($current_user->user_login); ?> | <strong>Roles:</strong> <?php echo esc_html(implode(', ', $current_user->roles)); ?> | <strong>manage_tanish_inventory:</strong> <?php echo current_user_can('manage_tanish_inventory') ? 'true' : 'false'; ?></p>
 			</div>
 
 			<div class="tanish-inventory-cards">
 				<div class="tanish-inventory-card">
-					<span>Total de productos</span>
-					<strong><?php echo esc_html((string) $summary['total_products']); ?></strong>
+					<span class="tanish-card-icon dashicons dashicons-products" aria-hidden="true"></span>
+					<div class="tanish-card-body">
+						<span>Total de productos</span>
+						<strong><?php echo esc_html((string) $summary['total_products']); ?></strong>
+					</div>
 				</div>
 				<div class="tanish-inventory-card success">
-					<span>Productos con stock</span>
-					<strong><?php echo esc_html((string) $summary['products_in_stock']); ?></strong>
+					<span class="tanish-card-icon dashicons dashicons-chart-bar" aria-hidden="true"></span>
+					<div class="tanish-card-body">
+						<span>Productos con stock</span>
+						<strong><?php echo esc_html((string) $summary['products_in_stock']); ?></strong>
+					</div>
 				</div>
 				<div class="tanish-inventory-card danger">
-					<span>Productos agotados</span>
-					<strong><?php echo esc_html((string) $summary['products_out_of_stock']); ?></strong>
+					<span class="tanish-card-icon dashicons dashicons-dismiss" aria-hidden="true"></span>
+					<div class="tanish-card-body">
+						<span>Productos agotados</span>
+						<strong><?php echo esc_html((string) $summary['products_out_of_stock']); ?></strong>
+					</div>
 				</div>
 				<div class="tanish-inventory-card warning">
-					<span>Productos con stock bajo</span>
-					<strong><?php echo esc_html((string) $summary['products_low_stock']); ?></strong>
+					<span class="tanish-card-icon dashicons dashicons-warning" aria-hidden="true"></span>
+					<div class="tanish-card-body">
+						<span>Productos con stock bajo</span>
+						<strong><?php echo esc_html((string) $summary['products_low_stock']); ?></strong>
+					</div>
 				</div>
 			</div>
 
 			<div class="tanish-inventory-actions">
-				<a class="button button-primary" href="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-entry')); ?>">Nueva entrada</a>
-				<a class="button" href="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-exit')); ?>">Nueva salida</a>
-				<a class="button" href="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-adjustment')); ?>">Ajustar stock</a>
-				<a class="button" href="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-movements')); ?>">Ver movimientos</a>
+				<a class="button button-primary" href="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-entry')); ?>"><span class="dashicons dashicons-plus" aria-hidden="true"></span>Nueva entrada</a>
+				<a class="button" href="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-exit')); ?>"><span class="dashicons dashicons-minus" aria-hidden="true"></span>Nueva salida</a>
+				<a class="button" href="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-adjustment')); ?>"><span class="dashicons dashicons-edit" aria-hidden="true"></span>Ajustar stock</a>
+				<a class="button" href="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-movements')); ?>"><span class="dashicons dashicons-list-view" aria-hidden="true"></span>Ver movimientos</a>
 			</div>
 		</div>
 		<?php
@@ -255,6 +267,7 @@ class Tanish_Inventory_Admin {
 		?>
 		<div class="wrap">
 			<h1 class="wp-heading-inline">Ajuste de stock</h1>
+			<p class="tanish-page-subtitle">Fija el stock real del producto tras un conteo físico.</p>
 			<?php $this->render_status_messages(); ?>
 			<form method="post" action="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-adjustment')); ?>">
 				<?php wp_nonce_field('tanish_inventory_adjustment'); ?>
@@ -274,7 +287,7 @@ class Tanish_Inventory_Admin {
 					</tr>
 					<tr>
 						<th scope="row">Stock actual</th>
-						<td><strong><?php echo esc_html((string) $current_stock); ?></strong></td>
+						<td><strong class="tanish-stock-chip"><?php echo esc_html((string) $current_stock); ?></strong></td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="new_stock">Nuevo stock</label></th>
@@ -295,6 +308,7 @@ class Tanish_Inventory_Admin {
 		?>
 		<div class="wrap">
 			<h1 class="wp-heading-inline"><?php echo esc_html($title); ?></h1>
+			<p class="tanish-page-subtitle"><?php echo esc_html('entry' === $type ? 'Registra el ingreso de unidades al inventario.' : 'Registra el descuento de unidades del inventario.'); ?></p>
 			<?php $this->render_status_messages(); ?>
 			<form method="post" action="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-' . $type)); ?>">
 				<?php wp_nonce_field('tanish_inventory_' . $type); ?>
@@ -314,7 +328,7 @@ class Tanish_Inventory_Admin {
 					</tr>
 					<tr>
 						<th scope="row"><?php echo esc_html($current_stock_label); ?></th>
-						<td><strong><?php echo esc_html((string) $current_stock); ?></strong></td>
+						<td><strong class="tanish-stock-chip"><?php echo esc_html((string) $current_stock); ?></strong></td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="quantity"><?php echo esc_html($qty_label); ?></label></th>
@@ -349,6 +363,28 @@ class Tanish_Inventory_Admin {
 		}
 	}
 
+	/**
+	 * Render a presentational badge for a movement type.
+	 *
+	 * @param string $type Raw movement type.
+	 */
+	private function render_movement_badge(string $type): void {
+		$labels = array(
+			'entry'      => 'Entrada',
+			'exit'       => 'Salida',
+			'adjustment' => 'Ajuste',
+		);
+
+		$class = array_key_exists($type, $labels) ? $type : 'neutral';
+		$label = $labels[$type] ?? ucfirst($type);
+
+		printf(
+			'<span class="tanish-badge tanish-badge--%1$s">%2$s</span>',
+			esc_attr($class),
+			esc_html($label)
+		);
+	}
+
 	public function render_movements(): void {
 		if (!current_user_can('manage_tanish_inventory')) {
 			wp_die('Lo siento, no tienes permisos para acceder a esta página.');
@@ -360,7 +396,8 @@ class Tanish_Inventory_Admin {
 		?>
 		<div class="wrap">
 			<h1 class="wp-heading-inline">Movimientos</h1>
-			<form method="get" action="<?php echo esc_url(admin_url('admin.php')); ?>" class="alignleft">
+			<p class="tanish-page-subtitle">Historial de entradas, salidas y ajustes de inventario.</p>
+			<form method="get" action="<?php echo esc_url(admin_url('admin.php')); ?>" class="alignleft tanish-filter-bar">
 				<input type="hidden" name="page" value="tanish-inventory-movements" />
 				<select name="product_id">
 					<option value="0">Todos los productos</option>
@@ -376,41 +413,43 @@ class Tanish_Inventory_Admin {
 				</select>
 				<?php submit_button('Filtrar', 'small', false); ?>
 			</form>
-			<table class="wp-list-table widefat striped">
-				<thead>
-					<tr>
-						<th>Fecha</th>
-						<th>Producto</th>
-						<th>SKU</th>
-						<th>Tipo</th>
-						<th>Cantidad</th>
-						<th>Stock anterior</th>
-						<th>Stock posterior</th>
-						<th>Motivo</th>
-						<th>Usuario</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php if (empty($movements)) : ?>
-						<tr><td colspan="9">No hay movimientos registrados.</td></tr>
-					<?php else : ?>
-						<?php foreach ($movements as $movement) : ?>
-							<?php $product = wc_get_product((int) $movement['product_id']); ?>
-							<tr>
-								<td><?php echo esc_html(mysql2date('d/m/Y H:i', $movement['created_at'])); ?></td>
-								<td><?php echo esc_html($movement['product_name'] ?: __('Producto', 'tanish-inventory')); ?></td>
-								<td><?php echo esc_html($product instanceof WC_Product ? $product->get_sku() : ''); ?></td>
-								<td><?php echo esc_html($movement['movement_type']); ?></td>
-								<td><?php echo esc_html((string) $movement['quantity_change']); ?></td>
-								<td><?php echo esc_html((string) $movement['stock_before']); ?></td>
-								<td><?php echo esc_html((string) $movement['stock_after']); ?></td>
-								<td><?php echo esc_html($movement['reason']); ?></td>
-								<td><?php echo esc_html($movement['user_name'] ?: 'Sistema'); ?></td>
-							</tr>
-						<?php endforeach; ?>
-					<?php endif; ?>
-				</tbody>
-			</table>
+			<div class="tanish-table-wrap">
+				<table class="wp-list-table widefat striped">
+					<thead>
+						<tr>
+							<th>Fecha</th>
+							<th>Producto</th>
+							<th>SKU</th>
+							<th>Tipo</th>
+							<th>Cantidad</th>
+							<th>Stock anterior</th>
+							<th>Stock posterior</th>
+							<th>Motivo</th>
+							<th>Usuario</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if (empty($movements)) : ?>
+							<tr><td colspan="9" class="tanish-empty-state">No hay movimientos registrados.</td></tr>
+						<?php else : ?>
+							<?php foreach ($movements as $movement) : ?>
+								<?php $product = wc_get_product((int) $movement['product_id']); ?>
+								<tr>
+									<td><?php echo esc_html(mysql2date('d/m/Y H:i', $movement['created_at'])); ?></td>
+									<td><?php echo esc_html($movement['product_name'] ?: __('Producto', 'tanish-inventory')); ?></td>
+									<td><?php echo esc_html($product instanceof WC_Product ? $product->get_sku() : ''); ?></td>
+									<td><?php $this->render_movement_badge((string) $movement['movement_type']); ?></td>
+									<td><?php echo esc_html((string) $movement['quantity_change']); ?></td>
+									<td><?php echo esc_html((string) $movement['stock_before']); ?></td>
+									<td><?php echo esc_html((string) $movement['stock_after']); ?></td>
+									<td><?php echo esc_html($movement['reason']); ?></td>
+									<td><?php echo esc_html($movement['user_name'] ?: 'Sistema'); ?></td>
+								</tr>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		<?php
 	}
@@ -428,7 +467,8 @@ class Tanish_Inventory_Admin {
 		?>
 		<div class="wrap">
 			<h1 class="wp-heading-inline">Kardex</h1>
-			<form method="get" action="<?php echo esc_url(admin_url('admin.php')); ?>" class="alignleft">
+			<p class="tanish-page-subtitle">Movimientos cronológicos y stock resultante por producto.</p>
+			<form method="get" action="<?php echo esc_url(admin_url('admin.php')); ?>" class="alignleft tanish-filter-bar">
 				<input type="hidden" name="page" value="tanish-inventory-kardex" />
 				<select name="product_id">
 					<option value="0">Selecciona un producto</option>
@@ -439,36 +479,38 @@ class Tanish_Inventory_Admin {
 				<?php submit_button('Ver kardex', 'small', false); ?>
 			</form>
 			<?php if ($product_id > 0 && !empty($kardex)) : ?>
-				<table class="wp-list-table widefat striped">
-					<thead>
-						<tr>
-							<th>Fecha</th>
-							<th>Tipo</th>
-							<th>Entrada</th>
-							<th>Salida</th>
-							<th>Ajuste</th>
-							<th>Stock resultante</th>
-							<th>Motivo</th>
-							<th>Usuario</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach ($kardex as $row) : ?>
+				<div class="tanish-table-wrap">
+					<table class="wp-list-table widefat striped">
+						<thead>
 							<tr>
-								<td><?php echo esc_html(mysql2date('d/m/Y H:i', $row['created_at'])); ?></td>
-								<td><?php echo esc_html($row['movement_type']); ?></td>
-								<td><?php echo esc_html('entry' === $row['movement_type'] ? (string) $row['quantity_change'] : '-'); ?></td>
-								<td><?php echo esc_html('exit' === $row['movement_type'] ? (string) abs((float) $row['quantity_change']) : '-'); ?></td>
-								<td><?php echo esc_html('adjustment' === $row['movement_type'] ? (string) $row['quantity_change'] : '-'); ?></td>
-								<td><?php echo esc_html((string) $row['stock_after']); ?></td>
-								<td><?php echo esc_html($row['reason']); ?></td>
-								<td><?php echo esc_html(get_userdata((int) $row['user_id'])->display_name ?? 'Sistema'); ?></td>
+								<th>Fecha</th>
+								<th>Tipo</th>
+								<th>Entrada</th>
+								<th>Salida</th>
+								<th>Ajuste</th>
+								<th>Stock resultante</th>
+								<th>Motivo</th>
+								<th>Usuario</th>
 							</tr>
-						<?php endforeach; ?>
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							<?php foreach ($kardex as $row) : ?>
+								<tr>
+									<td><?php echo esc_html(mysql2date('d/m/Y H:i', $row['created_at'])); ?></td>
+									<td><?php $this->render_movement_badge((string) $row['movement_type']); ?></td>
+									<td><?php echo esc_html('entry' === $row['movement_type'] ? (string) $row['quantity_change'] : '-'); ?></td>
+									<td><?php echo esc_html('exit' === $row['movement_type'] ? (string) abs((float) $row['quantity_change']) : '-'); ?></td>
+									<td><?php echo esc_html('adjustment' === $row['movement_type'] ? (string) $row['quantity_change'] : '-'); ?></td>
+									<td class="tanish-stock-value"><?php echo esc_html((string) $row['stock_after']); ?></td>
+									<td><?php echo esc_html($row['reason']); ?></td>
+									<td><?php echo esc_html(get_userdata((int) $row['user_id'])->display_name ?? 'Sistema'); ?></td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+				</div>
 			<?php elseif ($product_id > 0) : ?>
-				<p>No hay movimientos para este producto.</p>
+				<p class="tanish-empty-state">No hay movimientos para este producto.</p>
 			<?php endif; ?>
 		</div>
 		<?php
