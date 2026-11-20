@@ -74,7 +74,28 @@ class Tanish_Inventory_Service {
 			return new WP_Error('invalid_product', 'El producto seleccionado no es válido.');
 		}
 
+		if (!in_array($movement_type, array('entry', 'exit', 'adjustment'), true)) {
+			return new WP_Error('invalid_movement', 'Tipo de movimiento no válido.');
+		}
+
 		$quantity = (float) $quantity;
+
+		if ('adjustment' === $movement_type) {
+			if ($quantity < 0) {
+				return new WP_Error('quantity', 'La cantidad no puede ser negativa.');
+			}
+		} elseif ($quantity <= 0) {
+			return new WP_Error('quantity', 'La cantidad debe ser mayor que cero.');
+		}
+
+		if (!$product->get_manage_stock()) {
+			return new WP_Error('stock_not_managed', 'El producto no tiene activada la gestión de stock.');
+		}
+
+		if (empty(trim($reason))) {
+			return new WP_Error('missing_reason', 'El motivo es obligatorio.');
+		}
+
 		$stock_before = (float) $product->get_stock_quantity();
 		$stock_after = $stock_before;
 
@@ -87,16 +108,17 @@ class Tanish_Inventory_Service {
 			$stock_after = $stock_before - $quantity;
 		} elseif ('adjustment' === $movement_type) {
 			$stock_after = $quantity;
-		} else {
-			return new WP_Error('invalid_movement', 'Tipo de movimiento no válido.');
 		}
 
-		if (empty(trim($reason))) {
-			return new WP_Error('missing_reason', 'El motivo es obligatorio.');
+		if ($stock_after < 0) {
+			return new WP_Error('insufficient_stock', 'El stock resultante no puede ser negativo.');
 		}
 
 		$product->set_stock_quantity($stock_after);
-		$product->save();
+
+		if (!$product->save()) {
+			return new WP_Error('save_failed', 'No se pudo guardar el stock del producto.');
+		}
 
 		$quantity_change = $stock_after - $stock_before;
 		$movement_id = $this->database->insert_movement(
@@ -110,6 +132,10 @@ class Tanish_Inventory_Service {
 		);
 
 		if (0 === $movement_id) {
+			// Revierte el stock para no dejarlo desincronizado con el historial.
+			$product->set_stock_quantity($stock_before);
+			$product->save();
+
 			return new WP_Error('movement_failed', 'No se pudo registrar el movimiento en el historial.');
 		}
 

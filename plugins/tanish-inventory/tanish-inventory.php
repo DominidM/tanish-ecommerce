@@ -11,17 +11,45 @@
 defined('ABSPATH') || exit;
 
 define('TANISH_INVENTORY_VERSION', '0.3.0');
+define('TANISH_INVENTORY_DB_VERSION', '0.4.0');
 define('TANISH_INVENTORY_FILE', __FILE__);
 define('TANISH_INVENTORY_PATH', plugin_dir_path(__FILE__));
 define('TANISH_INVENTORY_URL', plugin_dir_url(__FILE__));
 
 function tanish_inventory_require_files(): void {
-	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-whatsapp.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-mercadopago-link.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-capabilities.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-database.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-service.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-admin.php';	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-cpts.php';
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-whatsapp.php';
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-mercadopago-link.php';
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-yape-gateway.php';
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-capabilities.php';
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-database.php';
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-service.php';
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-admin.php';
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-cpts.php';
 }
 
-function tanish_inventory_enqueue_admin_assets() {
+/**
+ * Crea/actualiza el esquema de la base de datos al activar el plugin.
+ */
+function tanish_inventory_install(): void {
+	require_once TANISH_INVENTORY_PATH . 'includes/class-tanish-inventory-database.php';
+
+	if (!class_exists('Tanish_Inventory_Database')) {
+		return;
+	}
+
+	$database = new Tanish_Inventory_Database();
+	$database->maybe_upgrade();
+}
+register_activation_hook(TANISH_INVENTORY_FILE, 'tanish_inventory_install');
+
+function tanish_inventory_enqueue_admin_assets($hook): void {
+	// Solo cargar los estilos del plugin en las pantallas del plugin.
+	if (empty($hook) || false === strpos($hook, 'tanish-inventory')) {
+		return;
+	}
+
 	wp_enqueue_style(
-		'tanish-storefront',
+		'tanish-inventory-storefront',
 		TANISH_INVENTORY_URL . 'assets/tanish-storefront.css',
 		array(),
 		TANISH_INVENTORY_VERSION
@@ -48,7 +76,7 @@ function tanish_inventory_bootstrap() {
 	tanish_inventory_require_files();
 
 	$database = new Tanish_Inventory_Database();
-	$database->create_table();
+	$database->maybe_upgrade();
 
 	new Tanish_Inventory_Capabilities();
 	$service = new Tanish_Inventory_Service($database);

@@ -8,6 +8,8 @@
 defined('ABSPATH') || exit;
 
 class Tanish_Inventory_Database {
+	public const OPTION_DB_VERSION = 'tanish_inventory_db_version';
+
 	public function get_table_name(): string {
 		global $wpdb;
 
@@ -38,6 +40,21 @@ class Tanish_Inventory_Database {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta($sql);
+	}
+
+	/**
+	 * Ejecuta dbDelta solo cuando cambia la versión del esquema.
+	 */
+	public function maybe_upgrade(): void {
+		$target_version = defined('TANISH_INVENTORY_DB_VERSION') ? TANISH_INVENTORY_DB_VERSION : '1.0.0';
+		$current_version = (string) get_option(self::OPTION_DB_VERSION, '');
+
+		if ($current_version === $target_version) {
+			return;
+		}
+
+		$this->create_table();
+		update_option(self::OPTION_DB_VERSION, $target_version, false);
 	}
 
 	public function insert_movement(int $product_id, string $movement_type, float $quantity_change, float $stock_before, float $stock_after, string $reason, int $user_id = 0): int {

@@ -151,7 +151,7 @@ class Tanish_CPTs {
                 <td>
                     <select id="tanish_banner_active" name="tanish_banner_active">
                         <option value="1" <?php selected($active, '1', true); ?>>Sí</option>
-                        <option value="0" <?php selected($active, '', true); ?>>No</option>
+                        <option value="0" <?php selected($active, '0', true); ?>>No</option>
                     </select>
                 </td>
             </tr>
@@ -210,7 +210,7 @@ class Tanish_CPTs {
                 <td>
                     <select id="tanish_video_featured" name="tanish_video_featured">
                         <option value="1" <?php selected($featured_vid, '1', true); ?>>Sí (video principal)</option>
-                        <option value="0" <?php selected($featured_vid, '', true); ?>>No</option>
+                        <option value="0" <?php selected($featured_vid, '0', true); ?>>No</option>
                     </select>
                 </td>
             </tr>
@@ -219,7 +219,7 @@ class Tanish_CPTs {
                 <td>
                     <select id="tanish_video_active" name="tanish_video_active">
                         <option value="1" <?php selected($active, '1', true); ?>>Sí</option>
-                        <option value="0" <?php selected($active, '', true); ?>>No</option>
+                        <option value="0" <?php selected($active, '0', true); ?>>No</option>
                     </select>
                 </td>
             </tr>

@@ -47,6 +47,16 @@ class Tanish_MercadoPago_Link_Gateway extends WC_Payment_Gateway
             'woocommerce_update_options_payment_gateways_' . $this->id,
             array($this, 'process_admin_options')
         );
+
+        // Registramos los callbacks con una instancia real del gateway.
+        add_action(
+            'woocommerce_thankyou_' . $this->id,
+            array($this, 'thankyou_page_order_received')
+        );
+        add_action(
+            'woocommerce_view_order',
+            array($this, 'thankyou_page_order_received')
+        );
     }
 
     /**
@@ -172,15 +182,3 @@ function tanish_register_mercadopago_link_gateway($methods): array
     return $methods;
 }
 add_filter('woocommerce_payment_gateways', 'tanish_register_mercadopago_link_gateway');
-
-/**
- * Muestra las instrucciones despues de confirmar el pedido.
- */
-add_action(
-    'woocommerce_thankyou_tanish_mercadopago_link',
-    array('Tanish_MercadoPago_Link_Gateway', 'thankyou_page_order_received')
-);
-add_action(
-    'woocommerce_view_order',
-    array('Tanish_MercadoPago_Link_Gateway', 'thankyou_page_order_received')
-);

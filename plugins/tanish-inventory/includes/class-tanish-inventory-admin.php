@@ -131,6 +131,13 @@ class Tanish_Inventory_Admin {
 			exit;
 		}
 
+		$product = wc_get_product($product_id);
+
+		if (!$product instanceof WC_Product) {
+			wp_safe_redirect(add_query_arg('error', 'invalid_product', admin_url('admin.php?page=' . $current_page)));
+			exit;
+		}
+
 		$quantity = 0.0;
 		if ('adjustment' === $action) {
 			$quantity = (float) wp_unslash($_POST['new_stock'] ?? 0);
@@ -138,31 +145,22 @@ class Tanish_Inventory_Admin {
 			$quantity = (float) wp_unslash($_POST['quantity'] ?? 0);
 		}
 
-		if ($quantity <= 0 && 'adjustment' !== $action) {
+		if ('adjustment' === $action) {
+			if ($quantity < 0) {
+				wp_safe_redirect(add_query_arg('error', 'quantity', admin_url('admin.php?page=' . $current_page)));
+				exit;
+			}
+		} elseif ($quantity <= 0) {
 			wp_safe_redirect(add_query_arg('error', 'quantity', admin_url('admin.php?page=' . $current_page)));
 			exit;
 		}
 
-		if ('exit' === $action) {
-			$stock_now = (float) wc_get_product($product_id)->get_stock_quantity();
+		if ('exit' === $action && $product->get_manage_stock()) {
+			$stock_now = (float) $product->get_stock_quantity();
 			if ($quantity > $stock_now) {
 				wp_safe_redirect(add_query_arg('error', 'insufficient_stock', admin_url('admin.php?page=' . $current_page)));
 				exit;
 			}
-		}
-
-		if ('adjustment' === $action) {
-			$product = wc_get_product($product_id);
-			$stock_before = (float) $product->get_stock_quantity();
-			$quantity = (float) $quantity;
-			$delta = $quantity - $stock_before;
-			$result = $this->service->apply_movement($product_id, 'adjustment', $quantity, $reason, $user_id);
-			if (is_wp_error($result)) {
-				wp_safe_redirect(add_query_arg('error', rawurlencode($result->get_error_message()), admin_url('admin.php?page=' . $current_page)));
-				exit;
-			}
-			wp_safe_redirect(add_query_arg('status', 'success', admin_url('admin.php?page=' . $current_page)));
-			exit;
 		}
 
 		$result = $this->service->apply_movement($product_id, $action, $quantity, $reason, $user_id);
@@ -339,8 +337,15 @@ class Tanish_Inventory_Admin {
 		}
 
 		if (isset($_GET['error'])) {
-			$error_message = sanitize_text_field(wp_unslash($_GET['error']));
-			echo '<div class="notice notice-error is-dismissible"><p>' . esc_html(urldecode($error_message)) . '</p></div>';
+			$error_code = sanitize_text_field(wp_unslash($_GET['error']));
+			$known_errors = array(
+				'invalid'            => 'Los datos del formulario no son válidos.',
+				'invalid_product'    => 'El producto seleccionado no existe o no es válido.',
+				'quantity'           => 'La cantidad no es válida: debe ser mayor que cero, o cero o más para un ajuste.',
+				'insufficient_stock' => 'La salida supera el stock disponible del producto.',
+			);
+			$error_message = $known_errors[$error_code] ?? urldecode($error_code);
+			echo '<div class="notice notice-error is-dismissible"><p>' . esc_html($error_message) . '</p></div>';
 		}
 	}
 

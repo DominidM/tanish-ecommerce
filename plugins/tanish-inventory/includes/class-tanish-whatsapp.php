@@ -12,10 +12,6 @@ defined('ABSPATH') || exit;
  *
  * Handles WhatsApp purchase integration for simple products.
  * - Settings page under WooCommerce > TANISH WhatsApp
- * - Button "Comprar por WhatsApp" on single product page
- * - Respects WooCommerce stock
- * - Removes traditional add-to-cart on single product
- * - Catalog loop keeps the native WooCommerce add-to-cart button
  */
 class Tanish_WhatsApp {
 
@@ -30,12 +26,6 @@ class Tanish_WhatsApp {
 	public function __construct() {
 		add_action('admin_menu', array($this, 'add_admin_menu'));
 		add_action('admin_init', array($this, 'register_settings'));
-
-		// Single product: remove the default add-to-cart flow while keeping the storefront catalog simple.
-		add_action('wp', array($this, 'maybe_remove_add_to_cart'));
-
-		// Catalog: the native "add to cart" link is intentionally left untouched.
-		// Detail view is reached by clicking the product image/title.
 	}
 
 	/**
@@ -140,89 +130,5 @@ class Tanish_WhatsApp {
 			<p><strong>Nota:</strong> Soporte inicial optimizado para <em>productos simples</em> de WooCommerce. Productos variables, bundles o externos se evaluarán en versiones futuras.</p>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Remove traditional add-to-cart on single product page.
-	 * Hooked to wp to ensure WooCommerce has added its action.
-	 * Can be reactivated easily by removing this hook in future version.
-	 */
-	public function maybe_remove_add_to_cart() {
-		if (is_admin()) {
-			return;
-		}
-		if (!function_exists('is_product') || !is_product()) {
-			return;
-		}
-		// Remove core WooCommerce add to cart template on single product.
-		// Sprint 01: RESTORED — both B2C add-to-cart and WhatsApp coexist.
-		// remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30);
-	}
-
-	/**
-	 * Render "Comprar por WhatsApp" button on single product summary.
-	 * Respects stock and simple product type, and requires configured number.
-	 */
-	public function render_whatsapp_button() {
-		global $product;
-
-		if (!is_a($product, 'WC_Product')) {
-			return;
-		}
-
-		// Compatibility: initial support only for simple products.
-		if (!$product->is_type('simple')) {
-			return;
-		}
-
-		// Respect WooCommerce stock: if out of stock, do not show.
-		if (!$product->is_in_stock()) {
-			return;
-		}
-
-		// Also respect purchasable check.
-		if (!$product->is_purchasable()) {
-			return;
-		}
-
-		$whatsapp_number = get_option(self::OPTION_NAME, '');
-		$whatsapp_number = preg_replace('/\D/', '', $whatsapp_number);
-
-		// If no number configured, do not generate invalid link.
-		if (empty($whatsapp_number)) {
-			return;
-		}
-
-		$product_name = $product->get_name();
-		$sku          = $product->get_sku();
-		$price_html   = $product->get_price_html();
-		// Strip HTML to get readable price. Fallback to "Consultar".
-		$price_text = !empty($price_html) ? wp_strip_all_tags($price_html) : 'Consultar';
-		$permalink  = get_permalink($product->get_id());
-
-		// Build message dynamically.
-		$message_lines = array();
-		$message_lines[] = 'Hola, deseo comprar este producto de TANISH.';
-		$message_lines[] = '';
-		$message_lines[] = 'Producto: ' . $product_name;
-		if (!empty($sku)) {
-			$message_lines[] = 'SKU: ' . $sku;
-		}
-		$message_lines[] = 'Precio: ' . $price_text;
-		$message_lines[] = 'Enlace: ' . $permalink;
-		$message_lines[] = '';
-		$message_lines[] = '¿Podrían confirmarme disponibilidad y coordinar el pedido?';
-
-		$message = implode("\n", $message_lines);
-		$encoded_message = rawurlencode($message);
-
-		$whatsapp_url = 'https://wa.me/' . $whatsapp_number . '?text=' . $encoded_message;
-
-		// Use WooCommerce button classes for visual consistency.
-		echo '<div class="tanish-whatsapp-wrapper" style="margin: 1em 0;">';
-		echo '<a href="' . esc_url($whatsapp_url) . '" class="button alt tanish-whatsapp-button" target="_blank" rel="noopener noreferrer">';
-		echo esc_html('Comprar por WhatsApp');
-		echo '</a>';
-		echo '</div>';
 	}
 }
