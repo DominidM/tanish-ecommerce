@@ -12,49 +12,82 @@
 
 defined('ABSPATH') || exit;
 
-$tanish_login_redirect = admin_url('admin.php?page=tanish-inventory');
-$tanish_errors         = array();
+$tanish_login_redirect    = admin_url('admin.php?page=tanish-inventory');
+$tanish_customer_redirect = function_exists('wc_get_page_permalink')
+    ? (string) wc_get_page_permalink('myaccount')
+    : home_url('/');
+$tanish_errors            = array();
+
+// WordPress añade barras invertidas a $_POST.
+$posted = wp_unslash($_POST);
 
 // Destino elegido al llegar a la pagina (por ejemplo /acceso?redirect_to=...).
-$tanish_requested = isset($_GET['redirect_to']) ? wp_unslash($_GET['redirect_to']) : '';
+$tanish_requested = isset($_GET['redirect_to']) ? esc_url_raw(wp_unslash($_GET['redirect_to'])) : '';
 $tanish_redirect  = $tanish_requested ? $tanish_requested : $tanish_login_redirect;
 
 // Solo se permiten redirecciones internas a este sitio.
-$tanish_host     = wp_parse_url(home_url(), PHP_URL_HOST);
-$tanish_req_host = wp_parse_url($tanish_redirect, PHP_URL_HOST);
-if ($tanish_req_host && $tanish_req_host !== $tanish_host) {
+$tanish_host     = (string) wp_parse_url(home_url(), PHP_URL_HOST);
+$tanish_req_host = (string) wp_parse_url($tanish_redirect, PHP_URL_HOST);
+if ($tanish_req_host !== '' && $tanish_req_host !== $tanish_host) {
     $tanish_redirect = $tanish_login_redirect;
 }
 
-// Si el visitante ya esta autenticado, se le manda directo al panel.
+// Si el visitante ya esta autenticado, se le manda a su destino. Un cliente
+// no debe acabar en el panel de inventario (no tiene permisos).
 if (is_user_logged_in()) {
+    if (!current_user_can('manage_tanish_inventory') && str_contains($tanish_redirect, 'page=tanish-inventory')) {
+        $tanish_redirect = $tanish_customer_redirect;
+    }
+
     wp_safe_redirect($tanish_redirect);
     exit;
 }
 
+// ── Anti fuerza bruta: 10 intentos fallidos cada 10 minutos por IP ──
+$tanish_ip        = function_exists('tanish_client_ip') ? tanish_client_ip() : (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+$tanish_rl_key    = 'tanish_login_rl_' . md5($tanish_ip);
+$tanish_attempts  = (int) get_transient($tanish_rl_key);
+
 // ── Procesado del formulario ──
-if ('POST' === $_SERVER['REQUEST_METHOD'] && isset($_POST['tanish_login_nonce'])) {
-    if (!wp_verify_nonce($_POST['tanish_login_nonce'], 'tanish_login_form')) {
+if ('POST' === $_SERVER['REQUEST_METHOD'] && isset($posted['tanish_login_nonce'])) {
+    if (!wp_verify_nonce(sanitize_text_field($posted['tanish_login_nonce']), 'tanish_login_form')) {
         $tanish_errors[] = 'La sesion expiro. Vuelve a intentarlo.';
+    } elseif ($tanish_attempts >= 10) {
+        $tanish_errors[] = 'Demasiados intentos. Espera unos minutos antes de volver a intentarlo.';
     } else {
         $tanish_user = wp_signon(
             array(
-                'user_login'    => isset($_POST['log']) ? sanitize_text_field(wp_unslash($_POST['log'])) : '',
-                'user_password' => isset($_POST['pwd']) ? (string) wp_unslash($_POST['pwd']) : '',
-                'remember'      => !empty($_POST['rememberme']),
+                'user_login'    => isset($posted['log']) ? sanitize_text_field($posted['log']) : '',
+                'user_password' => isset($posted['pwd']) ? (string) $posted['pwd'] : '',
+                'remember'      => !empty($posted['rememberme']),
             ),
             is_ssl() ? 'secure_auth' : ''
         );
 
         if (is_wp_error($tanish_user)) {
-            $tanish_errors[] = $tanish_user->get_error_message();
+            set_transient($tanish_rl_key, $tanish_attempts + 1, 10 * MINUTE_IN_SECONDS);
+            // Mensaje generico: no revela si el usuario existe.
+            $tanish_errors[] = 'El usuario o la contraseña no son correctos.';
         } else {
+            delete_transient($tanish_rl_key);
+
             // El destino se vuelve a validar por si el POST lo altero.
-            $tanish_target = isset($_POST['redirect_to']) ? esc_url_raw(wp_unslash($_POST['redirect_to'])) : $tanish_login_redirect;
-            $tanish_target_host = wp_parse_url($tanish_target, PHP_URL_HOST);
-            if ($tanish_target_host && $tanish_target_host !== $tanish_host) {
+            $tanish_target = isset($posted['redirect_to']) ? esc_url_raw($posted['redirect_to']) : '';
+            $tanish_target_host = (string) wp_parse_url($tanish_target, PHP_URL_HOST);
+
+            if ($tanish_target_host !== '' && $tanish_target_host !== $tanish_host) {
+                $tanish_target = '';
+            }
+
+            if ('' === $tanish_target) {
                 $tanish_target = $tanish_login_redirect;
             }
+
+            // Un cliente va a su cuenta; solo el personal entra al inventario.
+            if (!user_can($tanish_user, 'manage_tanish_inventory') && str_contains($tanish_target, 'page=tanish-inventory')) {
+                $tanish_target = $tanish_customer_redirect;
+            }
+
             wp_safe_redirect($tanish_target);
             exit;
         }
@@ -66,8 +99,8 @@ $tanish_error_texts = array(
     'empty_username'     => 'Escribe tu usuario o correo electrónico.',
     'empty_password'     => 'Escribe tu contraseña.',
     'incorrect_password' => 'El usuario o la contraseña no son correctos.',
-    'invalid_username'   => 'Ese usuario no existe.',
-    'invalid_email'      => 'Ese correo no está registrado.',
+    'invalid_username'   => 'El usuario o la contraseña no son correctos.',
+    'invalid_email'      => 'El usuario o la contraseña no son correctos.',
     'login_empty'        => 'Completa ambos campos para entrar.',
 );
 
@@ -122,7 +155,7 @@ get_header();
 
                         <div class="acceso-field">
                             <label for="user_login">Usuario o correo electrónico</label>
-                            <input type="text" name="log" id="user_login" class="input" value="<?php echo esc_attr($_POST['log'] ?? ''); ?>" autocomplete="username" autofocus required>
+                            <input type="text" name="log" id="user_login" class="input" value="<?php echo esc_attr($posted['log'] ?? ''); ?>" autocomplete="username" autofocus required>
                         </div>
 
                         <div class="acceso-field">

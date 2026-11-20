@@ -123,9 +123,11 @@ function tanish_storefront_prefetch_navigation(): void
     }
 
     $targets = array(
-        home_url('/shop/'),
-        home_url('/contacto/'),
+        function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop/'),
+        tanish_storefront_page_url('contacto', '/contacto/'),
     );
+
+    $targets = array_unique(array_filter($targets));
 
     foreach ($targets as $url) {
         printf('<link rel="prefetch" href="%s">' . "\n", esc_url($url));
