@@ -46,10 +46,10 @@ services:
       SMTP_SECURE: ${SMTP_SECURE:-}
       SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-no-reply@tanish.test}
       SMTP_FROM_NAME: ${SMTP_FROM_NAME:-TANISH}
-      # En local el loopback a localhost:8080 no funciona dentro del contenedor,
-      # asi que WP-Cron se ejecuta en linea con la peticion (Action Scheduler).
-      # En produccion se usa el cron real del servidor y esto se omite.
-      WORDPRESS_CONFIG_EXTRA: "define('ALTERNATE_WP_CRON', true);"
+      # En local el loopback a localhost:8080 no funciona dentro del contenedor.
+      # Desactivamos el cron nativo y un mu-plugin ejecuta los eventos vencidos
+      # dentro de la peticion (sin redirecciones). En produccion se usa el cron real.
+      WORDPRESS_CONFIG_EXTRA: "define('DISABLE_WP_CRON', true);"
     volumes:
       - wordpress_data:/var/www/html
       - ./plugins/tanish-inventory:/var/www/html/wp-content/plugins/tanish-inventory
