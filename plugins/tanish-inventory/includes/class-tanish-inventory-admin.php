@@ -227,8 +227,150 @@ class Tanish_Inventory_Admin {
 				<a class="button" href="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-adjustment')); ?>"><span class="dashicons dashicons-edit" aria-hidden="true"></span>Ajustar stock</a>
 				<a class="button" href="<?php echo esc_url(admin_url('admin.php?page=tanish-inventory-movements')); ?>"><span class="dashicons dashicons-list-view" aria-hidden="true"></span>Ver movimientos</a>
 			</div>
+
+			<?php $this->render_dashboard_charts($summary); ?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Gráficos del dashboard: movimientos por día y distribución del stock.
+	 *
+	 * @param array $summary Resumen del servicio.
+	 */
+	private function render_dashboard_charts(array $summary): void {
+		$series = $this->database->get_daily_movements(14);
+
+		echo '<div class="tanish-inv-charts">';
+		$this->render_movements_chart($series);
+		$this->render_stock_donut($summary);
+		echo '</div>';
+	}
+
+	/**
+	 * Gráfico de barras de entradas y salidas por día.
+	 *
+	 * @param array $series Serie diaria.
+	 */
+	private function render_movements_chart(array $series): void {
+		$has_movements = false;
+		$max           = 1.0;
+
+		foreach ($series as $day) {
+			if ($day['entries'] > 0 || $day['exits'] > 0) {
+				$has_movements = true;
+			}
+
+			$max = max($max, (float) $day['entries'], (float) $day['exits']);
+		}
+
+		$width      = 760;
+		$height     = 240;
+		$pad_x      = 44;
+		$pad_top    = 18;
+		$pad_bottom = 40;
+		$plot_w     = $width - ($pad_x * 2);
+		$plot_h     = $height - $pad_top - $pad_bottom;
+		$count      = max(count($series), 1);
+		$group_w    = $plot_w / $count;
+		$bar_w      = max(4.0, min(14.0, $group_w * 0.30));
+		$label_step = (int) max(1, ceil($count / 7));
+
+		$compact = static function (float $value): string {
+			if ($value >= 1000) {
+				return number_format_i18n($value / 1000, 1) . 'k';
+			}
+
+			return number_format_i18n($value, 0);
+		};
+
+		echo '<div class="tanish-inv-panel tanish-inv-panel--chart">';
+		echo '<div class="tanish-inv-panel-head">';
+		echo '<div><h2>' . esc_html('Movimientos de los últimos 14 días') . '</h2>';
+		echo '<p class="tanish-inv-panel-sub">' . esc_html('Unidades ingresadas y retiradas por día.') . '</p></div>';
+		echo '<div class="tanish-inv-legend"><span class="tanish-inv-legend-item"><i class="dot dot--entry"></i>' . esc_html('Entradas') . '</span>';
+		echo '<span class="tanish-inv-legend-item"><i class="dot dot--exit"></i>' . esc_html('Salidas') . '</span></div>';
+		echo '</div>';
+
+		echo '<svg class="tanish-inv-chart" viewBox="0 0 ' . esc_attr((string) $width) . ' ' . esc_attr((string) $height) . '" role="img" aria-label="' . esc_attr('Entradas y salidas de los últimos 14 días') . '" preserveAspectRatio="none">';
+
+		foreach (array(0, 0.25, 0.5, 0.75, 1) as $ratio) {
+			$y = $pad_top + ($plot_h * (1 - $ratio));
+			echo '<line class="tanish-inv-grid" x1="' . esc_attr((string) $pad_x) . '" y1="' . esc_attr((string) $y) . '" x2="' . esc_attr((string) ($width - $pad_x)) . '" y2="' . esc_attr((string) $y) . '"></line>';
+			echo '<text class="tanish-inv-axis" x="' . esc_attr((string) ($pad_x - 8)) . '" y="' . esc_attr((string) ($y + 4)) . '" text-anchor="end">' . esc_html($compact($max * $ratio)) . '</text>';
+		}
+
+		foreach ($series as $index => $day) {
+			$group_x = $pad_x + ($index * $group_w);
+			$entry_h = $plot_h * ((float) $day['entries'] / $max);
+			$exit_h  = $plot_h * ((float) $day['exits'] / $max);
+			$entry_h = $day['entries'] > 0 ? max(3.0, $entry_h) : 0.0;
+			$exit_h  = $day['exits'] > 0 ? max(3.0, $exit_h) : 0.0;
+
+			$entry_x = $group_x + ($group_w / 2) - $bar_w - 1;
+			$exit_x  = $group_x + ($group_w / 2) + 1;
+
+			echo '<g>';
+			echo '<title>' . esc_html($day['label'] . ': ' . number_format_i18n((float) $day['entries'], 2) . ' entradas / ' . number_format_i18n((float) $day['exits'], 2) . ' salidas') . '</title>';
+			echo '<rect class="tanish-inv-bar tanish-inv-bar--entry" x="' . esc_attr((string) $entry_x) . '" y="' . esc_attr((string) ($pad_top + $plot_h - $entry_h)) . '" width="' . esc_attr((string) $bar_w) . '" height="' . esc_attr((string) $entry_h) . '" rx="3"></rect>';
+			echo '<rect class="tanish-inv-bar tanish-inv-bar--exit" x="' . esc_attr((string) $exit_x) . '" y="' . esc_attr((string) ($pad_top + $plot_h - $exit_h)) . '" width="' . esc_attr((string) $bar_w) . '" height="' . esc_attr((string) $exit_h) . '" rx="3"></rect>';
+
+			if ($index % $label_step === 0) {
+				echo '<text class="tanish-inv-axis" x="' . esc_attr((string) ($group_x + ($group_w / 2))) . '" y="' . esc_attr((string) ($height - 12)) . '" text-anchor="middle">' . esc_html($day['label']) . '</text>';
+			}
+
+			echo '</g>';
+		}
+
+		echo '</svg>';
+
+		if (!$has_movements) {
+			echo '<p class="tanish-inv-empty-chart">' . esc_html('Todavía no hay movimientos en este periodo.') . '</p>';
+		}
+
+		echo '</div>';
+	}
+
+	/**
+	 * Dona de distribución del stock.
+	 *
+	 * @param array $summary Resumen del servicio.
+	 */
+	private function render_stock_donut(array $summary): void {
+		$in_stock = (int) $summary['products_in_stock'];
+		$low      = (int) $summary['products_low_stock'];
+		$out      = (int) $summary['products_out_of_stock'];
+
+		$healthy = max(0, $in_stock - $low);
+		$total   = max(1, $healthy + $low + $out);
+
+		$p_healthy = ($healthy / $total) * 100;
+		$p_low     = $p_healthy + (($low / $total) * 100);
+
+		$gradient = sprintf(
+			'conic-gradient(#22C55E 0 %.2f%%, #FBBF24 %.2f%% %.2f%%, #EF4444 %.2f%% 100%%)',
+			$p_healthy,
+			$p_healthy,
+			$p_low,
+			$p_low
+		);
+
+		echo '<div class="tanish-inv-panel tanish-inv-panel--donut">';
+		echo '<div class="tanish-inv-panel-head"><div><h2>' . esc_html('Distribución del stock') . '</h2>';
+		echo '<p class="tanish-inv-panel-sub">' . esc_html('Estado actual del catálogo.') . '</p></div></div>';
+
+		echo '<div class="tanish-donut-wrap">';
+		echo '<div class="tanish-donut" style="background:' . esc_attr($gradient) . '" role="img" aria-label="' . esc_attr('Distribución del stock: ' . $healthy . ' disponibles, ' . $low . ' con stock bajo, ' . $out . ' agotados') . '">';
+		echo '<div class="tanish-donut-center"><strong>' . esc_html(number_format_i18n($total)) . '</strong><span>' . esc_html('productos') . '</span></div>';
+		echo '</div>';
+
+		echo '<ul class="tanish-donut-legend">';
+		echo '<li><span class="dot dot--healthy"></span>' . esc_html('Disponible') . '<strong>' . esc_html(number_format_i18n($healthy)) . '</strong></li>';
+		echo '<li><span class="dot dot--low"></span>' . esc_html('Stock bajo') . '<strong>' . esc_html(number_format_i18n($low)) . '</strong></li>';
+		echo '<li><span class="dot dot--out"></span>' . esc_html('Agotado') . '<strong>' . esc_html(number_format_i18n($out)) . '</strong></li>';
+		echo '</ul>';
+		echo '</div>';
+		echo '</div>';
 	}
 
 	public function render_entry_form(): void {

@@ -121,4 +121,63 @@ class Tanish_Inventory_Database {
 
 		return $wpdb->get_results($query, ARRAY_A);
 	}
+
+	/**
+	 * Movimientos agregados por día para el gráfico del dashboard.
+	 *
+	 * @param int $days Número de días (7-31).
+	 * @return array<int,array{date:string,label:string,entries:float,exits:float,adjustments:int}>
+	 */
+	public function get_daily_movements(int $days = 14): array {
+		global $wpdb;
+
+		$days  = max(7, min(31, $days));
+		$table = $this->get_table_name();
+		$tz    = wp_timezone();
+
+		$today = new DateTimeImmutable('today', $tz);
+		$start = $today->modify('-' . ($days - 1) . ' days');
+
+		$series = array();
+
+		for ($i = 0; $i < $days; $i++) {
+			$day = $start->modify('+' . $i . ' days');
+
+			$series[$day->format('Y-m-d')] = array(
+				'date'        => $day->format('Y-m-d'),
+				'label'       => $day->format('d/m'),
+				'entries'     => 0.0,
+				'exits'       => 0.0,
+				'adjustments' => 0,
+			);
+		}
+
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT DATE(created_at) AS day, movement_type, SUM(quantity_change) AS total, COUNT(*) AS total_rows
+				FROM {$table}
+				WHERE created_at >= %s
+				GROUP BY DATE(created_at), movement_type",
+				$start->format('Y-m-d 00:00:00')
+			)
+		);
+
+		foreach ($rows as $row) {
+			$day = (string) $row->day;
+
+			if (!isset($series[$day])) {
+				continue;
+			}
+
+			if ('entry' === $row->movement_type) {
+				$series[$day]['entries'] += abs((float) $row->total);
+			} elseif ('exit' === $row->movement_type) {
+				$series[$day]['exits'] += abs((float) $row->total);
+			} else {
+				$series[$day]['adjustments'] += (int) $row->total_rows;
+			}
+		}
+
+		return array_values($series);
+	}
 }
