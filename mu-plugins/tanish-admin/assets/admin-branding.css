@@ -1,0 +1,1238 @@
+/* ================================================
+   TANISH · Branding del panel administrativo
+   ================================================ */
+
+body.wp-admin {
+	--tanish-navy: #0F3B5F;
+	--tanish-navy-light: #0D3456;
+	--tanish-primary: #1F2937;
+	--tanish-muted: #6B7280;
+	--tanish-border: #E5E7EB;
+	--tanish-accent: #22C55E;
+	--tanish-accent-dark: #16A34A;
+	--tanish-accent-text: #15803D;
+	--tanish-accent-soft: #ECFDF5;
+	--tanish-yellow: #FBBF24;
+	--tanish-red: #EF4444;
+	--tanish-surface-alt: #F8F9F4;
+	--tanish-radius: 8px;
+	--tanish-radius-lg: 10px;
+	--tanish-shadow: 0 1px 2px rgba(15, 59, 95, .06);
+	--tanish-shadow-hover: 0 8px 18px rgba(15, 59, 95, .10);
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--tanish-primary);
+}
+
+body.wp-admin #wpwrap,
+body.wp-admin #wpcontent,
+body.wp-admin #wpbody-content {
+	background: var(--tanish-surface-alt);
+}
+
+body.wp-admin #wpfooter {
+	color: var(--tanish-muted);
+}
+
+body.wp-admin #wpfooter a {
+	color: var(--tanish-accent-text);
+}
+
+body.wp-admin h1,
+body.wp-admin h2,
+body.wp-admin h3 {
+	color: var(--tanish-navy);
+}
+
+body.wp-admin .wp-heading-inline {
+	font-weight: 600;
+}
+
+/* Enlaces del contenido con verde de marca y contraste AA. */
+body.wp-admin #wpbody-content a:not(.button):not(.page-title-action):not(.tanish-dash-card) {
+	color: var(--tanish-accent-text);
+}
+
+body.wp-admin #wpbody-content a:not(.button):not(.page-title-action):not(.tanish-dash-card):hover,
+body.wp-admin #wpbody-content a:not(.button):not(.page-title-action):not(.tanish-dash-card):focus {
+	color: #166534;
+}
+
+body.wp-admin a:focus-visible,
+body.wp-admin button:focus-visible,
+body.wp-admin input:focus-visible,
+body.wp-admin select:focus-visible,
+body.wp-admin textarea:focus-visible {
+	outline: 2px solid var(--tanish-accent-dark);
+	outline-offset: 2px;
+}
+
+/* Campos de formulario. */
+body.wp-admin input[type="text"]:focus,
+body.wp-admin input[type="search"]:focus,
+body.wp-admin input[type="email"]:focus,
+body.wp-admin input[type="url"]:focus,
+body.wp-admin input[type="password"]:focus,
+body.wp-admin input[type="number"]:focus,
+body.wp-admin select:focus,
+body.wp-admin textarea:focus {
+	border-color: var(--tanish-accent-dark);
+	box-shadow: 0 0 0 1px var(--tanish-accent-dark);
+	outline: 2px solid transparent;
+}
+
+/* ------------------------------------------------
+   Botones
+   ------------------------------------------------ */
+
+body.wp-admin .wp-core-ui .button,
+body.wp-admin .wp-core-ui .button-secondary,
+body.wp-admin .page-title-action {
+	background: #fff;
+	border-color: #D1D5DB;
+	border-radius: var(--tanish-radius);
+	color: var(--tanish-primary);
+	box-shadow: none;
+	text-shadow: none;
+}
+
+body.wp-admin .wp-core-ui .button:hover,
+body.wp-admin .wp-core-ui .button-secondary:hover,
+body.wp-admin .page-title-action:hover {
+	background: var(--tanish-surface-alt);
+	border-color: #9CA3AF;
+	color: #111827;
+}
+
+body.wp-admin .wp-core-ui .button-primary {
+	background: var(--tanish-accent);
+	border-color: var(--tanish-accent);
+	border-radius: var(--tanish-radius);
+	color: #052E16;
+	box-shadow: none;
+	text-shadow: none;
+	font-weight: 600;
+}
+
+body.wp-admin .wp-core-ui .button-primary:hover,
+body.wp-admin .wp-core-ui .button-primary:focus {
+	background: var(--tanish-accent-dark);
+	border-color: var(--tanish-accent-dark);
+	color: #052E16;
+}
+
+body.wp-admin .wp-core-ui .button-link {
+	color: var(--tanish-accent-text);
+	box-shadow: none;
+}
+
+body.wp-admin .wp-core-ui .button-link:hover {
+	color: #166534;
+}
+
+/* ------------------------------------------------
+   Cajas y tablas
+   ------------------------------------------------ */
+
+body.wp-admin .postbox,
+body.wp-admin .card,
+body.wp-admin .stuffbox,
+body.wp-admin .welcome-panel {
+	background: #fff;
+	border: 1px solid var(--tanish-border);
+	border-radius: var(--tanish-radius-lg);
+	box-shadow: var(--tanish-shadow);
+}
+
+body.wp-admin .postbox .postbox-header {
+	border-bottom: 1px solid var(--tanish-border);
+	border-radius: var(--tanish-radius-lg) var(--tanish-radius-lg) 0 0;
+}
+
+body.wp-admin .postbox h2,
+body.wp-admin .postbox .hndle {
+	font-weight: 600;
+}
+
+body.wp-admin .wp-list-table {
+	background: #fff;
+	border-color: var(--tanish-border);
+}
+
+body.wp-admin .wp-list-table thead th,
+body.wp-admin .wp-list-table tfoot th {
+	color: var(--tanish-navy);
+	font-weight: 600;
+}
+
+body.wp-admin .notice {
+	border-radius: var(--tanish-radius);
+}
+
+body.wp-admin .notice p {
+	font-size: 14px;
+}
+
+/* ------------------------------------------------
+   Barra superior (admin bar)
+   ------------------------------------------------ */
+
+#wpadminbar {
+	background: var(--tanish-navy, #0F3B5F);
+	border-bottom: 1px solid var(--tanish-navy-light, #0D3456);
+}
+
+#wpadminbar .ab-item,
+#wpadminbar a.ab-item,
+#wpadminbar > #wp-toolbar > #wp-admin-bar-root-default > li > .ab-item {
+	color: #E8EEF4;
+}
+
+#wpadminbar #wp-admin-bar-tanish-brand > .ab-item {
+	color: #fff;
+	font-weight: 700;
+	letter-spacing: .12em;
+}
+
+#wpadminbar #wp-admin-bar-tanish-brand > .ab-item .ab-icon {
+	color: #86EFAC;
+	top: 2px;
+}
+
+#wpadminbar #wp-admin-bar-tanish-brand > .ab-item .ab-icon::before {
+	font-size: 18px;
+}
+
+#wpadminbar .ab-top-menu > li:hover > .ab-item,
+#wpadminbar .ab-top-menu > li > .ab-item:focus,
+#wpadminbar #wp-admin-bar-tanish-brand > .ab-item:hover,
+#wpadminbar #wp-admin-bar-tanish-brand > .ab-item:focus {
+	background: var(--tanish-accent-dark, #16A34A);
+	color: #fff;
+}
+
+#wpadminbar .ab-submenu {
+	background: var(--tanish-navy-light, #0D3456);
+}
+
+#wpadminbar .ab-submenu .ab-item {
+	color: #DCE7F0;
+}
+
+#wpadminbar .ab-submenu .ab-item:hover,
+#wpadminbar .ab-submenu .ab-item:focus {
+	background: var(--tanish-accent-dark, #16A34A);
+	color: #fff;
+}
+
+#wpadminbar #wp-admin-bar-tanish-stock-low > .ab-item {
+	color: #FDE68A;
+	font-weight: 600;
+}
+
+#wpadminbar #wp-admin-bar-tanish-stock-low > .ab-item:hover,
+#wpadminbar #wp-admin-bar-tanish-stock-low > .ab-item:focus {
+	background: #B45309;
+	color: #fff;
+}
+
+#wpadminbar #wp-admin-bar-tanish-stock-out > .ab-item {
+	color: #FCA5A5;
+	font-weight: 600;
+}
+
+#wpadminbar #wp-admin-bar-tanish-stock-out > .ab-item:hover,
+#wpadminbar #wp-admin-bar-tanish-stock-out > .ab-item:focus {
+	background: #B91C1C;
+	color: #fff;
+}
+
+/* ------------------------------------------------
+   Menú lateral
+   ------------------------------------------------ */
+
+#adminmenuback,
+#adminmenuwrap,
+#adminmenu {
+	background: linear-gradient(180deg, #0F3B5F 0%, #0B2C48 100%);
+}
+
+#adminmenu {
+	border-right: 0;
+}
+
+/* Marca en la parte superior del sidebar. */
+#adminmenuwrap::before {
+	content: "TANISH";
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 16px 16px 14px;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: .18em;
+	background: rgba(255, 255, 255, .04);
+	border-top: 3px solid var(--tanish-accent, #22C55E);
+	border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+body.folded #adminmenuwrap::before {
+	content: "T";
+	justify-content: center;
+	padding: 16px 0 14px;
+	font-size: 15px;
+	letter-spacing: 0;
+}
+
+#adminmenu li.menu-top {
+	border-top: 1px solid rgba(255, 255, 255, .045);
+}
+
+#adminmenu li.menu-top:first-child {
+	border-top: 0;
+}
+
+#adminmenu a {
+	color: #DCE7F0;
+	transition: color .15s ease, background-color .15s ease;
+}
+
+#adminmenu a:hover,
+#adminmenu a:focus {
+	color: #fff;
+}
+
+#adminmenu div.wp-menu-image::before {
+	color: #86EFAC;
+	opacity: .85;
+	transition: opacity .15s ease;
+}
+
+#adminmenu li.menu-top:hover div.wp-menu-image::before,
+#adminmenu li.current div.wp-menu-image::before,
+#adminmenu li.wp-has-current-submenu div.wp-menu-image::before {
+	opacity: 1;
+}
+
+#adminmenu li.menu-top:hover,
+#adminmenu li.opensub > a.menu-top,
+#adminmenu li > a.menu-top:focus {
+	background: rgba(255, 255, 255, .06);
+	color: #fff;
+}
+
+/* Ítem activo: pill suave con barra verde (en vez de bloque sólido). */
+#adminmenu li.current a.menu-top,
+#adminmenu li.wp-has-current-submenu a.wp-has-current-submenu,
+#adminmenu li.current.menu-top > a {
+	background: rgba(34, 197, 94, .16);
+	box-shadow: inset 3px 0 0 var(--tanish-accent, #22C55E);
+	color: #fff;
+	border-radius: 0 8px 8px 0;
+}
+
+#adminmenu li.current a.menu-top .wp-menu-image::before,
+#adminmenu li.wp-has-current-submenu a.wp-has-current-submenu .wp-menu-image::before {
+	color: var(--tanish-accent, #22C55E);
+}
+
+#adminmenu .wp-submenu {
+	background: rgba(5, 22, 38, .55);
+	border-radius: 0 0 8px 0;
+}
+
+#adminmenu .wp-submenu a {
+	color: #C9D8E6;
+	transition: color .15s ease, background-color .15s ease;
+}
+
+#adminmenu .wp-submenu a:hover,
+#adminmenu .wp-submenu a:focus {
+	background: rgba(255, 255, 255, .07);
+	color: #fff;
+}
+
+#adminmenu .wp-submenu li.current a,
+#adminmenu .wp-submenu a.current {
+	background: rgba(34, 197, 94, .16);
+	box-shadow: inset 3px 0 0 var(--tanish-accent, #22C55E);
+	color: #fff;
+	border-radius: 0 6px 6px 0;
+}
+
+#adminmenu .wp-menu-arrow,
+#adminmenu .wp-menu-arrow div {
+	background: transparent;
+}
+
+#adminmenu #collapse-menu,
+#adminmenu #collapse-menu button,
+#adminmenu #collapse-menu .collapse-button-label {
+	color: #A9BDCF;
+}
+
+#adminmenu #collapse-menu button:hover {
+	color: #fff;
+}
+
+/* Menú plegado: los desplegables mantienen el fondo navy. */
+body.folded #adminmenu .wp-submenu,
+body.folded #adminmenu li.menu-top:hover .wp-submenu,
+body.folded #adminmenu li.opensub > .wp-submenu {
+	background: #0D3456;
+	border-radius: 0 var(--tanish-radius, 8px) var(--tanish-radius, 8px) 0;
+	box-shadow: 0 8px 18px rgba(0, 0, 0, .22);
+}
+
+body.folded #adminmenu .wp-submenu a {
+	color: #D7E3EE;
+}
+
+body.folded #adminmenu .wp-submenu a:hover,
+body.folded #adminmenu .wp-submenu a:focus {
+	background: rgba(255, 255, 255, .08);
+	color: #fff;
+}
+
+/* ------------------------------------------------
+   Migaja de pan
+   ------------------------------------------------ */
+
+.tanish-breadcrumb {
+	margin: 12px 0 2px;
+	padding: 8px 14px;
+	background: #fff;
+	border: 1px solid var(--tanish-border, #E5E7EB);
+	border-radius: var(--tanish-radius, 8px);
+	box-shadow: 0 1px 2px rgba(15, 59, 95, .04);
+	font-size: 13px;
+}
+
+.tanish-breadcrumb-list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.tanish-breadcrumb-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+
+.tanish-breadcrumb-item + .tanish-breadcrumb-item::before {
+	content: "›";
+	color: #9CA3AF;
+	font-size: 15px;
+	line-height: 1;
+}
+
+.tanish-breadcrumb-home a {
+	color: var(--tanish-navy, #0F3B5F);
+	font-weight: 700;
+	letter-spacing: .06em;
+	text-decoration: none;
+}
+
+.tanish-breadcrumb-home a:hover {
+	color: var(--tanish-accent-text, #15803D);
+}
+
+.tanish-breadcrumb-section span {
+	color: var(--tanish-muted, #6B7280);
+}
+
+.tanish-breadcrumb-current {
+	color: var(--tanish-primary, #1F2937);
+	font-weight: 600;
+}
+
+/* ------------------------------------------------
+   Bienvenida del dashboard
+   ------------------------------------------------ */
+
+.tanish-welcome {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 16px 20px 0 0;
+	padding: 12px 16px;
+	background: #fff;
+	border: 1px solid var(--tanish-border, #E5E7EB);
+	border-left: 4px solid var(--tanish-accent, #22C55E);
+	border-radius: var(--tanish-radius-lg, 10px);
+	box-shadow: var(--tanish-shadow, 0 1px 2px rgba(15, 59, 95, .06));
+}
+
+.tanish-welcome-mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	flex: 0 0 34px;
+	background: var(--tanish-navy, #0F3B5F);
+	color: #fff;
+	border-radius: 50%;
+	font-weight: 700;
+	letter-spacing: .04em;
+}
+
+.tanish-welcome-text {
+	margin: 0;
+	color: var(--tanish-navy, #0F3B5F);
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.tanish-welcome-date {
+	margin-left: auto;
+	color: var(--tanish-muted, #6B7280);
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+/* ------------------------------------------------
+   Dashboard · Resumen TANISH
+   ------------------------------------------------ */
+
+body.index-php #dashboard-widgets-wrap #dashboard-widgets .postbox-container {
+	float: none;
+	width: 100% !important;
+}
+
+body.index-php #dashboard-widgets-wrap #dashboard-widgets .meta-box-sortables {
+	min-height: 0;
+}
+
+#tanish_resumen .inside {
+	margin: 0;
+	padding: 18px 20px;
+}
+
+.tanish-dash {
+	padding: 2px 0;
+}
+
+.tanish-dash-intro {
+	margin: 0 0 16px;
+	color: #374151;
+	font-size: 15px;
+}
+
+.tanish-dash-empty {
+	margin: 0 0 16px;
+	color: var(--tanish-muted, #6B7280);
+}
+
+.tanish-dash-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 12px;
+	margin-bottom: 18px;
+}
+
+.tanish-dash-card {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+	padding: 16px;
+	background: #fff;
+	border: 1px solid var(--tanish-border, #E5E7EB);
+	border-radius: var(--tanish-radius-lg, 10px);
+	box-shadow: var(--tanish-shadow, 0 1px 2px rgba(15, 59, 95, .06));
+	text-decoration: none;
+	transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+a.tanish-dash-card:hover,
+a.tanish-dash-card:focus {
+	border-color: var(--tanish-accent, #22C55E);
+	box-shadow: var(--tanish-shadow-hover, 0 8px 18px rgba(15, 59, 95, .10));
+	transform: translateY(-2px);
+}
+
+.tanish-dash-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	background: var(--tanish-accent-soft, #ECFDF5);
+	border-radius: var(--tanish-radius, 8px);
+	color: var(--tanish-accent-text, #15803D);
+	font-size: 19px;
+	line-height: 1;
+}
+
+.tanish-dash-label {
+	color: var(--tanish-muted, #6B7280);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: .03em;
+	text-transform: uppercase;
+}
+
+.tanish-dash-value {
+	color: var(--tanish-navy, #0F3B5F);
+	font-size: 26px;
+	font-weight: 700;
+	line-height: 1.15;
+	overflow-wrap: anywhere;
+}
+
+.tanish-dash-value .woocommerce-Price-amount {
+	font-size: 21px;
+}
+
+.tanish-dash-card--low .tanish-dash-icon {
+	background: #FEF3C7;
+	color: #B45309;
+}
+
+.tanish-dash-card--low .tanish-dash-value {
+	color: #B45309;
+}
+
+.tanish-dash-card--out .tanish-dash-icon {
+	background: #FEE2E2;
+	color: #B91C1C;
+}
+
+.tanish-dash-card--out .tanish-dash-value {
+	color: #B91C1C;
+}
+
+.tanish-dash-card--info .tanish-dash-icon {
+	background: #E0F2FE;
+	color: #075985;
+}
+
+.tanish-dash-card--accent .tanish-dash-icon {
+	background: var(--tanish-accent-soft, #ECFDF5);
+	color: var(--tanish-accent-text, #15803D);
+}
+
+.tanish-dash-card--accent .tanish-dash-value {
+	color: var(--tanish-accent-text, #15803D);
+}
+
+.tanish-dash-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+}
+
+body.wp-admin .tanish-dash-actions .button {
+	margin: 0;
+}
+
+/* ------------------------------------------------
+   Responsive
+   ------------------------------------------------ */
+
+@media screen and (max-width: 782px) {
+	.tanish-breadcrumb {
+		margin-top: 8px;
+	}
+
+	.tanish-breadcrumb-section {
+		display: none;
+	}
+
+	.tanish-welcome {
+		margin-right: 10px;
+	}
+
+	.tanish-welcome-date {
+		display: none;
+	}
+
+	.tanish-dash-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	#wpadminbar #wp-admin-bar-tanish-stock-low > .ab-item,
+	#wpadminbar #wp-admin-bar-tanish-stock-out > .ab-item {
+		font-size: 11px;
+		padding: 0 6px;
+	}
+
+	.tanish-welcome-text {
+		font-size: 14px;
+	}
+
+	#tanish_resumen .inside {
+		padding: 14px;
+	}
+}
+
+/* ------------------------------------------------
+   Gráfico de ventas
+   ------------------------------------------------ */
+
+.tanish-dash-section {
+	margin-top: 18px;
+}
+
+.tanish-chart {
+	background: #fff;
+	border: 1px solid var(--tanish-border, #E5E7EB);
+	border-radius: var(--tanish-radius-lg, 10px);
+	box-shadow: var(--tanish-shadow, 0 1px 2px rgba(15, 59, 95, .06));
+	padding: 16px 18px 10px;
+}
+
+.tanish-chart-head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 6px;
+}
+
+.tanish-chart-head h3 {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--tanish-navy, #0F3B5F);
+}
+
+.tanish-chart-sub {
+	margin: 2px 0 0;
+	font-size: 12px;
+	color: var(--tanish-muted, #6B7280);
+}
+
+.tanish-chart-svg {
+	display: block;
+	width: 100%;
+	height: auto;
+	overflow: visible;
+}
+
+.tanish-chart-grid {
+	stroke: #EEF1F4;
+	stroke-width: 1;
+}
+
+.tanish-chart-y,
+.tanish-chart-x {
+	fill: #9AA7B8;
+	font-size: 10px;
+	font-family: inherit;
+}
+
+.tanish-chart-bar rect {
+	fill: #22C55E;
+	transition: fill .15s ease;
+}
+
+.tanish-chart-bar:hover rect,
+.tanish-chart-bar:focus rect {
+	fill: #16A34A;
+}
+
+/* ------------------------------------------------
+   Paneles: últimos pedidos, stock bajo, más vendidos
+   ------------------------------------------------ */
+
+.tanish-dash-panels {
+	display: grid;
+	grid-template-columns: 1.15fr .85fr;
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.tanish-panel {
+	background: #fff;
+	border: 1px solid var(--tanish-border, #E5E7EB);
+	border-radius: var(--tanish-radius-lg, 10px);
+	box-shadow: var(--tanish-shadow, 0 1px 2px rgba(15, 59, 95, .06));
+	padding: 14px 16px;
+	min-width: 0;
+}
+
+.tanish-panel--wide {
+	margin-top: 16px;
+}
+
+.tanish-panel-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 8px;
+}
+
+.tanish-panel-head h3 {
+	margin: 0;
+	font-size: 13.5px;
+	font-weight: 600;
+	color: var(--tanish-navy, #0F3B5F);
+}
+
+.tanish-panel-link {
+	font-size: 12px;
+	font-weight: 500;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.tanish-panel-empty {
+	margin: 6px 0;
+	font-size: 13px;
+	color: var(--tanish-muted, #6B7280);
+}
+
+.tanish-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+
+.tanish-table th {
+	padding: 7px 8px;
+	text-align: left;
+	font-size: 10.5px;
+	font-weight: 700;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+	color: var(--tanish-muted, #6B7280);
+	border-bottom: 1px solid var(--tanish-border, #E5E7EB);
+}
+
+.tanish-table td {
+	padding: 9px 8px;
+	border-bottom: 1px solid #F1F3F5;
+	vertical-align: middle;
+	color: var(--tanish-primary, #1F2937);
+}
+
+.tanish-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.tanish-table tbody tr:hover td {
+	background: var(--tanish-surface-alt, #F8F9F4);
+}
+
+.tanish-table-num {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.tanish-table-meta {
+	display: block;
+	font-size: 11px;
+	color: #9AA7B8;
+}
+
+.tanish-status {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.6;
+	white-space: nowrap;
+}
+
+.tanish-status--success {
+	background: #ECFDF5;
+	color: #15803D;
+}
+
+.tanish-status--info {
+	background: #EFF6FF;
+	color: #1D4ED8;
+}
+
+.tanish-status--warning {
+	background: #FEF9C3;
+	color: #B45309;
+}
+
+.tanish-status--danger {
+	background: #FEF2F2;
+	color: #B91C1C;
+}
+
+.tanish-status--neutral {
+	background: #F3F4F6;
+	color: #4B5563;
+}
+
+.tanish-stock-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.tanish-stock-list li {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 9px 0;
+	border-bottom: 1px solid #F1F3F5;
+	font-size: 13px;
+}
+
+.tanish-stock-list li:last-child {
+	border-bottom: 0;
+}
+
+.tanish-stock-list a {
+	text-decoration: none;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tanish-stock-badge {
+	flex: 0 0 auto;
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: #FEF9C3;
+	color: #B45309;
+	font-size: 11px;
+	font-weight: 700;
+}
+
+/* ------------------------------------------------
+   Catálogo por categoría
+   ------------------------------------------------ */
+
+.tanish-cat-bars {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.tanish-cat-row {
+	display: grid;
+	grid-template-columns: 170px 1fr 48px;
+	align-items: center;
+	gap: 12px;
+	font-size: 13px;
+}
+
+.tanish-cat-name {
+	color: var(--tanish-primary, #1F2937);
+	text-decoration: none;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tanish-cat-row:hover .tanish-cat-name {
+	color: var(--tanish-accent-text, #15803D);
+}
+
+.tanish-cat-track {
+	display: block;
+	height: 10px;
+	background: #F1F3F5;
+	border-radius: 999px;
+	overflow: hidden;
+}
+
+.tanish-cat-fill {
+	display: block;
+	height: 100%;
+	border-radius: 999px;
+	background: linear-gradient(90deg, #22C55E, #16A34A);
+	transition: width .3s ease;
+}
+
+.tanish-cat-count {
+	text-align: right;
+	font-weight: 700;
+	color: var(--tanish-muted, #6B7280);
+	font-variant-numeric: tabular-nums;
+}
+
+@media screen and (max-width: 600px) {
+	.tanish-cat-row {
+		grid-template-columns: 110px 1fr 36px;
+	}
+}
+
+@media screen and (max-width: 960px) {
+	.tanish-dash-panels {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ================================================
+   Catálogo de productos (edit.php?post_type=product)
+   ================================================ */
+
+body.edit-php.post-type-product .wrap > h1.wp-heading-inline,
+body.edit-php.post-type-product .wrap > a.page-title-action,
+body.edit-php.post-type-product .wrap > hr.wp-header-end {
+	display: none;
+}
+
+.tanish-prod-head {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+	margin: 10px 20px 14px 2px;
+}
+
+.tanish-prod-title {
+	margin: 0;
+	font-size: 26px;
+	line-height: 1.2;
+	font-weight: 600;
+	color: var(--tanish-navy, #0F3B5F);
+}
+
+.tanish-prod-sub {
+	margin: 4px 0 0;
+	font-size: 13px;
+	color: var(--tanish-muted, #6B7280);
+}
+
+.tanish-prod-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+body.wp-admin .tanish-prod-actions .button {
+	border-radius: 999px;
+	min-height: 34px;
+	line-height: 32px;
+	padding: 0 14px;
+}
+
+.tanish-prod-kpis {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 12px;
+	margin: 0 20px 16px 2px;
+}
+
+.tanish-prod-kpi {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 12px 16px;
+	background: #fff;
+	border: 1px solid var(--tanish-border, #E5E7EB);
+	border-top: 3px solid var(--tanish-accent, #22C55E);
+	border-radius: var(--tanish-radius-lg, 10px);
+	box-shadow: var(--tanish-shadow, 0 1px 2px rgba(15, 59, 95, .06));
+	text-decoration: none;
+	transition: box-shadow .15s ease, transform .15s ease;
+}
+
+.tanish-prod-kpi:hover,
+.tanish-prod-kpi:focus {
+	box-shadow: var(--tanish-shadow-hover, 0 8px 18px rgba(15, 59, 95, .10));
+	transform: translateY(-1px);
+	text-decoration: none;
+}
+
+.tanish-prod-kpi-label {
+	font-size: 11.5px;
+	font-weight: 700;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+	color: var(--tanish-muted, #6B7280);
+}
+
+.tanish-prod-kpi-value {
+	font-size: 26px;
+	line-height: 1.15;
+	font-weight: 700;
+	color: var(--tanish-navy, #0F3B5F);
+}
+
+.tanish-prod-kpi--low {
+	border-top-color: var(--tanish-yellow, #FBBF24);
+}
+
+.tanish-prod-kpi--low .tanish-prod-kpi-value {
+	color: #B45309;
+}
+
+.tanish-prod-kpi--out {
+	border-top-color: var(--tanish-red, #EF4444);
+}
+
+.tanish-prod-kpi--out .tanish-prod-kpi-value {
+	color: #B91C1C;
+}
+
+.tanish-prod-kpi--muted {
+	border-top-color: #94A3B8;
+}
+
+.tanish-prod-kpi--muted .tanish-prod-kpi-value {
+	color: #475569;
+}
+
+/* Tabla de productos */
+
+body.edit-php.post-type-product .wp-list-table {
+	background: #fff;
+	border: 1px solid var(--tanish-border, #E5E7EB);
+	border-radius: var(--tanish-radius-lg, 10px);
+	border-collapse: separate;
+	border-spacing: 0;
+	overflow: hidden;
+	box-shadow: var(--tanish-shadow, 0 1px 2px rgba(15, 59, 95, .06));
+}
+
+body.edit-php.post-type-product .wp-list-table thead th,
+body.edit-php.post-type-product .wp-list-table thead td {
+	background: var(--tanish-surface-alt, #F8F9F4);
+	border-bottom: 1px solid var(--tanish-border, #E5E7EB);
+	font-size: 11px;
+}
+
+body.edit-php.post-type-product .wp-list-table tbody tr:hover td,
+body.edit-php.post-type-product .wp-list-table tbody tr:hover th {
+	background: #F8FAF9;
+}
+
+body.edit-php.post-type-product .column-thumb img {
+	width: 44px !important;
+	height: 44px !important;
+	max-width: 44px !important;
+	object-fit: cover;
+	border-radius: 10px;
+	border: 1px solid var(--tanish-border, #E5E7EB);
+	background: #fff;
+}
+
+body.edit-php.post-type-product .column-name .row-title {
+	font-weight: 600;
+	color: var(--tanish-navy, #0F3B5F);
+}
+
+body.edit-php.post-type-product .column-price .amount {
+	font-weight: 700;
+	color: var(--tanish-navy, #0F3B5F);
+	white-space: nowrap;
+}
+
+body.edit-php.post-type-product .column-is_in_stock {
+	white-space: nowrap;
+}
+
+body.edit-php.post-type-product mark.instock,
+body.edit-php.post-type-product mark.outofstock,
+body.edit-php.post-type-product mark.onbackorder {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1.6;
+	background-image: none;
+}
+
+body.edit-php.post-type-product mark.instock {
+	background: #ECFDF5;
+	color: #15803D;
+}
+
+body.edit-php.post-type-product mark.outofstock {
+	background: #FEF2F2;
+	color: #B91C1C;
+}
+
+body.edit-php.post-type-product mark.onbackorder {
+	background: #FEF9C3;
+	color: #B45309;
+}
+
+body.edit-php.post-type-product .column-featured .wc-featured {
+	font-size: 16px;
+}
+
+body.edit-php.post-type-product .column-featured .wc-featured.yes {
+	color: #F59E0B;
+}
+
+/* Vistas (Todos | Publicados | ...) como pills. */
+body.edit-php.post-type-product ul.subsubsub {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 2px 0 12px;
+	padding: 0;
+}
+
+body.edit-php.post-type-product ul.subsubsub li {
+	margin: 0;
+}
+
+body.edit-php.post-type-product ul.subsubsub a {
+	display: inline-block;
+	padding: 4px 11px;
+	border-radius: 999px;
+	background: #fff;
+	border: 1px solid var(--tanish-border, #E5E7EB);
+	text-decoration: none;
+	font-size: 12px;
+	color: var(--tanish-primary, #1F2937);
+}
+
+body.edit-php.post-type-product ul.subsubsub a:hover {
+	border-color: var(--tanish-accent, #22C55E);
+	color: var(--tanish-accent-text, #15803D);
+}
+
+body.edit-php.post-type-product ul.subsubsub a.current {
+	background: var(--tanish-accent, #22C55E);
+	border-color: var(--tanish-accent, #22C55E);
+	color: #fff;
+	font-weight: 600;
+}
+
+body.edit-php.post-type-product .search-box input[type="search"] {
+	height: 34px;
+	border-radius: 8px;
+	border-color: var(--tanish-border, #E5E7EB);
+}
+
+body.edit-php.post-type-product .tablenav .actions select {
+	border-radius: 8px;
+}
+
+@media screen and (max-width: 960px) {
+	.tanish-prod-kpis {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.tanish-prod-kpis {
+		grid-template-columns: 1fr;
+	}
+
+	.tanish-prod-head {
+		align-items: flex-start;
+	}
+}

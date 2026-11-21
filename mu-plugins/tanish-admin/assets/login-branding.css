@@ -1,0 +1,301 @@
+/* ================================================
+   TANISH · Login de WordPress
+   ================================================ */
+
+body.login {
+	--tanish-navy: #0F3B5F;
+	--tanish-navy-light: #0D3456;
+	--tanish-primary: #1F2937;
+	--tanish-muted: #6B7280;
+	--tanish-border: #E5E7EB;
+	--tanish-accent: #22C55E;
+	--tanish-accent-dark: #16A34A;
+	--tanish-accent-text: #15803D;
+	--tanish-accent-soft: #ECFDF5;
+	--tanish-red: #EF4444;
+	--tanish-radius: 8px;
+	--tanish-radius-lg: 16px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	justify-content: safe center;
+	min-height: 100vh;
+	height: auto;
+	box-sizing: border-box;
+	padding: 40px 16px;
+	background:
+		radial-gradient(circle at 12% 15%, rgba(34, 197, 94, .22), transparent 42%),
+		radial-gradient(circle at 88% 85%, rgba(34, 197, 94, .14), transparent 40%),
+		linear-gradient(145deg, #0F3B5F 0%, #0D3456 55%, #0A2A46 100%);
+	background-attachment: fixed;
+	color: var(--tanish-primary);
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+body.login #login {
+	width: 100%;
+	max-width: 380px;
+	margin: 0;
+	padding: 0;
+}
+
+/* El h1 original queda solo para lectores de pantalla. */
+body.login #login h1.wp-login-logo {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ------------------------------------------------
+   Marca sobre la caja de login
+   ------------------------------------------------ */
+
+.tanish-login-brand {
+	width: 100%;
+	max-width: 380px;
+	margin: 0 auto 20px;
+	text-align: center;
+}
+
+.tanish-login-brand-link {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	text-decoration: none;
+}
+
+.tanish-login-brand-link:focus-visible {
+	outline: 2px solid #86EFAC;
+	outline-offset: 4px;
+	border-radius: 12px;
+}
+
+.tanish-login-wordmark {
+	display: inline-block;
+	padding: 14px 30px 12px;
+	background: #fff;
+	border-bottom: 3px solid var(--tanish-accent);
+	border-radius: 12px;
+	box-shadow: 0 12px 28px rgba(0, 0, 0, .22);
+	color: var(--tanish-navy);
+	font-size: 28px;
+	font-weight: 700;
+	letter-spacing: .18em;
+	line-height: 1.1;
+}
+
+.tanish-login-logo {
+	display: block;
+	width: 84px;
+	height: 84px;
+	padding: 8px;
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 0 12px 28px rgba(0, 0, 0, .22);
+	object-fit: contain;
+}
+
+.tanish-login-tagline {
+	margin: 12px 0 0;
+	color: #D1FAE5;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: .18em;
+	text-transform: uppercase;
+}
+
+/* ------------------------------------------------
+   Caja y formulario
+   ------------------------------------------------ */
+
+body.login #login form {
+	margin-top: 0;
+	padding: 26px 24px 22px;
+	background: #fff;
+	border: 1px solid var(--tanish-border);
+	border-radius: var(--tanish-radius-lg);
+	box-shadow: 0 24px 60px rgba(4, 20, 35, .35);
+}
+
+body.login #login form p {
+	margin-bottom: 16px;
+}
+
+body.login #login form p.submit {
+	margin: 0;
+	padding: 0;
+}
+
+body.login label {
+	color: var(--tanish-primary);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+body.login input[type="text"],
+body.login input[type="password"],
+body.login input[type="email"] {
+	padding: 10px 12px;
+	background: #fff;
+	border: 1px solid #D1D5DB;
+	border-radius: var(--tanish-radius);
+	box-shadow: none;
+	color: var(--tanish-primary);
+	font-size: 15px;
+	line-height: 1.4;
+}
+
+body.login input[type="text"]:focus,
+body.login input[type="password"]:focus,
+body.login input[type="email"]:focus {
+	border-color: var(--tanish-accent-dark);
+	box-shadow: 0 0 0 2px rgba(22, 163, 74, .25);
+	outline: 2px solid transparent;
+}
+
+body.login .button-primary {
+	float: none;
+	width: 100%;
+	min-height: 42px;
+	padding: 6px 16px;
+	background: var(--tanish-accent);
+	border-color: var(--tanish-accent);
+	border-radius: var(--tanish-radius);
+	box-shadow: none;
+	color: #052E16;
+	font-size: 15px;
+	font-weight: 600;
+	text-shadow: none;
+}
+
+body.login .button-primary:hover,
+body.login .button-primary:focus {
+	background: var(--tanish-accent-dark);
+	border-color: var(--tanish-accent-dark);
+	color: #052E16;
+}
+
+body.login .button-primary:focus-visible {
+	outline: 2px solid #052E16;
+	outline-offset: 2px;
+}
+
+body.login .forgetmenot {
+	display: block;
+	float: none;
+	margin: 2px 0 16px;
+}
+
+body.login .forgetmenot label {
+	color: var(--tanish-muted);
+	font-size: 13px;
+}
+
+body.login #login form a {
+	color: var(--tanish-accent-text);
+}
+
+body.login #login form a:hover {
+	color: #166534;
+}
+
+body.login .message,
+body.login .notice,
+body.login .success,
+body.login #login_error {
+	margin: 0 0 20px;
+	padding: 10px 14px;
+	background: #fff;
+	border-radius: var(--tanish-radius);
+	box-shadow: 0 6px 18px rgba(4, 20, 35, .16);
+}
+
+body.login #login_error {
+	border-left: 4px solid var(--tanish-red);
+}
+
+/* ------------------------------------------------
+   Enlaces bajo la caja
+   ------------------------------------------------ */
+
+body.login #nav,
+body.login #backtoblog,
+body.login .privacy-policy-page-link {
+	padding: 0 4px;
+	color: #CBD5E1;
+	font-size: 13px;
+	text-align: center;
+}
+
+body.login #nav a,
+body.login #backtoblog a,
+body.login .privacy-policy-page-link a {
+	color: #BBF7D0;
+}
+
+body.login #nav a:hover,
+body.login #backtoblog a:hover,
+body.login .privacy-policy-page-link a:hover,
+body.login #nav a:focus,
+body.login #backtoblog a:focus,
+body.login .privacy-policy-page-link a:focus {
+	color: #fff;
+}
+
+body.login .privacy-policy-page-link {
+	margin: 1.5em 0 0;
+}
+
+body.login #nav a:focus-visible,
+body.login #backtoblog a:focus-visible,
+body.login .privacy-policy-page-link a:focus-visible {
+	outline: 2px solid #86EFAC;
+	outline-offset: 2px;
+}
+
+/* ------------------------------------------------
+   Responsive
+   ------------------------------------------------ */
+
+@media screen and (max-width: 480px) {
+	body.login {
+		padding: 24px 12px;
+		justify-content: flex-start;
+	}
+
+	body.login #login,
+	.tanish-login-brand {
+		max-width: 100%;
+	}
+
+	.tanish-login-wordmark {
+		font-size: 23px;
+		padding: 12px 22px 10px;
+	}
+
+	body.login #login form {
+		padding: 22px 18px 18px;
+	}
+}
+
+/* Login dentro de iframe (interim-login): sin centrado forzado. */
+body.login.interim-login {
+	display: block;
+	min-height: 0;
+	padding: 20px;
+	background: var(--tanish-navy);
+}
+
+body.login.interim-login #login {
+	margin: 0 auto;
+}
