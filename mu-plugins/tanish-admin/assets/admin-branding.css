@@ -999,10 +999,10 @@ body.edit-product .wrap > hr.wp-header-end {
 .tanish-prod-title {
 	position: relative;
 	margin: 0;
-	padding-left: 14px;
-	font-size: 26px;
-	line-height: 1.2;
-	font-weight: 600;
+	padding-left: 18px;
+	font-size: 25px;
+	line-height: 1.25;
+	font-weight: 650;
 	color: var(--tanish-navy, #0F3B5F);
 }
 
@@ -1012,9 +1012,9 @@ body.edit-product .wrap > hr.wp-header-end {
 	left: 0;
 	top: 4px;
 	bottom: 4px;
-	width: 4px;
-	border-radius: 4px;
-	background: var(--tanish-accent, #22C55E);
+	width: 5px;
+	border-radius: 999px;
+	background: linear-gradient(180deg, var(--tanish-accent, #22C55E), var(--tanish-accent-dark, #16A34A));
 }
 
 .tanish-prod-sub {
@@ -1030,57 +1030,115 @@ body.edit-product .wrap > hr.wp-header-end {
 }
 
 body.wp-admin .tanish-prod-actions .button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 40px;
+	padding: 0 20px;
 	border-radius: 999px;
-	min-height: 34px;
-	line-height: 32px;
-	padding: 0 14px;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1;
+	text-shadow: none;
+	box-shadow: none;
+	transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease, border-color .16s ease;
+}
+
+body.wp-admin .tanish-prod-actions .button:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 8px 16px -10px rgba(15, 59, 95, .5);
 }
 
 .tanish-prod-kpis {
 	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
-	gap: 12px;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 16px;
 	margin: 0 20px 16px 2px;
 }
 
 .tanish-prod-kpi {
+	--kpi-accent: var(--tanish-navy, #0F3B5F);
+	--kpi-icon-bg: #EEF3F8;
+	--kpi-icon-color: var(--tanish-navy, #0F3B5F);
+
+	position: relative;
 	display: flex;
-	flex-direction: column;
-	gap: 2px;
-	padding: 12px 16px;
+	align-items: center;
+	gap: 14px;
+	overflow: hidden;
+	padding: 20px;
 	background: #fff;
 	border: 1px solid var(--tanish-border, #E5E7EB);
-	border-top: 3px solid var(--tanish-accent, #22C55E);
-	border-radius: var(--tanish-radius-lg, 10px);
+	border-radius: 12px;
 	box-shadow: var(--tanish-shadow, 0 1px 2px rgba(15, 59, 95, .06));
 	text-decoration: none;
-	transition: box-shadow .15s ease, transform .15s ease;
+	transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.tanish-prod-kpi::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 4px;
+	background: var(--kpi-accent);
 }
 
 .tanish-prod-kpi:hover,
 .tanish-prod-kpi:focus {
-	box-shadow: var(--tanish-shadow-hover, 0 8px 18px rgba(15, 59, 95, .10));
-	transform: translateY(-1px);
+	transform: translateY(-2px);
+	border-color: #D7DEE7;
+	box-shadow: 0 2px 4px rgba(15, 59, 95, .06), 0 18px 32px -22px rgba(15, 59, 95, .4);
 	text-decoration: none;
 }
 
+.tanish-prod-kpi-icon {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 46px;
+	height: 46px;
+	border-radius: 50%;
+	background: var(--kpi-icon-bg);
+	color: var(--kpi-icon-color);
+	font-size: 22px;
+	line-height: 1;
+}
+
+.tanish-prod-kpi-icon.dashicons {
+	width: 46px;
+	height: 46px;
+}
+
+.tanish-prod-kpi-body {
+	min-width: 0;
+}
+
 .tanish-prod-kpi-label {
+	display: block;
+	margin-bottom: 4px;
 	font-size: 11.5px;
 	font-weight: 700;
 	letter-spacing: .06em;
+	line-height: 1.35;
 	text-transform: uppercase;
 	color: var(--tanish-muted, #6B7280);
 }
 
 .tanish-prod-kpi-value {
-	font-size: 26px;
-	line-height: 1.15;
+	display: block;
+	font-size: 32px;
 	font-weight: 700;
+	line-height: 1.05;
 	color: var(--tanish-navy, #0F3B5F);
 }
 
 .tanish-prod-kpi--low {
-	border-top-color: var(--tanish-yellow, #FBBF24);
+	--kpi-accent: var(--tanish-yellow, #FBBF24);
+	--kpi-icon-bg: #FEF9C3;
+	--kpi-icon-color: #B45309;
 }
 
 .tanish-prod-kpi--low .tanish-prod-kpi-value {
@@ -1088,7 +1146,9 @@ body.wp-admin .tanish-prod-actions .button {
 }
 
 .tanish-prod-kpi--out {
-	border-top-color: var(--tanish-red, #EF4444);
+	--kpi-accent: var(--tanish-red, #EF4444);
+	--kpi-icon-bg: #FEF2F2;
+	--kpi-icon-color: #B91C1C;
 }
 
 .tanish-prod-kpi--out .tanish-prod-kpi-value {
@@ -1096,7 +1156,9 @@ body.wp-admin .tanish-prod-actions .button {
 }
 
 .tanish-prod-kpi--muted {
-	border-top-color: #94A3B8;
+	--kpi-accent: #94A3B8;
+	--kpi-icon-bg: #F1F5F9;
+	--kpi-icon-color: #475569;
 }
 
 .tanish-prod-kpi--muted .tanish-prod-kpi-value {
@@ -1117,14 +1179,35 @@ body.edit-product .wp-list-table {
 
 body.edit-product .wp-list-table thead th,
 body.edit-product .wp-list-table thead td {
+	padding: 12px 14px;
 	background: var(--tanish-surface-alt, #F8F9F4);
 	border-bottom: 1px solid var(--tanish-border, #E5E7EB);
+	color: var(--tanish-muted, #6B7280);
 	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: .06em;
+	line-height: 1.4;
+	text-align: left;
+	text-transform: uppercase;
+}
+
+body.edit-product .wp-list-table tbody td,
+body.edit-product .wp-list-table tbody th {
+	padding: 13px 14px;
+	border-bottom: 1px solid #F1F3EF;
+	font-size: 13px;
+	line-height: 1.5;
+	vertical-align: middle;
+}
+
+body.edit-product .wp-list-table tbody tr:last-child td,
+body.edit-product .wp-list-table tbody tr:last-child th {
+	border-bottom: 0;
 }
 
 body.edit-product .wp-list-table tbody tr:hover td,
 body.edit-product .wp-list-table tbody tr:hover th {
-	background: #F8FAF9;
+	background: var(--tanish-surface-alt, #F8F9F4);
 }
 
 body.edit-product .column-thumb img {
@@ -1207,9 +1290,9 @@ body.edit-product mark.outofstock,
 body.edit-product mark.onbackorder {
 	display: inline-flex;
 	align-items: center;
-	padding: 2px 8px;
+	padding: 3px 10px;
 	border-radius: 999px;
-	font-size: 11px;
+	font-size: 11.5px;
 	font-weight: 700;
 	line-height: 1.6;
 	background-image: none;

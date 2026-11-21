@@ -37,8 +37,8 @@
 	color: var(--t-primary);
 }
 
-/* Movimientos y Kardex ocupan todo el ancho disponible. */
-:is(body.tanish-inventory_page_tanish-inventory-movements, body.tanish-inventory_page_tanish-inventory-kardex) .wrap {
+/* Movimientos, Kardex y formularios de movimiento ocupan todo el ancho. */
+:is(body.tanish-inventory_page_tanish-inventory-movements, body.tanish-inventory_page_tanish-inventory-kardex, body.tanish-inventory_page_tanish-inventory-entry, body.tanish-inventory_page_tanish-inventory-exit, body.tanish-inventory_page_tanish-inventory-adjustment) .wrap {
 	max-width: none;
 }
 
@@ -255,7 +255,7 @@
 
 :is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table {
 	width: 100%;
-	max-width: 720px;
+	max-width: none;
 	margin: 20px 0 0;
 	padding: 8px 24px;
 	background: #fff;
@@ -297,7 +297,7 @@
 :is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table select,
 :is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table textarea {
 	width: 100%;
-	max-width: 420px;
+	max-width: 640px;
 	min-height: 40px;
 	padding: 8px 12px;
 	background: #fff;
@@ -312,6 +312,7 @@
 }
 
 :is(body.toplevel_page_tanish-inventory, body[class*="tanish-inventory_page_"]) .form-table textarea {
+	max-width: 100%;
 	min-height: 96px;
 	resize: vertical;
 }

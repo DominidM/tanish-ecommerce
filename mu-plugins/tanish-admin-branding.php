@@ -1298,24 +1298,28 @@ function tanish_admin_products_header(): void
 			'label'  => 'Publicados',
 			'value'  => (int) $inventory['published'],
 			'class'  => 'neutral',
+			'icon'   => 'dashicons-products',
 			'url'    => admin_url('edit.php?post_type=product&post_status=publish'),
 		),
 		array(
 			'label'  => 'Stock bajo (1-5)',
 			'value'  => (int) $inventory['low'],
 			'class'  => 'low',
+			'icon'   => 'dashicons-warning',
 			'url'    => admin_url('admin.php?page=tanish-inventory'),
 		),
 		array(
 			'label'  => 'Agotados',
 			'value'  => (int) $inventory['out'],
 			'class'  => 'out',
+			'icon'   => 'dashicons-dismiss',
 			'url'    => admin_url('edit.php?post_type=product&stock_status=outofstock'),
 		),
 		array(
 			'label'  => 'Borradores',
 			'value'  => $drafts + $pending,
 			'class'  => 'muted',
+			'icon'   => 'dashicons-edit',
 			'url'    => admin_url('edit.php?post_type=product&post_status=draft'),
 		),
 	);
@@ -1337,8 +1341,11 @@ function tanish_admin_products_header(): void
 
 	foreach ($cards as $card) {
 		echo '<a class="tanish-prod-kpi tanish-prod-kpi--' . esc_attr($card['class']) . '" href="' . esc_url($card['url']) . '">';
+		echo '<span class="tanish-prod-kpi-icon dashicons ' . esc_attr($card['icon']) . '" aria-hidden="true"></span>';
+		echo '<span class="tanish-prod-kpi-body">';
 		echo '<span class="tanish-prod-kpi-label">' . esc_html($card['label']) . '</span>';
 		echo '<strong class="tanish-prod-kpi-value">' . esc_html(number_format_i18n($card['value'])) . '</strong>';
+		echo '</span>';
 		echo '</a>';
 	}
 
