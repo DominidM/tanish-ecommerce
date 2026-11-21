@@ -48,11 +48,13 @@ function tanish_inventory_enqueue_admin_assets($hook): void {
 		return;
 	}
 
+	$css_path = TANISH_INVENTORY_PATH . 'assets/tanish-storefront.css';
+
 	wp_enqueue_style(
 		'tanish-inventory-storefront',
 		TANISH_INVENTORY_URL . 'assets/tanish-storefront.css',
 		array(),
-		TANISH_INVENTORY_VERSION
+		file_exists($css_path) ? (string) filemtime($css_path) : TANISH_INVENTORY_VERSION
 	);
 }
 add_action('admin_enqueue_scripts', 'tanish_inventory_enqueue_admin_assets');

@@ -25,11 +25,13 @@ class Tanish_Inventory_Admin {
 			return;
 		}
 
+		$css_path = TANISH_INVENTORY_PATH . 'assets/admin.css';
+
 		wp_enqueue_style(
 			'tanish-inventory-admin',
 			TANISH_INVENTORY_URL . 'assets/admin.css',
 			array(),
-			TANISH_INVENTORY_VERSION
+			file_exists($css_path) ? (string) filemtime($css_path) : TANISH_INVENTORY_VERSION
 		);
 	}
 
