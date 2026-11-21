@@ -68,7 +68,7 @@ add_action('admin_enqueue_scripts', function (): void {
 		array(),
 		tanish_admin_asset_version($relative)
 	);
-});
+}, 999);
 
 add_action('login_enqueue_scripts', function (): void {
 	$relative = 'tanish-admin/assets/login-branding.css';
@@ -973,7 +973,7 @@ add_action('in_admin_header', function (): void {
 
 	// -10000 queda antes del contenedor que WooCommerce usa para reubicar
 	// avisos, de modo que la migaja nunca acaba dentro de un bloque oculto.
-	add_action('admin_notices', 'tanish_admin_render_breadcrumb', -10000);
+	add_action('admin_notices', 'tanish_admin_render_breadcrumb', -10002);
 }, 100);
 
 /**
@@ -1344,7 +1344,7 @@ function tanish_admin_products_header(): void
 
 	echo '</div>';
 }
-add_action('admin_notices', 'tanish_admin_products_header');
+add_action('admin_notices', 'tanish_admin_products_header', -10001);
 
 /**
  * Configura el dashboard: quita widgets por defecto y añade el resumen TANISH.

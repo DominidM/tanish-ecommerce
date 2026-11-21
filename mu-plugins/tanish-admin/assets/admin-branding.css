@@ -1,5 +1,5 @@
-/* ================================================
-   TANISH · Branding del panel administrativo
+﻿/* ================================================
+   TANISH Â· Branding del panel administrativo
    ================================================ */
 
 body.wp-admin {
@@ -249,7 +249,7 @@ body.wp-admin .notice p {
 }
 
 /* ------------------------------------------------
-   Menú lateral
+   MenÃº lateral
    ------------------------------------------------ */
 
 #adminmenuback,
@@ -323,7 +323,7 @@ body.folded #adminmenuwrap::before {
 	color: #fff;
 }
 
-/* Ítem activo: pill suave con barra verde (en vez de bloque sólido). */
+/* Ãtem activo: pill suave con barra verde (en vez de bloque sÃ³lido). */
 #adminmenu li.current a.menu-top,
 #adminmenu li.wp-has-current-submenu a.wp-has-current-submenu,
 #adminmenu li.current.menu-top > a {
@@ -377,7 +377,7 @@ body.folded #adminmenuwrap::before {
 	color: #fff;
 }
 
-/* Menú plegado: los desplegables mantienen el fondo navy. */
+/* MenÃº plegado: los desplegables mantienen el fondo navy. */
 body.folded #adminmenu .wp-submenu,
 body.folded #adminmenu li.menu-top:hover .wp-submenu,
 body.folded #adminmenu li.opensub > .wp-submenu {
@@ -428,7 +428,7 @@ body.folded #adminmenu .wp-submenu a:focus {
 }
 
 .tanish-breadcrumb-item + .tanish-breadcrumb-item::before {
-	content: "›";
+	content: "â€º";
 	color: #9CA3AF;
 	font-size: 15px;
 	line-height: 1;
@@ -500,7 +500,7 @@ body.folded #adminmenu .wp-submenu a:focus {
 }
 
 /* ------------------------------------------------
-   Dashboard · Resumen TANISH
+   Dashboard Â· Resumen TANISH
    ------------------------------------------------ */
 
 body.index-php #dashboard-widgets-wrap #dashboard-widgets .postbox-container {
@@ -679,7 +679,7 @@ body.wp-admin .tanish-dash-actions .button {
 }
 
 /* ------------------------------------------------
-   Gráfico de ventas
+   GrÃ¡fico de ventas
    ------------------------------------------------ */
 
 .tanish-dash-section {
@@ -745,7 +745,7 @@ body.wp-admin .tanish-dash-actions .button {
 }
 
 /* ------------------------------------------------
-   Paneles: últimos pedidos, stock bajo, más vendidos
+   Paneles: Ãºltimos pedidos, stock bajo, mÃ¡s vendidos
    ------------------------------------------------ */
 
 .tanish-dash-panels {
@@ -913,7 +913,7 @@ body.wp-admin .tanish-dash-actions .button {
 }
 
 /* ------------------------------------------------
-   Catálogo por categoría
+   CatÃ¡logo por categorÃ­a
    ------------------------------------------------ */
 
 .tanish-cat-bars {
@@ -978,12 +978,12 @@ body.wp-admin .tanish-dash-actions .button {
 }
 
 /* ================================================
-   Catálogo de productos (edit.php?post_type=product)
+   CatÃ¡logo de productos (edit.php?post_type=product)
    ================================================ */
 
-body.edit-php.post-type-product .wrap > h1.wp-heading-inline,
-body.edit-php.post-type-product .wrap > a.page-title-action,
-body.edit-php.post-type-product .wrap > hr.wp-header-end {
+body.edit-product .wrap > h1.wp-heading-inline,
+body.edit-product .wrap > a.page-title-action,
+body.edit-product .wrap > hr.wp-header-end {
 	display: none;
 }
 
@@ -997,11 +997,24 @@ body.edit-php.post-type-product .wrap > hr.wp-header-end {
 }
 
 .tanish-prod-title {
+	position: relative;
 	margin: 0;
+	padding-left: 14px;
 	font-size: 26px;
 	line-height: 1.2;
 	font-weight: 600;
 	color: var(--tanish-navy, #0F3B5F);
+}
+
+.tanish-prod-title::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 4px;
+	bottom: 4px;
+	width: 4px;
+	border-radius: 4px;
+	background: var(--tanish-accent, #22C55E);
 }
 
 .tanish-prod-sub {
@@ -1092,7 +1105,7 @@ body.wp-admin .tanish-prod-actions .button {
 
 /* Tabla de productos */
 
-body.edit-php.post-type-product .wp-list-table {
+body.edit-product .wp-list-table {
 	background: #fff;
 	border: 1px solid var(--tanish-border, #E5E7EB);
 	border-radius: var(--tanish-radius-lg, 10px);
@@ -1102,19 +1115,19 @@ body.edit-php.post-type-product .wp-list-table {
 	box-shadow: var(--tanish-shadow, 0 1px 2px rgba(15, 59, 95, .06));
 }
 
-body.edit-php.post-type-product .wp-list-table thead th,
-body.edit-php.post-type-product .wp-list-table thead td {
+body.edit-product .wp-list-table thead th,
+body.edit-product .wp-list-table thead td {
 	background: var(--tanish-surface-alt, #F8F9F4);
 	border-bottom: 1px solid var(--tanish-border, #E5E7EB);
 	font-size: 11px;
 }
 
-body.edit-php.post-type-product .wp-list-table tbody tr:hover td,
-body.edit-php.post-type-product .wp-list-table tbody tr:hover th {
+body.edit-product .wp-list-table tbody tr:hover td,
+body.edit-product .wp-list-table tbody tr:hover th {
 	background: #F8FAF9;
 }
 
-body.edit-php.post-type-product .column-thumb img {
+body.edit-product .column-thumb img {
 	width: 44px !important;
 	height: 44px !important;
 	max-width: 44px !important;
@@ -1124,24 +1137,74 @@ body.edit-php.post-type-product .column-thumb img {
 	background: #fff;
 }
 
-body.edit-php.post-type-product .column-name .row-title {
+body.edit-product .column-name .row-title {
 	font-weight: 600;
 	color: var(--tanish-navy, #0F3B5F);
 }
 
-body.edit-php.post-type-product .column-price .amount {
+body.edit-product .column-name strong a.row-title {
+	font-size: 14px;
+}
+
+body.edit-product .column-sku {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 12px;
+	color: #475569;
+}
+
+body.edit-product .column-product_cat a {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: #F1F5F9;
+	color: #334155;
+	text-decoration: none;
+	font-size: 11.5px;
+	white-space: nowrap;
+}
+
+body.edit-product .column-product_cat a:hover {
+	background: var(--tanish-accent-soft, #ECFDF5);
+	color: var(--tanish-accent-text, #15803D);
+}
+
+body.edit-product .column-date {
+	font-size: 12px;
+	color: var(--tanish-muted, #6B7280);
+}
+
+body.edit-product .row-actions {
+	color: #9AA7B8;
+	font-size: 12px;
+}
+
+body.edit-product .row-actions a {
+	text-decoration: none;
+}
+
+body.edit-product .wp-list-table tbody tr:hover td:first-child {
+	box-shadow: inset 3px 0 0 var(--tanish-accent, #22C55E);
+}
+
+body.edit-product .wp-list-table thead th {
+	position: sticky;
+	top: 32px;
+	z-index: 2;
+}
+
+body.edit-product .column-price .amount {
 	font-weight: 700;
 	color: var(--tanish-navy, #0F3B5F);
 	white-space: nowrap;
 }
 
-body.edit-php.post-type-product .column-is_in_stock {
+body.edit-product .column-is_in_stock {
 	white-space: nowrap;
 }
 
-body.edit-php.post-type-product mark.instock,
-body.edit-php.post-type-product mark.outofstock,
-body.edit-php.post-type-product mark.onbackorder {
+body.edit-product mark.instock,
+body.edit-product mark.outofstock,
+body.edit-product mark.onbackorder {
 	display: inline-flex;
 	align-items: center;
 	padding: 2px 8px;
@@ -1152,31 +1215,31 @@ body.edit-php.post-type-product mark.onbackorder {
 	background-image: none;
 }
 
-body.edit-php.post-type-product mark.instock {
+body.edit-product mark.instock {
 	background: #ECFDF5;
 	color: #15803D;
 }
 
-body.edit-php.post-type-product mark.outofstock {
+body.edit-product mark.outofstock {
 	background: #FEF2F2;
 	color: #B91C1C;
 }
 
-body.edit-php.post-type-product mark.onbackorder {
+body.edit-product mark.onbackorder {
 	background: #FEF9C3;
 	color: #B45309;
 }
 
-body.edit-php.post-type-product .column-featured .wc-featured {
+body.edit-product .column-featured .wc-featured {
 	font-size: 16px;
 }
 
-body.edit-php.post-type-product .column-featured .wc-featured.yes {
+body.edit-product .column-featured .wc-featured.yes {
 	color: #F59E0B;
 }
 
 /* Vistas (Todos | Publicados | ...) como pills. */
-body.edit-php.post-type-product ul.subsubsub {
+body.edit-product ul.subsubsub {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 6px;
@@ -1184,11 +1247,11 @@ body.edit-php.post-type-product ul.subsubsub {
 	padding: 0;
 }
 
-body.edit-php.post-type-product ul.subsubsub li {
+body.edit-product ul.subsubsub li {
 	margin: 0;
 }
 
-body.edit-php.post-type-product ul.subsubsub a {
+body.edit-product ul.subsubsub a {
 	display: inline-block;
 	padding: 4px 11px;
 	border-radius: 999px;
@@ -1199,25 +1262,47 @@ body.edit-php.post-type-product ul.subsubsub a {
 	color: var(--tanish-primary, #1F2937);
 }
 
-body.edit-php.post-type-product ul.subsubsub a:hover {
+body.edit-product ul.subsubsub a:hover {
 	border-color: var(--tanish-accent, #22C55E);
 	color: var(--tanish-accent-text, #15803D);
 }
 
-body.edit-php.post-type-product ul.subsubsub a.current {
+body.edit-product ul.subsubsub a.current {
 	background: var(--tanish-accent, #22C55E);
 	border-color: var(--tanish-accent, #22C55E);
 	color: #fff;
 	font-weight: 600;
 }
 
-body.edit-php.post-type-product .search-box input[type="search"] {
+body.edit-product .search-box input[type="search"] {
 	height: 34px;
 	border-radius: 8px;
 	border-color: var(--tanish-border, #E5E7EB);
 }
 
-body.edit-php.post-type-product .tablenav .actions select {
+body.edit-product .tablenav.top {
+	height: auto;
+	margin: 0 0 10px;
+	padding: 8px 10px;
+	background: #fff;
+	border: 1px solid var(--tanish-border, #E5E7EB);
+	border-radius: var(--tanish-radius-lg, 10px);
+	box-shadow: var(--tanish-shadow, 0 1px 2px rgba(15, 59, 95, .06));
+}
+
+body.edit-product .tablenav.top .actions {
+	padding: 0;
+}
+
+body.edit-product .tablenav.top .tablenav-pages {
+	margin: 0;
+}
+
+body.edit-product .tablenav.bottom {
+	margin-top: 10px;
+}
+
+body.edit-product .tablenav .actions select {
 	border-radius: 8px;
 }
 
@@ -1236,3 +1321,4 @@ body.edit-php.post-type-product .tablenav .actions select {
 		align-items: flex-start;
 	}
 }
+
