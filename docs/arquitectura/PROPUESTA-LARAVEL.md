@@ -9,6 +9,7 @@
 | Alcance | Documental. No modifica código, contenedores ni base de datos |
 | Documento base | `docs/arquitectura/ARQUITECTURA-ACTUAL.md` |
 | Decisión registrada | `docs/arquitectura/ADR-001-soa-laravel.md` |
+| Implementación | `docs/arquitectura/IMPLEMENTACION-FASES.md` |
 | Relacionados | `docs/sprints/TRACEABILITY.md`, `docs/DEPLOYMENT.md`, `docker-compose.prod.yml` |
 
 ---

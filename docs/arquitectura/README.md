@@ -9,6 +9,7 @@ Documentación de arquitectura del proyecto: estado actual y evolución propuest
 | [ARQUITECTURA-ACTUAL.md](./ARQUITECTURA-ACTUAL.md) | Cómo funciona hoy el sistema: monolito modular WordPress + WooCommerce, capas, datos, infraestructura y limitaciones. | Línea base técnica y evidencia del "estado antes". |
 | [PROPUESTA-LARAVEL.md](./PROPUESTA-LARAVEL.md) | Evolución a una arquitectura orientada a servicios (SOA) de dos servicios: WordPress + WooCommerce como comercio y Laravel como servicio de integración vía webhooks y REST API. | Propuesta de mejora, plan por fases y sustento académico. |
 | [ADR-001-soa-laravel.md](./ADR-001-soa-laravel.md) | Registro de la decisión arquitectónica: contexto, decisión, alternativas descartadas y consecuencias. | Justificación formal de la propuesta. |
+| [IMPLEMENTACION-FASES.md](./IMPLEMENTACION-FASES.md) | Estado real de la implementación en la rama `feat/laravel-soa`: qué se construyó, cómo demostrarlo y qué queda pendiente. | Evidencia técnica de avance. |
 
 ## Orden de lectura
 
