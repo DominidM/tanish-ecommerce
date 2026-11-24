@@ -90,7 +90,13 @@ php artisan test
 
 Cubren firma, idempotencia, pedidos, inventario, cliente API, notificaciones, GA4, roles, panel y tienda pública.
 
-## Producción (Docker)
+## Producción
+
+- **Tienda:** `https://tanish-proxy.solvegrades.workers.dev/`
+- **Panel Laravel:** `https://tanish-proxy.solvegrades.workers.dev/admin`
+- **WordPress admin:** `https://tanish-proxy.solvegrades.workers.dev/wp-admin`
+
+El Worker `tanish-proxy` enruta por ruta: `/admin`, `/livewire*`, `/css*`, `/js*`, `/fonts*`, `/storage*`, `/api*` y `/up` van a Laravel; el resto va a WordPress. `CADDY_ADMIN_DOMAIN` se mantiene como origen interno y `LARAVEL_URL` apunta al dominio público.
 
 ```bash
 docker compose --env-file .env.production --env-file .env.soa \

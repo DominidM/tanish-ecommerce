@@ -105,7 +105,7 @@ Crea `.env.soa` en el VPS a partir de `.env.soa.example`:
 
 ```dotenv
 CADDY_ADMIN_DOMAIN=http://admin.185.176.254.183.nip.io
-LARAVEL_URL=http://admin.185.176.254.183.nip.io
+LARAVEL_URL=https://tanish-proxy.solvegrades.workers.dev
 LARAVEL_APP_KEY=base64:...
 LARAVEL_DB_DATABASE=tanish_laravel
 LARAVEL_DB_USERNAME=tanish_laravel
@@ -121,6 +121,15 @@ WHATSAPP_DRIVER=log
 ```
 
 `LARAVEL_APP_KEY` se genera con `php artisan key:generate --show`.
+
+La URL pública unificada es:
+
+- Tienda: `https://tanish-proxy.solvegrades.workers.dev/`
+- Panel Laravel: `https://tanish-proxy.solvegrades.workers.dev/admin`
+- WordPress admin: `https://tanish-proxy.solvegrades.workers.dev/wp-admin`
+- API/webhooks Laravel: `https://tanish-proxy.solvegrades.workers.dev/api/webhooks/woocommerce`
+
+El Worker `tanish-proxy` enruta por ruta: `/admin`, `/livewire*`, `/css*`, `/js*`, `/fonts*`, `/storage*`, `/api*` y `/up` van a Laravel; el resto va a WordPress.
 
 ### 2. Esquema MySQL
 
@@ -183,9 +192,9 @@ Repite el webhook para los tópicos necesarios (`order.created`, `product.update
 ### 6. Verificación
 
 ```bash
-curl -fsS http://admin.185.176.254.183.nip.io/up          # health
-curl -fsS http://admin.185.176.254.183.nip.io/ | head     # tienda
-curl -fsS http://admin.185.176.254.183.nip.io/admin/login # panel
+curl -fsS https://tanish-proxy.solvegrades.workers.dev/up          # health
+curl -fsS https://tanish-proxy.solvegrades.workers.dev/ | head     # tienda
+curl -fsS https://tanish-proxy.solvegrades.workers.dev/admin/login # panel
 docker ps --filter name=tanish
 ```
 
