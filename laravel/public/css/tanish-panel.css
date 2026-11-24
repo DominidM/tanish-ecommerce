@@ -38,10 +38,14 @@ body.fi-body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
-/* El logo original es oscuro; en el sidebar azul se invierte a blanco. */
+/* El logo se muestra sobre una tarjeta blanca para conservar contraste
+   sobre el sidebar azul, sin invertir sus colores originales. */
 .fi-sidebar-header .fi-logo img,
 .fi-sidebar-header .fi-logo svg {
-    filter: brightness(0) invert(1);
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
 }
 
 .fi-sidebar-item-button {
