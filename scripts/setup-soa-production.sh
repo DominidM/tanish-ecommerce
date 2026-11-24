@@ -60,7 +60,7 @@ FLUSH PRIVILEGES;
 SQL
 
 echo "[2/4] Generando credenciales REST de WooCommerce..."
-KEY_JSON="$(docker exec -u www-data tanish-prod-wordpress wp eval-file - <<'PHP'
+cat > /tmp/tanish-wc-key.php <<'PHP'
 <?php
 global $wpdb;
 
@@ -87,7 +87,17 @@ if (! $inserted) {
 
 echo json_encode(['key' => $consumer_key, 'secret' => $consumer_secret]);
 PHP
-)"
+
+docker cp /tmp/tanish-wc-key.php tanish-prod-wordpress:/tmp/tanish-wc-key.php
+
+if ! KEY_JSON="$(docker exec -u www-data tanish-prod-wordpress wp eval-file /tmp/tanish-wc-key.php 2>/tmp/tanish-wc-key.err)"; then
+  cat /tmp/tanish-wc-key.err >&2
+  rm -f /tmp/tanish-wc-key.php /tmp/tanish-wc-key.err
+  exit 1
+fi
+
+rm -f /tmp/tanish-wc-key.php /tmp/tanish-wc-key.err
+docker exec tanish-prod-wordpress rm -f /tmp/tanish-wc-key.php
 
 WOO_KEY="$(printf '%s' "${KEY_JSON}" | sed -n 's/.*"key":"\([^"]*\)".*/\1/p')"
 WOO_SECRET="$(printf '%s' "${KEY_JSON}" | sed -n 's/.*"secret":"\([^"]*\)".*/\1/p')"
