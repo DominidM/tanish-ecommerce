@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Auth\LoginResponse;
 use App\Filament\Resources\InventoryMovements\InventoryMovementResource;
 use App\Models\OrderSnapshot;
 use App\Models\ProductSnapshot;
@@ -17,6 +18,20 @@ class PanelAccessTest extends TestCase
     public function test_guests_are_redirected_to_the_panel_login(): void
     {
         $this->get('/admin')->assertRedirect('/admin/login');
+    }
+
+    public function test_the_admin_origin_redirects_to_the_public_panel_url(): void
+    {
+        $this->get('http://admin.185.176.254.183.nip.io/admin')
+            ->assertRedirect(config('app.url').'/admin');
+    }
+
+    public function test_the_login_uses_the_custom_response(): void
+    {
+        $this->assertInstanceOf(
+            LoginResponse::class,
+            app(\Filament\Auth\Http\Responses\Contracts\LoginResponse::class)
+        );
     }
 
     public function test_the_login_page_uses_a_username_field(): void

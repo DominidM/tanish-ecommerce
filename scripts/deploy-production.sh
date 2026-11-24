@@ -62,11 +62,14 @@ docker compose "${COMPOSE_ENV_ARGS[@]}" "${COMPOSE_FILE_ARGS[@]}" ps
 
 echo "[6/6] Verificando salud..."
 docker compose "${COMPOSE_ENV_ARGS[@]}" "${COMPOSE_FILE_ARGS[@]}" exec -T mysql mysqladmin ping -h 127.0.0.1 -uroot -p"${MYSQL_ROOT_PASSWORD}" --silent
-curl -fsSL "http://${CADDY_DOMAIN:-localhost}/" >/dev/null || curl -fsSL "http://127.0.0.1/" >/dev/null || true
-
 if [[ "${USE_SOA}" -eq 1 && -n "${LARAVEL_URL:-}" ]]; then
   curl -fsSL "${LARAVEL_URL}/up" >/dev/null || true
 fi
+
+CADDY_HOST="${CADDY_DOMAIN:-localhost}"
+CADDY_HOST="${CADDY_HOST#http://}"
+CADDY_HOST="${CADDY_HOST#https://}"
+curl -fsSL "http://${CADDY_HOST}/" >/dev/null || curl -fsSL "http://127.0.0.1/" >/dev/null || true
 
 echo "Despliegue listo. Revisa logs con:"
 echo "  docker compose ${COMPOSE_ENV_ARGS[*]} ${COMPOSE_FILE_ARGS[*]} logs -f"

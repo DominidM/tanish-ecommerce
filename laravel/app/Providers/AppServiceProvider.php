@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Filament\Auth\LoginResponse;
 use App\Services\WooCommerce\WooCommerceClient;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse as LoginResponseContract;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,6 +18,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             WooCommerceClient::class,
             static fn (): WooCommerceClient => WooCommerceClient::fromConfig()
+        );
+
+        $this->app->bind(
+            LoginResponseContract::class,
+            LoginResponse::class
         );
     }
 
