@@ -33,6 +33,7 @@ x-laravel-common: &laravel-common
     CACHE_STORE: redis
     QUEUE_CONNECTION: redis
     SESSION_DRIVER: redis
+    SESSION_SECURE_COOKIE: "true"
     REDIS_HOST: redis
     REDIS_PORT: "6379"
     REDIS_CLIENT: predis
