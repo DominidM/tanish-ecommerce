@@ -1,0 +1,104 @@
+# ---------------------------------------------------------------------------
+# Overlay SOA: servicio Laravel (panel + integración) sobre el compose de prod.
+#
+# Uso:
+#   docker compose --env-file .env.production \
+#     -f docker-compose.prod.yml -f docker-compose.soa.yml up -d --build
+# ---------------------------------------------------------------------------
+
+x-laravel-common: &laravel-common
+  build:
+    context: ./laravel
+    dockerfile: Dockerfile
+  image: tanish-laravel:latest
+  restart: unless-stopped
+  depends_on:
+    mysql:
+      condition: service_healthy
+    redis:
+      condition: service_started
+  environment:
+    APP_ENV: production
+    APP_DEBUG: "false"
+    APP_URL: https://${CADDY_ADMIN_DOMAIN}
+    APP_TIMEZONE: America/Lima
+    LOG_CHANNEL: stderr
+    DB_CONNECTION: mysql
+    DB_HOST: mysql
+    DB_PORT: "3306"
+    DB_DATABASE: ${LARAVEL_DB_DATABASE:-tanish_laravel}
+    DB_USERNAME: ${LARAVEL_DB_USERNAME:-tanish_laravel}
+    DB_PASSWORD: ${LARAVEL_DB_PASSWORD:?LARAVEL_DB_PASSWORD is required}
+    CACHE_STORE: redis
+    QUEUE_CONNECTION: redis
+    SESSION_DRIVER: redis
+    REDIS_HOST: redis
+    REDIS_PORT: "6379"
+    REDIS_CLIENT: predis
+    WOOCOMMERCE_URL: ${WOOCOMMERCE_URL:-http://wordpress:80}
+    WOOCOMMERCE_KEY: ${WOOCOMMERCE_KEY:?WOOCOMMERCE_KEY is required}
+    WOOCOMMERCE_SECRET: ${WOOCOMMERCE_SECRET:?WOOCOMMERCE_SECRET is required}
+    WOOCOMMERCE_WEBHOOK_SECRET: ${WOOCOMMERCE_WEBHOOK_SECRET:?WOOCOMMERCE_WEBHOOK_SECRET is required}
+    WOOCOMMERCE_VERIFY: "false"
+    GA4_MEASUREMENT_ID: ${GA4_MEASUREMENT_ID:-}
+    GA4_API_SECRET: ${GA4_API_SECRET:-}
+    WHATSAPP_NOTIFY_URL: ${WHATSAPP_NOTIFY_URL:-}
+    WHATSAPP_NOTIFY_TOKEN: ${WHATSAPP_NOTIFY_TOKEN:-}
+    WHATSAPP_ADMIN_NUMBER: ${WHATSAPP_ADMIN_NUMBER:-}
+  networks:
+    - tanish-network
+
+services:
+  laravel:
+    <<: *laravel-common
+    container_name: tanish-laravel
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1/up >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  laravel-queue:
+    <<: *laravel-common
+    container_name: tanish-laravel-queue
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=5", "--timeout=90"]
+
+  laravel-scheduler:
+    <<: *laravel-common
+    container_name: tanish-laravel-scheduler
+    command: ["php", "artisan", "schedule:work"]
+
+  redis:
+    image: redis:7-alpine
+    container_name: tanish-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    expose:
+      - "6379"
+    networks:
+      - tanish-network
+
+  mysql:
+    volumes:
+      - ./docker/mysql-init-soa.sh:/docker-entrypoint-initdb.d/10-laravel.sh:ro
+    environment:
+      LARAVEL_DB_DATABASE: ${LARAVEL_DB_DATABASE:-tanish_laravel}
+      LARAVEL_DB_USERNAME: ${LARAVEL_DB_USERNAME:-tanish_laravel}
+      LARAVEL_DB_PASSWORD: ${LARAVEL_DB_PASSWORD:?LARAVEL_DB_PASSWORD is required}
+
+  caddy:
+    environment:
+      CADDY_ADMIN_DOMAIN: ${CADDY_ADMIN_DOMAIN:?CADDY_ADMIN_DOMAIN is required}
+    volumes: !override
+      - ./caddy/Caddyfile.soa:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  redis_data:
+    name: tanish_redis_data

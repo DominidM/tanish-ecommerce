@@ -3,6 +3,7 @@
 .env.*
 !.env.example
 !.env.production.example
+!.env.soa.example
 
 # WordPress core y contenido generado (se usa imagen Docker)
 wordpress/
@@ -15,6 +16,7 @@ wp-content/backups/
 # Producción / Caddy / despliegue
 caddy/*
 !caddy/Caddyfile
+!caddy/Caddyfile.soa
 
 # Backups
 backups/
