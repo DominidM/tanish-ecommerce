@@ -34,7 +34,6 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate --seed
-php artisan db:seed --class=DemoCatalogSeeder
 php artisan serve
 ```
 

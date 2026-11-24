@@ -72,7 +72,7 @@ Este documento registra qué se implementó de la [PROPUESTA-LARAVEL.md](./PROPU
 - [x] `GET /producto/{slug|id}` — ficha de producto.
 - [x] Cotización en sesión (`/cotizacion`) y envío por WhatsApp.
 - [x] SEO básico (title, description, canonical, Open Graph) y CSS propio (sin build de Node).
-- [x] Seeder `DemoCatalogSeeder` para probar el front sin WooCommerce.
+- [x] Catálogo real vía `woo:sync-products`; los datos de prueba se insertan directamente en la base y no se versionan.
 
 > **Decisión de diseño:** el carrito y el checkout reales siguen en WooCommerce. Laravel ofrece catálogo y **cotización por WhatsApp**, que es el canal comercial de TANISH. Reconstruir el checkout en Laravel queda para una fase posterior.
 
@@ -86,7 +86,6 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate --seed
-php artisan db:seed --class=DemoCatalogSeeder   # catálogo de demostración
 php artisan serve
 ```
 

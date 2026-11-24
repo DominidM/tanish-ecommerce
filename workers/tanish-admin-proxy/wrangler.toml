@@ -1,0 +1,7 @@
+name = "tanish-admin"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[vars]
+ORIGIN = "http://admin.185.176.254.183.nip.io"
