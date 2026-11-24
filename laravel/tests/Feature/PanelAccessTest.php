@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Filament\Resources\InventoryMovements\InventoryMovementResource;
+use App\Models\OrderSnapshot;
+use App\Models\ProductSnapshot;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -63,6 +65,49 @@ class PanelAccessTest extends TestCase
         ] as $url) {
             $this->actingAs($user)->get($url)->assertOk();
         }
+    }
+
+    public function test_detail_pages_render_json_payloads_without_errors(): void
+    {
+        $user = User::factory()->create(['role' => User::ROLE_ADMIN]);
+
+        $product = ProductSnapshot::create([
+            'woo_id' => 7001,
+            'name' => 'Producto detalle',
+            'slug' => 'producto-detalle',
+            'status' => 'publish',
+            'price' => 10,
+            'manage_stock' => true,
+            'stock_quantity' => 5,
+            'stock_status' => 'instock',
+            'category_ids' => [1],
+            'payload' => ['description' => 'Demo', 'images' => [['src' => 'https://example.com/image.jpg']]],
+        ]);
+
+        $order = OrderSnapshot::create([
+            'woo_id' => 7002,
+            'number' => '7002',
+            'status' => 'processing',
+            'currency' => 'PEN',
+            'total' => 20,
+            'line_items' => [[
+                'id' => 1,
+                'product_id' => 7001,
+                'name' => 'Producto detalle',
+                'quantity' => 2,
+            ]],
+            'payload' => ['billing' => ['email' => 'test@example.com']],
+        ]);
+
+        $this->actingAs($user)
+            ->get("/admin/product-snapshots/{$product->id}")
+            ->assertOk()
+            ->assertSee('Payload');
+
+        $this->actingAs($user)
+            ->get("/admin/order-snapshots/{$order->id}")
+            ->assertOk()
+            ->assertSee('Payload');
     }
 
     public function test_a_sales_user_cannot_open_the_inventory_create_page(): void

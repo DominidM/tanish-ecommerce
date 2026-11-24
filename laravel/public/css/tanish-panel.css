@@ -222,3 +222,30 @@ h3 {
 .fi-simple-header-heading {
     color: var(--tanish-navy) !important;
 }
+
+/* ---------------------------------------------------------
+   Detalles: evita que JSON, URLs o errores largos rompan el layout
+   --------------------------------------------------------- */
+
+.fi-in-text,
+.fi-in-text-item,
+.fi-in-entry-wrp,
+.fi-section-content,
+.fi-main,
+.fi-page-content {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.fi-in-text,
+.fi-in-text-item {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.tanish-json,
+.tanish-json .fi-in-text-item {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+}

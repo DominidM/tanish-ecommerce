@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AnalyticsEvents\Schemas;
 
+use App\Filament\Support\JsonEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -17,13 +18,9 @@ class AnalyticsEventInfolist
                 TextEntry::make('woo_order_id')
                     ->numeric()
                     ->placeholder('-'),
-                TextEntry::make('payload')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
+                JsonEntry::make('payload'),
                 TextEntry::make('status'),
-                TextEntry::make('response')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
+                JsonEntry::make('response', 'Respuesta GA4'),
                 TextEntry::make('sent_at')
                     ->dateTime()
                     ->placeholder('-'),

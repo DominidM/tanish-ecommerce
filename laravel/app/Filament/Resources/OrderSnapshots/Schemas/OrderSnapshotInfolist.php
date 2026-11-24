@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OrderSnapshots\Schemas;
 
+use App\Filament\Support\JsonEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -20,7 +21,7 @@ class OrderSnapshotInfolist
                 TextEntry::make('currency')
                     ->placeholder('-'),
                 TextEntry::make('total')
-                    ->numeric(),
+                    ->money('PEN'),
                 TextEntry::make('customer_id')
                     ->numeric()
                     ->placeholder('-'),
@@ -38,12 +39,8 @@ class OrderSnapshotInfolist
                 TextEntry::make('date_paid')
                     ->dateTime()
                     ->placeholder('-'),
-                TextEntry::make('line_items')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
-                TextEntry::make('payload')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
+                JsonEntry::make('line_items', 'Ítems del pedido'),
+                JsonEntry::make('payload'),
                 TextEntry::make('stock_recorded_at')
                     ->dateTime()
                     ->placeholder('-'),

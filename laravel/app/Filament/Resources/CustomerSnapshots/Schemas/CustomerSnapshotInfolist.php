@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CustomerSnapshots\Schemas;
 
+use App\Filament\Support\JsonEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -22,9 +23,7 @@ class CustomerSnapshotInfolist
                     ->placeholder('-'),
                 TextEntry::make('role')
                     ->placeholder('-'),
-                TextEntry::make('payload')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
+                JsonEntry::make('payload'),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),

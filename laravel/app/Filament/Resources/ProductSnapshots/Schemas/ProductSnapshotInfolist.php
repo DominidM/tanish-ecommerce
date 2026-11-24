@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ProductSnapshots\Schemas;
 
+use App\Filament\Support\JsonEntry;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -26,13 +27,13 @@ class ProductSnapshotInfolist
                 TextEntry::make('status')
                     ->placeholder('-'),
                 TextEntry::make('price')
-                    ->money()
+                    ->money('PEN')
                     ->placeholder('-'),
                 TextEntry::make('regular_price')
-                    ->money()
+                    ->money('PEN')
                     ->placeholder('-'),
                 TextEntry::make('sale_price')
-                    ->money()
+                    ->money('PEN')
                     ->placeholder('-'),
                 IconEntry::make('manage_stock')
                     ->boolean(),
@@ -41,14 +42,10 @@ class ProductSnapshotInfolist
                     ->placeholder('-'),
                 TextEntry::make('stock_status')
                     ->placeholder('-'),
-                TextEntry::make('category_ids')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
+                JsonEntry::make('category_ids', 'Categorías'),
                 ImageEntry::make('image_url')
                     ->placeholder('-'),
-                TextEntry::make('payload')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
+                JsonEntry::make('payload'),
                 TextEntry::make('woo_created_at')
                     ->dateTime()
                     ->placeholder('-'),

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\NotificationLogs\Schemas;
 
+use App\Filament\Support\JsonEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -15,9 +16,7 @@ class NotificationLogInfolist
                 TextEntry::make('recipient'),
                 TextEntry::make('template')
                     ->placeholder('-'),
-                TextEntry::make('payload')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
+                JsonEntry::make('payload'),
                 TextEntry::make('status'),
                 TextEntry::make('attempts')
                     ->numeric(),

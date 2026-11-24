@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\WebhookEvents\Schemas;
 
+use App\Filament\Support\JsonEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -21,8 +22,7 @@ class WebhookEventInfolist
                     ->placeholder('-'),
                 TextEntry::make('source')
                     ->placeholder('-'),
-                TextEntry::make('payload')
-                    ->columnSpanFull(),
+                JsonEntry::make('payload'),
                 TextEntry::make('status'),
                 TextEntry::make('attempts')
                     ->numeric(),

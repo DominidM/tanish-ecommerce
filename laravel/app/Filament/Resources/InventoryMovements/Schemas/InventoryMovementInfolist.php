@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\InventoryMovements\Schemas;
 
+use App\Filament\Support\JsonEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -31,9 +32,7 @@ class InventoryMovementInfolist
                 TextEntry::make('source'),
                 TextEntry::make('reference')
                     ->placeholder('-'),
-                TextEntry::make('metadata')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
+                JsonEntry::make('metadata', 'Metadata'),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),
