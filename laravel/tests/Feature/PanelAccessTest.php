@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Filament\Resources\InventoryMovements\InventoryMovementResource;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class PanelAccessTest extends TestCase
@@ -14,6 +15,28 @@ class PanelAccessTest extends TestCase
     public function test_guests_are_redirected_to_the_panel_login(): void
     {
         $this->get('/admin')->assertRedirect('/admin/login');
+    }
+
+    public function test_the_login_page_uses_a_username_field(): void
+    {
+        $this->get('/admin/login')
+            ->assertOk()
+            ->assertSee('Usuario');
+    }
+
+    public function test_a_user_can_authenticate_with_a_username(): void
+    {
+        $user = User::factory()->create([
+            'username' => 'tanish_admin',
+            'password' => 'secret-password',
+        ]);
+
+        $this->assertTrue(Auth::attempt([
+            'username' => 'tanish_admin',
+            'password' => 'secret-password',
+        ]));
+
+        $this->assertAuthenticatedAs($user);
     }
 
     public function test_an_administrator_can_access_the_panel(): void

@@ -92,8 +92,8 @@ php artisan serve
 
 - Tienda: <http://localhost:8000/>
 - Panel: <http://localhost:8000/admin>
-- Usuario local: `tanish_admin@tanish.local` / valor de `TANISH_ADMIN_PASSWORD`
-- Usuarios demo: `admin@tanish.test`, `almacen@tanish.test`, `ventas@tanish.test` / `password` (solo local)
+- Usuario local: `tanish_admin` (o el correo) / valor de `TANISH_ADMIN_PASSWORD`
+- Usuarios demo: `admin`, `almacen`, `ventas` / `password` (solo local)
 
 ---
 

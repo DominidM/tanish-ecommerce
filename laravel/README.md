@@ -40,8 +40,8 @@ php artisan serve
 
 - Tienda: <http://localhost:8000/>
 - Panel: <http://localhost:8000/admin>
-- Admin local: `tanish_admin@tanish.local` con `TANISH_ADMIN_PASSWORD`
-- Demo: `admin@tanish.test` / `password` (solo entorno local)
+- Admin local: `tanish_admin` (o `tanish_admin@tanish.local`) con `TANISH_ADMIN_PASSWORD`
+- Demo: `admin`, `almacen`, `ventas` / `password` (solo entorno local)
 
 ## Variables de entorno
 

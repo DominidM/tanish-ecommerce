@@ -54,6 +54,7 @@ x-laravel-common: &laravel-common
     WHATSAPP_TEMPLATE_LANG: ${WHATSAPP_TEMPLATE_LANG:-es}
     TANISH_STORE_URL: ${TANISH_STORE_URL:-https://tanish-proxy.solvegrades.workers.dev}
     TANISH_WHATSAPP_NUMBER: ${TANISH_WHATSAPP_NUMBER:-51975852932}
+    TANISH_ADMIN_USERNAME: ${TANISH_ADMIN_USERNAME:-tanish_admin}
     TANISH_ADMIN_EMAIL: ${TANISH_ADMIN_EMAIL:-tanish_admin@tanish.local}
     TANISH_ADMIN_PASSWORD: ${TANISH_ADMIN_PASSWORD:-}
   networks:

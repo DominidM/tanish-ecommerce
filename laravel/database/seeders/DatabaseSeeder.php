@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $adminEmail = (string) config('tanish.admin.email', 'tanish_admin@tanish.local');
+        $adminUsername = (string) config('tanish.admin.username', 'tanish_admin');
         $adminPassword = (string) config('tanish.admin.password', '');
 
         if ($adminPassword !== '') {
@@ -17,6 +18,7 @@ class DatabaseSeeder extends Seeder
                 ['email' => $adminEmail],
                 [
                     'name' => 'tanish_admin',
+                    'username' => $adminUsername,
                     'password' => $adminPassword,
                     'role' => User::ROLE_ADMIN,
                 ]
@@ -28,6 +30,7 @@ class DatabaseSeeder extends Seeder
                 ['email' => 'admin@tanish.test'],
                 [
                     'name' => 'Administrador TANISH',
+                    'username' => 'admin',
                     'password' => 'password',
                     'role' => User::ROLE_ADMIN,
                 ]
@@ -37,6 +40,7 @@ class DatabaseSeeder extends Seeder
                 ['email' => 'almacen@tanish.test'],
                 [
                     'name' => 'Personal de Almacén',
+                    'username' => 'almacen',
                     'password' => 'password',
                     'role' => User::ROLE_ALMACEN,
                 ]
@@ -46,6 +50,7 @@ class DatabaseSeeder extends Seeder
                 ['email' => 'ventas@tanish.test'],
                 [
                     'name' => 'Personal de Ventas',
+                    'username' => 'ventas',
                     'password' => 'password',
                     'role' => User::ROLE_VENTAS,
                 ]

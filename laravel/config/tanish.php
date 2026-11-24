@@ -18,6 +18,7 @@ return [
     ],
 
     'admin' => [
+        'username' => env('TANISH_ADMIN_USERNAME', 'tanish_admin'),
         'email' => env('TANISH_ADMIN_EMAIL', 'tanish_admin@tanish.local'),
         'password' => env('TANISH_ADMIN_PASSWORD'),
     ],
