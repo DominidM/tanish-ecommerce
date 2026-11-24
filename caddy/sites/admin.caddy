@@ -1,0 +1,13 @@
+# Panel administrativo y API del servicio Laravel.
+#
+# Este archivo se monta dentro de Caddy y se carga con:
+#   import /etc/caddy/sites/*.caddy
+#
+# Se usa un snippet para no reemplazar el Caddyfile compartido con otros
+# proyectos del VPS (por ejemplo, ComuniDev).
+{$CADDY_ADMIN_DOMAIN} {
+    encode gzip
+
+    # Laravel responde el panel en /admin y la tienda pública en /.
+    reverse_proxy laravel:80
+}

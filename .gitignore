@@ -16,7 +16,8 @@ wp-content/backups/
 # Producción / Caddy / despliegue
 caddy/*
 !caddy/Caddyfile
-!caddy/Caddyfile.soa
+!caddy/sites/
+!caddy/sites/**
 
 # Backups
 backups/
