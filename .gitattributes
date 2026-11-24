@@ -1,0 +1,6 @@
+# Fuerza LF en archivos que se ejecutan dentro de contenedores Linux.
+*.sh text eol=lf
+Dockerfile text eol=lf
+docker/*.sh text eol=lf
+caddy/Caddyfile* text eol=lf
+docker-compose*.yml text eol=lf
