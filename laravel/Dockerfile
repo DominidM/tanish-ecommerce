@@ -12,11 +12,14 @@ RUN composer install \
     --no-interaction \
     --no-scripts \
     --prefer-dist \
-    --ignore-platform-req=ext-pcntl
+    --ignore-platform-req=ext-pcntl \
+    --ignore-platform-req=ext-intl
 
 COPY . .
 
-RUN composer dump-autoload --optimize --no-dev --no-scripts
+RUN composer dump-autoload --optimize --no-dev --no-scripts \
+    --ignore-platform-req=ext-pcntl \
+    --ignore-platform-req=ext-intl
 
 
 FROM php:8.3-apache
