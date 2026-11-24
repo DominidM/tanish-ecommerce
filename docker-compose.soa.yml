@@ -2,7 +2,7 @@
 # Overlay SOA: servicio Laravel (panel + integración) sobre el compose de prod.
 #
 # Uso:
-#   docker compose --env-file .env.production \
+#   docker compose --env-file .env.production --env-file .env.soa \
 #     -f docker-compose.prod.yml -f docker-compose.soa.yml up -d --build
 # ---------------------------------------------------------------------------
 
@@ -20,7 +20,8 @@ x-laravel-common: &laravel-common
   environment:
     APP_ENV: production
     APP_DEBUG: "false"
-    APP_URL: https://${CADDY_ADMIN_DOMAIN}
+    APP_KEY: ${LARAVEL_APP_KEY:?LARAVEL_APP_KEY is required}
+    APP_URL: ${LARAVEL_URL:?LARAVEL_URL is required}
     APP_TIMEZONE: America/Lima
     LOG_CHANNEL: stderr
     DB_CONNECTION: mysql
@@ -42,9 +43,18 @@ x-laravel-common: &laravel-common
     WOOCOMMERCE_VERIFY: "false"
     GA4_MEASUREMENT_ID: ${GA4_MEASUREMENT_ID:-}
     GA4_API_SECRET: ${GA4_API_SECRET:-}
+    WHATSAPP_DRIVER: ${WHATSAPP_DRIVER:-webhook}
     WHATSAPP_NOTIFY_URL: ${WHATSAPP_NOTIFY_URL:-}
     WHATSAPP_NOTIFY_TOKEN: ${WHATSAPP_NOTIFY_TOKEN:-}
     WHATSAPP_ADMIN_NUMBER: ${WHATSAPP_ADMIN_NUMBER:-}
+    WHATSAPP_META_TOKEN: ${WHATSAPP_META_TOKEN:-}
+    WHATSAPP_META_PHONE_ID: ${WHATSAPP_META_PHONE_ID:-}
+    WHATSAPP_TEMPLATE_NAME: ${WHATSAPP_TEMPLATE_NAME:-}
+    WHATSAPP_TEMPLATE_LANG: ${WHATSAPP_TEMPLATE_LANG:-es}
+    TANISH_STORE_URL: ${TANISH_STORE_URL:-https://tanish-proxy.solvegrades.workers.dev}
+    TANISH_WHATSAPP_NUMBER: ${TANISH_WHATSAPP_NUMBER:-51975852932}
+    TANISH_ADMIN_EMAIL: ${TANISH_ADMIN_EMAIL:-tanish_admin@tanish.local}
+    TANISH_ADMIN_PASSWORD: ${TANISH_ADMIN_PASSWORD:-}
   networks:
     - tanish-network
 
@@ -94,10 +104,9 @@ services:
   caddy:
     environment:
       CADDY_ADMIN_DOMAIN: ${CADDY_ADMIN_DOMAIN:?CADDY_ADMIN_DOMAIN is required}
-    volumes: !override
-      - ./caddy/Caddyfile.soa:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
+    volumes:
+      # Se agrega un snippet al Caddyfile existente (no se reemplaza).
+      - ./caddy/sites:/etc/caddy/sites:ro
 
 volumes:
   redis_data:

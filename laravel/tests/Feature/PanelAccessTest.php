@@ -35,6 +35,8 @@ class PanelAccessTest extends TestCase
             '/admin/inventory-movements',
             '/admin/inventory-movements/create',
             '/admin/webhook-events',
+            '/admin/analytics-events',
+            '/admin/notification-logs',
         ] as $url) {
             $this->actingAs($user)->get($url)->assertOk();
         }

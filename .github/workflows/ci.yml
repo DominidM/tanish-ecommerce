@@ -8,26 +8,61 @@ on:
 
 jobs:
   validate-compose:
-    name: Validar docker-compose.prod.yml
+    name: Validar compose de produccion y SOA
     runs-on: ubuntu-latest
     env:
-      # Valores dummy solo para pasar la validación de variables obligatorias.
+      # Valores dummy solo para pasar la validacion de variables obligatorias.
       MYSQL_PASSWORD: ci-dummy
       MYSQL_ROOT_PASSWORD: ci-dummy
+      WORDPRESS_URL: https://example.com
+      CADDY_ADMIN_DOMAIN: admin.example.com
+      LARAVEL_URL: https://admin.example.com
+      LARAVEL_APP_KEY: base64:ci-dummy
+      LARAVEL_DB_PASSWORD: ci-dummy
+      WOOCOMMERCE_KEY: ci-dummy
+      WOOCOMMERCE_SECRET: ci-dummy
+      WOOCOMMERCE_WEBHOOK_SECRET: ci-dummy
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validar sintaxis del compose de producción
-        run: docker compose -f docker-compose.prod.yml config --quiet
+      - name: Validar sintaxis de los compose
+        run: docker compose -f docker-compose.prod.yml -f docker-compose.soa.yml config --quiet
 
   php-lint:
-    name: Lint PHP (plugins y temas)
+    name: Lint PHP (WordPress y Laravel)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: php -l en todos los archivos PHP
-        run: find plugins themes mu-plugins -name '*.php' -print0 | xargs -0 -n1 php -l
+        run: find plugins themes mu-plugins laravel/app laravel/config laravel/database laravel/routes laravel/tests -name '*.php' -print0 | xargs -0 -n1 php -l
+
+  laravel-tests:
+    name: Laravel (tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, intl, pdo_sqlite, sqlite3, zip, gd, fileinfo
+          coverage: none
+
+      - name: Instalar dependencias
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Preparar entorno
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Ejecutar pruebas
+        run: php artisan test --compact
 
   shellcheck:
     name: Shellcheck (scripts)

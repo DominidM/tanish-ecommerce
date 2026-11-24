@@ -21,14 +21,22 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Lint PHP (temas, plugins, mu-plugins)
-        run: find plugins themes mu-plugins -name '*.php' -print0 | xargs -0 -n1 php -l
+        run: find plugins themes mu-plugins laravel/app laravel/config laravel/database laravel/routes laravel/tests -name '*.php' -print0 | xargs -0 -n1 php -l
 
       - name: Validar sintaxis del compose de producción
-        run: docker compose -f docker-compose.prod.yml config --quiet
+        run: docker compose -f docker-compose.prod.yml -f docker-compose.soa.yml config --quiet
         env:
-          # Dummies solo para pasar la validación de variables obligatorias.
+          # Dummies solo para pasar la validacion de variables obligatorias.
           MYSQL_PASSWORD: ci-dummy
           MYSQL_ROOT_PASSWORD: ci-dummy
+          WORDPRESS_URL: https://example.com
+          CADDY_ADMIN_DOMAIN: admin.example.com
+          LARAVEL_URL: https://admin.example.com
+          LARAVEL_APP_KEY: base64:ci-dummy
+          LARAVEL_DB_PASSWORD: ci-dummy
+          WOOCOMMERCE_KEY: ci-dummy
+          WOOCOMMERCE_SECRET: ci-dummy
+          WOOCOMMERCE_WEBHOOK_SECRET: ci-dummy
 
   deploy:
     name: Desplegar en VPS
