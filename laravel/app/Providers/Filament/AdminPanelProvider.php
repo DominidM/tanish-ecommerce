@@ -30,6 +30,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('18rem')
             ->brandName('TANISH')
             ->brandLogo('https://res.cloudinary.com/dp1vgjhsq/image/upload/w_400,q_auto,f_auto/v1789516962/logo-tanish_ekdvpd.png')
             ->brandLogoHeight('2.5rem')

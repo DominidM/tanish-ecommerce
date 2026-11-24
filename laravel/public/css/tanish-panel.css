@@ -38,6 +38,10 @@ body.fi-body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
+.fi-sidebar-header .fi-logo {
+    color: #ffffff !important;
+}
+
 /* El logo se muestra sobre una tarjeta blanca para conservar contraste
    sobre el sidebar azul, sin invertir sus colores originales. */
 .fi-sidebar-header .fi-logo img,
@@ -48,28 +52,44 @@ body.fi-body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
 }
 
-.fi-sidebar-item-button {
-    color: #dbe7f0 !important;
+/* Textos e iconos del sidebar (clases reales de Filament 5) */
+.fi-sidebar-item-btn,
+.fi-sidebar-item-btn .fi-sidebar-item-label,
+.fi-sidebar-item-btn .fi-sidebar-item-icon,
+.fi-sidebar-group-btn,
+.fi-sidebar-group-label {
+    color: #e6eef5 !important;
+}
+
+.fi-sidebar-item-btn {
     border-radius: 8px;
 }
 
-.fi-sidebar-item-button:hover {
+.fi-sidebar-item-btn:hover,
+.fi-sidebar-item-btn:hover .fi-sidebar-item-label,
+.fi-sidebar-item-btn:hover .fi-sidebar-item-icon {
     background-color: rgba(255, 255, 255, 0.08) !important;
     color: #ffffff !important;
 }
 
-.fi-sidebar-item.fi-active > .fi-sidebar-item-button,
-.fi-sidebar-item-button[aria-current="page"] {
+/* Item activo en verde TANISH */
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn,
+.fi-sidebar-item-btn[aria-current="page"] {
     background-color: var(--tanish-green) !important;
     color: #052e16 !important;
     font-weight: 600;
 }
 
-.fi-sidebar-item.fi-active .fi-sidebar-item-icon {
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-sidebar-item-label,
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-sidebar-item-icon {
     color: #052e16 !important;
 }
 
 .fi-sidebar-group-label {
+    color: #9db8c9 !important;
+}
+
+.fi-sidebar-group-collapse-btn {
     color: #9db8c9 !important;
 }
 
